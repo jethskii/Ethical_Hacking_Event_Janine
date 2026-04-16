@@ -14,12 +14,22 @@
             --error-red: #ff3131;
         }
 
+        /* --- GLOBAL SCROLL SETTINGS --- */
         body, html {
-            margin: 0; padding: 0; width: 100%; min-height: 100vh;
+            margin: 0; padding: 0; width: 100%; 
+            min-height: 100vh;
             background-color: var(--deep-black);
             font-family: 'Consolas', 'Courier New', monospace;
-            color: white; scroll-behavior: smooth;
+            color: white;
+            overflow-x: hidden;
+            overflow-y: auto; /* Enables vertical scrolling */
+            scroll-behavior: smooth;
         }
+
+        /* Custom Scrollbar for a Hacker Look */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--dark-green); border-radius: 10px; border: 1px solid var(--neon-green); }
 
         .bg-container {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -27,33 +37,66 @@
             z-index: -3;
         }
 
-        .dashboard { display: grid; grid-template-columns: 320px 1fr; gap: 40px; padding: 40px; max-width: 1500px; margin: 0 auto; }
+        .dashboard { 
+            display: grid; 
+            grid-template-columns: 320px 1fr; 
+            gap: 40px; 
+            padding: 40px; 
+            max-width: 1500px; 
+            margin: 0 auto;
+            align-items: start;
+        }
 
-        .sidebar { background: var(--glass-bg); border: 1px solid var(--neon-green); padding: 30px; border-radius: 15px; position: sticky; top: 40px; }
+        /* SIDEBAR: STICKY (Stays put while you scroll) */
+        .sidebar { 
+            background: var(--glass-bg); 
+            border: 1px solid var(--neon-green); 
+            padding: 30px; 
+            border-radius: 15px; 
+            position: sticky; 
+            top: 40px; 
+            box-shadow: 0 0 20px rgba(0,255,0,0.1);
+        }
 
-        .content-area { background: rgba(0, 5, 0, 0.7); border: 1px solid rgba(57, 255, 20, 0.3); padding: 60px; border-radius: 20px; backdrop-filter: blur(20px); min-height: 80vh; }
+        /* CONTENT: SCROLLABLE SECTIONS */
+        .content-area { 
+            background: rgba(0, 5, 0, 0.7); 
+            border: 1px solid rgba(57, 255, 20, 0.3); 
+            padding: 20px 60px 100px 60px; /* Extra bottom padding for scroll space */
+            border-radius: 20px; 
+            backdrop-filter: blur(20px);
+        }
 
-        .nav-item { padding: 15px; cursor: pointer; margin-bottom: 10px; color: #666; transition: 0.3s; border-radius: 8px; text-transform: uppercase; font-size: 0.8rem; border: 1px solid transparent; }
-        .nav-item.active { background: var(--neon-green); color: black !important; font-weight: bold; box-shadow: 0 0 20px var(--neon-green); }
+        .topic-section {
+            padding: 60px 0;
+            border-bottom: 1px solid rgba(57, 255, 20, 0.1);
+            min-height: 60vh; /* Ensures each topic takes up a good chunk of the screen */
+        }
 
-        .topic-content { display: none; }
-        .topic-content.active { display: block; }
+        .topic-section:last-child { border-bottom: none; }
 
-        .definition-box { background: rgba(255,255,255,0.05); border-left: 4px solid var(--neon-green); padding: 20px; margin: 20px 0; line-height: 1.6; }
-        .is-tag { color: var(--neon-green); font-size: 0.7rem; letter-spacing: 2px; margin-bottom: 10px; display: block; }
-        
-        .img-frame { border: 2px solid var(--neon-green); padding: 10px; background: #000; margin: 20px 0; border-radius: 10px; text-align: center; }
-        .img-frame img { max-width: 100%; height: auto; border: 1px solid #333; }
+        .nav-item { 
+            padding: 15px; cursor: pointer; margin-bottom: 10px; color: #666; 
+            transition: 0.3s; border-radius: 8px; text-transform: uppercase; 
+            font-size: 0.8rem; text-decoration: none; display: block;
+        }
+        .nav-item:hover { color: var(--neon-green); background: rgba(0, 255, 0, 0.05); }
 
-        /* --- QUIZ STYLES --- */
+        .definition-box { background: rgba(255,255,255,0.05); border-left: 4px solid var(--neon-green); padding: 20px; margin: 20px 0; }
+        .img-frame { border: 2px solid var(--neon-green); padding: 10px; background: #000; margin: 30px 0; border-radius: 10px; text-align: center; }
+        .img-frame img { max-width: 100%; height: auto; }
+
+        /* QUIZ OVERLAY */
         #quiz-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; }
-        .flashcard { background: #000; border: 2px solid var(--neon-green); padding: 40px; width: 600px; box-shadow: 0 0 50px rgba(0,255,0,0.2); }
+        .flashcard { background: #000; border: 2px solid var(--neon-green); padding: 40px; width: 600px; text-align: center; }
+
         .choice-btn { width: 100%; text-align: left; padding: 12px; margin: 8px 0; background: transparent; border: 1px solid #444; color: #ccc; cursor: pointer; font-family: inherit; }
         .choice-btn.correct-choice { background: var(--dark-green); border-color: var(--neon-green); color: var(--neon-green); }
-        .feedback-flash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: 0.2s; z-index: 1100; }
-        
-        .btn { padding: 10px 20px; background: none; border: 1px solid var(--neon-green); color: var(--neon-green); cursor: pointer; text-transform: uppercase; margin: 5px; text-decoration: none; display: inline-block; font-weight: bold;}
+
+        .btn { padding: 10px 20px; background: none; border: 1px solid var(--neon-green); color: var(--neon-green); cursor: pointer; text-transform: uppercase; font-weight: bold; text-decoration: none;}
         .btn:hover { background: var(--neon-green); color: #000; }
+
+        .feedback-flash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: 0.2s; z-index: 1100; }
     </style>
 </head>
 <body>
@@ -62,13 +105,13 @@
 
     <div id="quiz-overlay">
         <div class="flashcard">
-            <h3 style="color: var(--neon-green);">[ SECURITY_CHALLENGE_v2 ]</h3>
+            <h3 style="color: var(--neon-green);">[ SECURITY_VALIDATION ]</h3>
             <p id="quiz-question" style="font-size: 1.1rem; margin-bottom: 20px;"></p>
             <div id="choices-container"></div>
-            <div id="quiz-controls" style="margin-top: 30px; border-top: 1px solid #222; padding-top: 20px; display: none;">
+            <div id="quiz-controls" style="margin-top: 30px; display: none;">
                 <button class="btn" onclick="triggerFeedback('correct')">CORRECT</button>
                 <button class="btn" style="border-color: var(--error-red); color: var(--error-red);" onclick="triggerFeedback('wrong')">WRONG</button>
-                <button class="btn" style="border:none; color: #555;" onclick="closeQuiz()">[ CLOSE ]</button>
+                <button class="btn" onclick="closeQuiz()">[ CLOSE ]</button>
             </div>
             <button id="reveal-btn" class="btn" onclick="revealAnswer()">REVEAL ANSWER</button>
         </div>
@@ -80,138 +123,88 @@
 
     <div class="dashboard">
         <div class="sidebar">
-            <h2 style="color:var(--neon-green); font-size: 0.8rem; text-align: center; border-bottom: 1px solid #222; padding-bottom: 15px;">PROTECTION_LAYERS</h2>
-            <div class="nav-item active" onclick="showTab('w0', this)">00. Overview</div>
-            <div class="nav-item" onclick="showTab('w1', this)">01. WAF</div>
-            <div class="nav-item" onclick="showTab('w2', this)">02. Encryption</div>
-            <div class="nav-item" onclick="showTab('w3', this)">03. RBAC</div>
-            <div class="nav-item" onclick="showTab('w4', this)">04. MFA</div>
-            <div class="nav-item" onclick="showTab('w5', this)">05. HTTPS</div>
+            <h2 style="color:var(--neon-green); font-size: 0.8rem; text-align: center; border-bottom: 1px solid #222; padding-bottom: 15px;">TOPIC_LINKS</h2>
+            <a href="#overview" class="nav-item">00. Overview</a>
+            <a href="#waf" class="nav-item">01. WAF</a>
+            <a href="#encrypt" class="nav-item">02. Encryption</a>
+            <a href="#rbac" class="nav-item">03. RBAC</a>
+            <a href="#mfa" class="nav-item">04. MFA</a>
+            <a href="#https" class="nav-item">05. HTTPS</a>
         </div>
 
         <div class="content-area">
             
-            <div id="w0" class="topic-content active">
+            <section id="overview" class="topic-section">
                 <h1 style="color: var(--neon-green); font-size: 3rem;">Defense Strategy</h1>
-                <p>To secure a modern Information System, we must deploy layers of defense. These 5 core tools work together to ensure the Confidentiality, Integrity, and Availability (CIA) of our web application.</p>
-                
+                <p>Welcome to the 2026 Web Security Protocol. Below are the 5 pillars required for an Information System to maintain the CIA Triad.</p>
                 <div class="img-frame">
-                    <img src="Web_application_security_tools_40424a679c.png" alt="Full Security Map">
+                    <img src="Web_application_security_tools_40424a679c.png" alt="Security Map">
                 </div>
-                <p style="color: #888; font-style: italic; text-align: center;">Figure 1.0: The 5 Pillars of Web Application Security</p>
-            </div>
+            </section>
 
-            <div id="w1" class="topic-content">
-                <span class="is-tag">NETWORK_FILTERING</span>
-                <h1 style="color: var(--neon-green);">01. WAF (Web Application Firewall)</h1>
+            <section id="waf" class="topic-section">
+                <h1 style="color: var(--neon-green);">01. WAF (Web App Firewall)</h1>
                 <div class="definition-box">
-                    <strong>Definition:</strong> A Web Application Firewall (WAF) acts as a gateway that monitors and filters incoming HTTP traffic. It identifies and blocks malicious requests such as SQL Injection and Cross-Site Scripting (XSS) before they reach the web server.
+                    <strong>Definition:</strong> Monitors and filters HTTP traffic. Think of it as a bouncer at the door of your Information System, checking IDs and blocking known troublemakers (SQLi/XSS).
                 </div>
-                <div class="img-frame" style="border-style: dashed; border-color: #444;">
-                    [Visual: Diagram showing Traffic -> WAF -> Web Server]
-                </div>
-                <button class="btn" onclick="startQuiz(0)">Topic Quiz</button>
-            </div>
+                <button class="btn" onclick="startQuiz(0)">Take Quiz</button>
+            </section>
 
-            <div id="w2" class="topic-content">
-                <span class="is-tag">DATA_INTEGRITY</span>
+            <section id="encrypt" class="topic-section">
                 <h1 style="color: var(--neon-green);">02. Encrypted Data</h1>
                 <div class="definition-box">
-                    <strong>Definition:</strong> Cryptography transforms readable data into a complex code (ciphertext). In web applications, we focus on "Encryption at Rest"—protecting databases from physical theft—and "Hashing"—storing passwords in an irreversible format.
+                    <strong>Definition:</strong> Scrambling data at rest. If the physical server hard drive is stolen, the data is useless without the cryptographic key.
                 </div>
-                <div class="img-frame" style="border-style: dashed; border-color: #444;">
-                    [Visual: Comparison of Plaintext vs. Hashed Passwords]
-                </div>
-                <button class="btn" onclick="startQuiz(1)">Topic Quiz</button>
-            </div>
+                <button class="btn" onclick="startQuiz(1)">Take Quiz</button>
+            </section>
 
-            <div id="w3" class="topic-content">
-                <span class="is-tag">ACCESS_MANAGEMENT</span>
-                <h1 style="color: var(--neon-green);">03. RBAC (Role-Based Access Control)</h1>
+            <section id="rbac" class="topic-section">
+                <h1 style="color: var(--neon-green);">03. RBAC</h1>
                 <div class="definition-box">
-                    <strong>Definition:</strong> Role-Based Access Control assigns permissions to specific "roles" rather than individual users. For example, an 'Admin' can edit records, while a 'Customer' can only view their own profile. This enforces the Principle of Least Privilege.
+                    <strong>Definition:</strong> Role-Based Access Control ensures that an intern cannot access the payroll database. Access is based on the job role, not the individual.
                 </div>
-                <div class="img-frame" style="border-style: dashed; border-color: #444;">
-                    [Visual: Organizational Hierarchy showing Admin vs User permissions]
-                </div>
-                <button class="btn" onclick="startQuiz(2)">Topic Quiz</button>
-            </div>
+                <button class="btn" onclick="startQuiz(2)">Take Quiz</button>
+            </section>
 
-            <div id="w4" class="topic-content">
-                <span class="is-tag">AUTHENTICATION</span>
-                <h1 style="color: var(--neon-green);">04. MFA (Multi-Factor Authentication)</h1>
+            <section id="mfa" class="topic-section">
+                <h1 style="color: var(--neon-green);">04. MFA</h1>
                 <div class="definition-box">
-                    <strong>Definition:</strong> MFA requires users to provide at least two different forms of identification before logging in. Typically: Something you know (password) + Something you have (phone/key) or Something you are (biometrics).
+                    <strong>Definition:</strong> Something you know (password) + Something you have (phone). This blocks 99% of bulk phishing attacks even if your password is stolen.
                 </div>
-                <div class="img-frame" style="border-style: dashed; border-color: #444;">
-                    [Visual: Smartphone showing an Authenticator App code]
-                </div>
-                <button class="btn" onclick="startQuiz(3)">Topic Quiz</button>
-            </div>
+                <button class="btn" onclick="startQuiz(3)">Take Quiz</button>
+            </section>
 
-            <div id="w5" class="topic-content">
-                <span class="is-tag">SECURE_TRANSPORT</span>
+            <section id="https" class="topic-section">
                 <h1 style="color: var(--neon-green);">05. HTTPS</h1>
                 <div class="definition-box">
-                    <strong>Definition:</strong> HTTPS is the secure version of HTTP. It uses SSL/TLS protocols to encrypt the communication channel between the user and the server. This prevents attackers from "sniffing" or eavesdropping on private data while it travels across the internet.
+                    <strong>Definition:</strong> Encrypts the "tunnel" between the browser and the server. It prevents "Man-in-the-Middle" attacks where a hacker eavesdrops on a public Wi-Fi.
                 </div>
-                <div class="img-frame" style="border-style: dashed; border-color: #444;">
-                    [Visual: Address bar with the Padlock Icon and 'HTTPS' highlighted]
-                </div>
-                <button class="btn" onclick="startQuiz(4)">Topic Quiz</button>
-            </div>
+                <button class="btn" onclick="startQuiz(4)">Take Quiz</button>
+            </section>
+
         </div>
     </div>
 
     <script>
         const quizData = [
-            {
-                q: "What is the primary role of a WAF?",
-                options: ["Speeding up website loading", "Monitoring/Filtering HTTP traffic", "Encrypting the server hard drive", "Updating the database"],
-                correct: 1
-            },
-            {
-                q: "Which concept protects data even if a hacker gains access to the database files?",
-                options: ["Firewalls", "HTTPS", "Encryption at Rest", "Software Updates"],
-                correct: 2
-            },
-            {
-                q: "What IS principle is enforced by using RBAC?",
-                options: ["Shadow IT", "Principle of Least Privilege", "Data Redundancy", "Social Engineering"],
-                correct: 1
-            },
-            {
-                q: "Which of these is a valid 'second factor' in MFA?",
-                options: ["A strong password", "Your home address", "A one-time code on your phone", "Your favorite color"],
-                correct: 2
-            },
-            {
-                q: "What does HTTPS protect data during?",
-                options: ["Data in Transit", "Data at Rest", "Data Deletion", "Data Backups"],
-                correct: 0
-            }
+            { q: "What is the WAF's primary job?", options: ["Speed", "Filtering HTTP Traffic", "Backup", "Marketing"], correct: 1 },
+            { q: "What does 'at rest' encryption protect?", options: ["Cables", "Data on a hard drive", "Wifi signals", "Emails being sent"], correct: 1 },
+            { q: "RBAC limits access based on what?", options: ["Seniority", "Job Role", "Age", "Computer Speed"], correct: 1 },
+            { q: "MFA is which pillar of security?", options: ["Defense in Depth", "Social Media", "Hardware", "Authentication"], correct: 3 },
+            { q: "HTTPS uses which protocol?", options: ["SSL/TLS", "SMTP", "FTP", "POP3"], correct: 0 }
         ];
 
-        let currentQuizIdx = null;
-
-        function showTab(id, el) {
-            document.querySelectorAll('.topic-content').forEach(t => t.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            el.classList.add('active');
-            window.scrollTo({top: 0, behavior: 'smooth'});
-        }
+        let currentIdx = 0;
 
         function startQuiz(idx) {
-            currentQuizIdx = idx;
-            const data = quizData[idx];
-            document.getElementById('quiz-question').innerText = data.q;
+            currentIdx = idx;
+            document.getElementById('quiz-question').innerText = quizData[idx].q;
             const container = document.getElementById('choices-container');
             container.innerHTML = '';
-            data.options.forEach((opt, i) => {
+            quizData[idx].options.forEach((opt, i) => {
                 const btn = document.createElement('button');
                 btn.className = 'choice-btn';
-                btn.innerText = `${String.fromCharCode(65 + i)}) ${opt}`;
+                btn.innerText = opt;
                 btn.id = `opt-${i}`;
                 container.appendChild(btn);
             });
@@ -221,8 +214,7 @@
         }
 
         function revealAnswer() {
-            const correctIdx = quizData[currentQuizIdx].correct;
-            document.getElementById(`opt-${correctIdx}`).classList.add('correct-choice');
+            document.getElementById(`opt-${quizData[currentIdx].correct}`).classList.add('correct-choice');
             document.getElementById('quiz-controls').style.display = 'block';
             document.getElementById('reveal-btn').style.display = 'none';
         }
@@ -231,7 +223,7 @@
             const f = document.getElementById('feedback');
             f.style.background = (type === 'correct') ? 'rgba(0, 255, 0, 0.4)' : 'rgba(255, 0, 0, 0.4)';
             f.style.opacity = '1';
-            setTimeout(() => f.style.opacity = '0', 400);
+            setTimeout(() => f.style.opacity = '0', 300);
         }
 
         function closeQuiz() { document.getElementById('quiz-overlay').style.display = 'none'; }
