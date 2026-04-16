@@ -369,29 +369,107 @@
     <button class="btn" style="width: 100%; margin-top: 20px;" onclick="showTab('quiz', this)">Validate Memory Forensics Knowledge</button>
 </div>
 
-            <div id="m4" class="topic-content">
-                <h1 class="glitch-text">AD Dominance</h1>
-                <div class="speaker-context">
-                    "When Active Directory falls, the attacker doesn't steal your ID; they become the person who makes the IDs."
-                </div>
-                <div class="golden-ticket-card">
-                    <h2 style="color:var(--gold); margin:0;">👑 THE GOLDEN TICKET</h2>
-                    <p>The Kerberos Ticket Granting Ticket (TGT) is stolen or forged, granting unlimited impersonation across the entire domain forever.</p>
-                </div>
-            </div>
+            <div id="m4" class="topic-content active">
+    <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 30px;">
+        <h1 class="glitch-text" style="margin:0;">AD Dominance</h1>
+        <div style="flex-grow: 1; height: 2px; background: linear-gradient(90deg, var(--neon-green), transparent);"></div>
+    </div>
+    
+    <div class="speaker-context" style="position: relative; overflow: hidden;">
+        <div style="position: absolute; right: -10px; bottom: -10px; opacity: 0.1; font-size: 5rem;">👑</div>
+        "When Active Directory falls, the attacker doesn't steal your ID; they become the person who makes the IDs. In a Windows enterprise, AD is the brain—controlling it makes you the <b>'God'</b> of the network."
+    </div>
 
-            <div id="m5" class="topic-content">
-                <h1 class="glitch-text">Lateral Movement</h1>
-                <div class="speaker-context">
-                    "Lateral movement is the art of moving room-to-room inside a building after sneaking through a window."
-                </div>
-                <div class="impact-grid">
-                    <div class="impact-card">
-                        <b style="color:var(--neon-green);">Graph Theory</b><br>
-                        Attackers see networks as nodes (users/devices) and edges (permissions/connections).
-                    </div>
-                </div>
+    <h3 style="color:var(--neon-green); letter-spacing: 2px; display: flex; align-items: center; gap: 10px;">
+        <span>[ 🏛️ THE PILLAR: KERBEROS TICKETS ]</span>
+    </h3>
+    
+    <div class="highlight-box" style="border-radius: 20px; background: rgba(0, 255, 0, 0.02);">
+        <p style="color: #888; font-size: 0.9rem; margin-top: 0;">VISUALIZING THE AUTHENTICATION FLOW:</p>
+        <div style="display: flex; justify-content: space-between; align-items: center; text-align: center; gap: 10px; margin: 30px 0;">
+            <div style="flex: 1; padding: 15px; border: 1px solid #333; border-radius: 10px;">
+                <span style="font-size: 1.5rem;">👤</span><br>
+                <b style="color: var(--neon-green); font-size: 0.7rem;">USER ID</b><br>
+                <small style="font-size: 0.65rem;">Identity Check</small>
             </div>
+            <div style="color: var(--neon-green); font-weight: bold;">➔</div>
+            <div style="flex: 1; padding: 15px; border: 1px solid var(--neon-green); border-radius: 10px; box-shadow: 0 0 15px rgba(57, 255, 20, 0.1);">
+                <span style="font-size: 1.5rem;">🎟️</span><br>
+                <b style="color: var(--neon-green); font-size: 0.7rem;">TGT TICKET</b><br>
+                <small style="font-size: 0.65rem;">The 'VIP Pass'</small>
+            </div>
+            <div style="color: var(--neon-green); font-weight: bold;">➔</div>
+            <div style="flex: 1; padding: 15px; border: 1px solid #333; border-radius: 10px;">
+                <span style="font-size: 1.5rem;">🚪</span><br>
+                <b style="color: var(--neon-green); font-size: 0.7rem;">RESOURCES</b><br>
+                <small style="font-size: 0.65rem;">VIP Access</small>
+            </div>
+        </div>
+        <p style="font-size: 0.85rem; color: #ccc; line-height: 1.6;">
+            The <b>Domain Controller</b> acts as the bouncer. Once you have the <b>Ticket Granting Ticket (TGT)</b>, you can enter Lounges (SQL, Files, Workstations) without showing ID again.
+        </p>
+    </div>
+
+    <div class="golden-ticket-card" style="position: relative; overflow: hidden;">
+        <div style="position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--gold);"></div>
+        <h2 style="color:var(--gold); margin:0; letter-spacing: 3px; display: flex; align-items: center; gap: 15px;">
+            <span>👑 THE GOLDEN TICKET</span>
+        </h2>
+        <p style="margin-top: 15px; line-height: 1.6;">
+            By compromising the <b>KRBTGT account</b>, attackers gain the ability to forge their own 'VIP Passes'. 
+            This allows them to <span style="color: var(--gold);"><b>impersonate anyone</b></span>—the CEO, Admins, or ghost users—with tickets that remain valid for over a decade.
+        </p>
+    </div>
+
+    <h3 style="color:var(--neon-green); letter-spacing: 2px;">[ 🔨 PATH TO DOMINANCE: TECHNIQUES ]</h3>
+    <div class="phase-grid">
+        <div class="phase-card" style="transition: 0.3s; cursor: crosshair;">
+            <b style="color:var(--gold); border-bottom: 1px solid #333; display: block; padding-bottom: 5px; margin-bottom: 10px;">KERBEROASTING</b>
+            <small style="color: #aaa;">Extracting service tickets from memory and cracking them offline to find vulnerable service account passwords.</small>
+        </div>
+        <div class="phase-card" style="transition: 0.3s; cursor: crosshair;">
+            <b style="color:var(--gold); border-bottom: 1px solid #333; display: block; padding-bottom: 5px; margin-bottom: 10px;">BLOODHOUND</b>
+            <small style="color: #aaa;">Utilizing graph theory to map the hidden connections and shortest paths between a regular user and Domain Admin.</small>
+        </div>
+    </div>
+
+    <div class="impact-grid" style="margin-top: 10px;">
+        <div class="impact-card" style="border-left: 2px solid var(--neon-green);">
+            <b>LLMNR POISONING</b><br>
+            <small style="color: #888;">Intercepting local broadcast traffic to capture and steal user hashes.</small>
+        </div>
+        <div class="impact-card" style="border-left: 2px solid var(--neon-green);">
+            <b>NTLM RELAYING</b><br>
+            <small style="color: #888;">Redirecting authentication requests to impersonate users without needing their password.</small>
+        </div>
+    </div>
+
+    <h3 style="color:var(--neon-green); letter-spacing: 2px; margin-top: 40px;">[ 🚧 DEFENSIVE HARDENING: TIERED ADMIN ]</h3>
+    <div class="terminal-box" style="border-left: 5px solid var(--neon-green); background: linear-gradient(135deg, #000 0%, #050505 100%);">
+        <div style="margin-bottom: 10px; display: flex; gap: 10px; align-items: center;">
+            <span style="color: var(--gold);">[TIER_0]</span> <b>Domain Controllers:</b> Isolated Core. 
+        </div>
+        <div style="margin-bottom: 10px; display: flex; gap: 10px; align-items: center;">
+            <span style="color: #888;">[TIER_1]</span> <b>Servers:</b> Mid-level Management.
+        </div>
+        <div style="margin-bottom: 15px; display: flex; gap: 10px; align-items: center;">
+            <span style="color: #666;">[TIER_2]</span> <b>Workstations:</b> Standard Users.
+        </div>
+        <div style="border-top: 1px solid #222; padding-top: 10px; color: var(--error-red); font-size: 0.8rem; font-weight: bold;">
+            CRITICAL: If a Tier 0 Admin logs into a Tier 2 PC, their 'God' credentials are leaked and stolen instantly.
+        </div>
+    </div>
+
+    <div style="margin-top: 40px; text-align: center; border: 1px dashed #333; padding: 25px; border-radius: 15px;">
+        <p style="font-style: italic; color: #666; font-size: 0.85rem; margin: 0;">
+            "Peer Note: AD Dominance is <b>'Game Over'</b>. Post-breach recovery often requires a total forest rebuild. To stop the bleeding, the KRBTGT password must be rotated twice."
+        </p>
+    </div>
+
+    <button class="btn" style="width: 100%; margin-top: 30px; letter-spacing: 2px;" onclick="showTab('m5', this)">
+        PROCEED TO LATERAL MOVEMENT ➔
+    </button>
+</div>
 
             <div id="quiz" class="topic-content">
                 <h1 class="glitch-text">Validate Proficiency</h1>
