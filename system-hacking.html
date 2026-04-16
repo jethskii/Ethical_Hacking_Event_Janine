@@ -261,12 +261,36 @@
 
             <div id="m2" class="topic-content">
                 <h1 class="glitch-text">Breaking the OS Barrier</h1>
+                
                 <div class="speaker-context">
-                    "Think of your OS like a <b>School Campus</b>. Students are users, Teachers are admins, and Guards are system protections."
+                    <b style="color: var(--neon-green);">🎤 SPEAKER BROADCAST:</b><br>
+                    "Now let’s talk about what we call Breaking the OS Barrier. To understand this easily, let’s imagine your Operating System as a <b>school campus</b>."
                 </div>
+
+                <div class="highlight-box">
+                    <h3 style="margin-top:0; color:var(--neon-green);">The School Campus Analogy</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 10px;">👨‍🎓 <b>Students (Regular Users):</b> Access classrooms and Allowed resources within limits.</li>
+                        <li style="margin-bottom: 10px;">👩‍🏫 <b>Teachers (Administrators):</b> Higher authority; manage students and access restricted areas.</li>
+                        <li style="margin-bottom: 10px;">🛡️ <b>Security Guards (System Protections):</b> Enforce rules and prevent unauthorized entry.</li>
+                    </ul>
+                </div>
+
+                <div class="speaker-context">
+                    "In an operating system, there is a strict separation called a <b>security boundary</b>. This ensures normal users cannot perform high-level actions that could damage the system. Breaking this barrier happens when an attacker bypasses these restrictions—like a student suddenly accessing the teacher's office or changing school records."
+                </div>
+
                 <div class="terminal-box">
-                    # Enumerating unquoted service paths<br>
+                    # THE TECHNICAL REALITY: Enumerating unquoted service paths<br>
                     wmic service get name,displayname,pathname,startmode | findstr /i "Auto" | findstr /i /v "C:\Windows\\" | findstr /i /v """
+                </div>
+                
+                <div class="highlight-box" style="border-color: var(--error-red);">
+                    <b style="color: var(--error-red);">Why It’s Dangerous:</b> When the barrier is broken, the trust model is compromised. Attackers gain admin-level access, control over resources, and the ability to execute malicious programs freely.
+                </div>
+
+                <div class="highlight-box">
+                    <b style="color: var(--neon-green);">Ethical Hacking Perspective:</b> Our goal is to identify and secure these boundaries before attackers do. Breaking the OS barrier is a breakdown of authority that should never happen in a secure system.
                 </div>
             </div>
 
@@ -277,8 +301,6 @@
                 </div>
                 
                 <h1 class="glitch-text">Memory Corruption</h1>
-
-                
 
                 <div class="highlight-box">
                     <b style="color: var(--neon-green);">What is a Buffer Overflow?</b><br>
@@ -293,11 +315,6 @@
                 <div class="speaker-context">
                     <b style="color: var(--neon-green);">What happens during an attack?</b><br>
                     "When a buffer overflow occurs, the excess data can overwrite nearby memory — and if it reaches the Instruction Pointer, the attacker may be able to change the program’s execution flow. In simple terms: Instead of the program following its normal instructions, it may be forced to execute something unintended or malicious."
-                </div>
-
-                <div class="highlight-box">
-                    <b style="color: var(--neon-green);">Security Insight</b><br>
-                    "This is why buffer overflows are considered critical vulnerabilities. Modern systems implement protections, but understanding how memory works is essential in ethical hacking — because many exploits are built around these weaknesses. A buffer overflow is not just a crash — it’s a breakdown of memory control that can lead to system exploitation."
                 </div>
 
                 <ul class="data-list">
@@ -317,6 +334,12 @@
                         <li><b>Unlimited Impersonation:</b> Log in as any user.</li>
                         <li><b>Unlimited Time:</b> Forged tickets can last 10 years.</li>
                     </ul>
+                </div>
+                <div class="terminal-box">
+                    # Kerberoasting: Stealing service tickets for offline cracking<br>
+                    $ invoke-kerberoast -erroraction silentlycontinue<br><br>
+                    # DCSync: Mimicking a Domain Controller to pull every password hash<br>
+                    $ lsadump::dcsync /domain:corp.local /user:administrator
                 </div>
             </div>
 
