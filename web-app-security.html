@@ -243,59 +243,161 @@
                 <button class="btn" onclick="startQuiz(1)">Launch Topic Quiz</button>
             </div>
 
-            <div id="m2" class="topic-content">
+            <div id="m2" <div id="m2" class="topic-content">
                 <h1 class="glitch-text">Data Encryption</h1>
-                <p>Translating plaintext into ciphertext to protect data from being stolen, changed, or compromised.</p>
+                <p>The science of <b>Cryptography</b> translates plaintext into unreadable ciphertext. In modern IS, we must distinguish between reversible encryption and one-way hashing.</p>
+
+                <div style="margin: 20px 0; border: 1px dashed var(--neon-green); padding: 15px; background: rgba(0,0,0,0.5); border-radius: 10px;">
+                    <button class="btn" style="font-size: 0.7rem;" onclick="toggleHashInfo()">[ COMPARE HASHING VS ENCRYPTION ]</button>
+                    
+                    <div id="hash-info" style="display: none; margin-top: 20px; font-size: 0.85rem; text-align: left;">
+                        <table style="width: 100%; border-collapse: collapse; color: #ccc;">
+                            <tr style="border-bottom: 1px solid var(--neon-green);">
+                                <th style="text-align: left; padding: 8px;">Feature</th>
+                                <th style="text-align: left; padding: 8px;">Hashing (One-Way)</th>
+                                <th style="text-align: left; padding: 8px;">Encryption (Two-Way)</th>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px;"><b>Primary Goal</b></td>
+                                <td style="padding: 8px;">Data Integrity</td>
+                                <td style="padding: 8px;">Confidentiality</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px;"><b>Reversibility</b></td>
+                                <td style="padding: 8px; color: var(--warning-red);">Impossible</td>
+                                <td style="padding: 8px; color: var(--neon-green);">Required (with Key)</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px;"><b>Use Case</b></td>
+                                <td style="padding: 8px;">Passwords / Digital Signatures</td>
+                                <td style="padding: 8px;">Private Messaging / File Storage</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
                 <ul class="data-list">
-                    <li><b>Types:</b> Symmetric (Same key for lock/unlock) and Asymmetric (Public/Private key pair).</li>
-                    <li><b>Data at Rest:</b> Encrypting information stored on hard drives or databases.</li>
-                    <li><b>Data in Transit:</b> Securing information as it travels over a network (e.g., via HTTPS).</li>
+                    <li><b>Symmetric Encryption:</b> Single secret key for both lock/unlock. Extremely fast for bulk data.</li>
+                    <li><b>Asymmetric Encryption:</b> Uses a <b>Public Key</b> to encrypt and a <b>Private Key</b> to decrypt.</li>
+                    <li><b>Salted Hashing:</b> Adding random data to passwords before hashing to defeat "Rainbow Table" attacks.</li>
                 </ul>
+                
                 <div class="terminal-box">
-$ openssl enc -aes-256-cbc -salt -in plaintext.txt -out secrets.enc
-[SYSTEM] Decryption key required for access.
+$ echo "password123" | sha256sum
+[HASH]: ef92b778ba7158... (One-way fingerprint created)
+$ openssl enc -aes-256-cbc -in secret.txt
+[ENCRYPTED]: U2FsdGVkX1... (Reversible ciphertext created)
                 </div>
                 <button class="btn" onclick="startQuiz(2)">Launch Topic Quiz</button>
             </div>
 
             <div id="m3" class="topic-content">
                 <h1 class="glitch-text">Access Roles (RBAC)</h1>
-                <p><b>Role-Based Access Control</b> authorizes system access based on predefined roles rather than individual identity.</p>
+                <p><b>Role-Based Access Control</b> decouples users from permissions by using <b>Roles</b> as a management bridge. This ensures consistency across the enterprise.</p>
+
+                <div style="margin: 20px 0; border: 1px dashed var(--neon-green); padding: 15px; background: rgba(0,0,0,0.5); border-radius: 10px;">
+                    <button class="btn" style="font-size: 0.7rem;" onclick="toggleRBACInfo()">[ VIEW RBAC CORE COMPONENTS ]</button>
+                    
+                    <div id="rbac-info" style="display: none; margin-top: 20px; font-size: 0.85rem; text-align: left;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                            <div style="border: 1px solid #444; padding: 10px;">
+                                <b style="color: var(--neon-green);">1. USERS</b><br>
+                                <span style="font-size: 0.75rem;">Individual identities (Employees/Services). Linked to Roles.</span>
+                            </div>
+                            <div style="border: 1px solid #444; padding: 10px;">
+                                <b style="color: var(--neon-green);">2. ROLES</b><br>
+                                <span style="font-size: 0.75rem;">Job functions (Finance, IT, HR). The "Middle Man" logic.</span>
+                            </div>
+                            <div style="border: 1px solid #444; padding: 10px;">
+                                <b style="color: var(--neon-green);">3. PERMISSIONS</b><br>
+                                <span style="font-size: 0.75rem;">Granular rights (Read, Write, Execute) on specific resources.</span>
+                            </div>
+                        </div>
+                        <p style="margin-top:15px; font-style: italic; color: #888;">Rule: Users receive permissions <u>only</u> through their assigned roles.</p>
+                    </div>
+                </div>
+
                 <ul class="data-list">
-                    <li><b>Structure:</b> Administrators assign users to roles (e.g., Finance, HR, IT Analyst).</li>
-                    <li><b>Permissions:</b> Each role has a specific set of privileges (Least Privilege Principle).</li>
-                    <li><b>Internal Security:</b> Defends against malicious insiders and negligent employee mistakes.</li>
+                    <li><b>Principle of Least Privilege:</b> Limiting a user's "Blast Radius" by granting only essential permissions.</li>
+                    <li><b>Role Hierarchy:</b> Inheriting permissions (e.g., a "Manager" role inherits all "Staff" permissions).</li>
+                    <li><b>Separation of Duties:</b> Requiring different roles for critical tasks to prevent internal fraud.</li>
                 </ul>
-                <div class="speaker-note">
-                    Example: A Sales rep can see customer accounts but cannot modify the firewall settings.
+
+                <div class="terminal-box">
+[AUTH_CHECK] User: John_Doe | Requested Action: DELETE_DATABASE
+[LOOKUP] User 'John_Doe' belongs to Role: 'Analyst'
+[POLICY] Role 'Analyst' Permission: [READ_ONLY]
+[RESULT] ACCESS DENIED. (PoLP enforced)
                 </div>
                 <button class="btn" onclick="startQuiz(3)">Launch Topic Quiz</button>
             </div>
-
             <div id="m4" class="topic-content">
                 <h1 class="glitch-text">Authentication (MFA)</h1>
-                <p>Requires two or more distinct types of verification factors to prove a user's identity.</p>
+                <p>Multi-Factor Authentication (MFA) is the process of verifying a user's identity through <b>two or more</b> independent categories of credentials. It is the strongest defense against compromised passwords.</p>
+
+                <div style="margin: 20px 0; border: 1px dashed var(--neon-green); padding: 15px; background: rgba(0,0,0,0.5); border-radius: 10px;">
+                    <button class="btn" style="font-size: 0.7rem;" onclick="toggleMFAFactors()">[ ANALYZE AUTHENTICATION FACTORS ]</button>
+                    
+                    <div id="mfa-details" style="display: none; margin-top: 20px; font-size: 0.85rem; text-align: left;">
+                        <p><b style="color: var(--neon-green);">1. KNOWLEDGE (Something you Know):</b></p>
+                        <ul style="list-style-type: square; color: #ccc;">
+                            <li><b>Static Passwords:</b> The most common but vulnerable factor.</li>
+                            <li><b>Passphrases:</b> High entropy strings (e.g., "correct-horse-battery-staple") which are harder for bots to crack.</li>
+                            <li><b>PINs:</b> Specific numeric identifiers.</li>
+                        </ul>
+                        
+                        <p style="margin-top:10px;"><b style="color: var(--neon-green);">2. POSSESSION (Something you Have):</b></p>
+                        <p style="color: #ccc; margin-left: 20px;">Physical tokens, Smartphones (TOTP apps), or Hardware Security Keys (YubiKey).</p>
+
+                        <p style="margin-top:10px;"><b style="color: var(--neon-green);">3. INHERENCE (Something you Are):</b></p>
+                        <p style="color: #ccc; margin-left: 20px;">Biological traits: Fingerprints, Iris scans, and Facial geometry.</p>
+                    </div>
+                </div>
+
                 <ul class="data-list">
-                    <li><b>Knowledge:</b> Something you Know (Passwords, PINs).</li>
-                    <li><b>Possession:</b> Something you Have (Smartphone, Security Token).</li>
-                    <li><b>Inherence:</b> Something you Are (Fingerprints, Face Recognition).</li>
+                    <li><b>The Golden Rule:</b> Factors <u>must</u> come from different categories. Password + Security Question is NOT true MFA.</li>
+                    <li><b>TOTP Logic:</b> Time-based One Time Passwords expire every 30-60 seconds, neutralizing stolen credentials.</li>
+                    <li><b>Adaptive MFA:</b> Triggering extra challenges based on Location (Geo-fencing) or Time-of-access.</li>
                 </ul>
+
                 <div class="terminal-box">
-[LOGIN] Admin verified via password...
-[MFA] Enter code from Authenticator App: ******
-[SUCCESS] Access Granted.
+[LOGIN_ATTEMPT] User: Admin | IP: 103.45.XX.XX
+[THREAT_INTEL] IP flagged for Credential Stuffing.
+[ACTION] Knowledge Factor Accepted. Triggering mandatory Inherence Check...
+[MFA] Awaiting Biometric confirmation on mobile device.
                 </div>
                 <button class="btn" onclick="startQuiz(4)">Launch Topic Quiz</button>
             </div>
 
-            <div id="m5" class="topic-content">
+           <div id="m5" class="topic-content">
                 <h1 class="glitch-text">Transport Layer (HTTPS)</h1>
-                <p>HTTPS is the secure version of HTTP, using <b>TLS (Transport Layer Security)</b> to encrypt communications.</p>
+                <p>HTTPS (HTTP Secure) is the standard for encrypted communication. It relies on <b>TLS (Transport Layer Security)</b> to provide a secure channel over an insecure network.</p>
+
+                <div style="margin: 20px 0; border: 1px dashed var(--neon-green); padding: 15px; background: rgba(0,0,0,0.5); border-radius: 10px;">
+                    <button class="btn" style="font-size: 0.7rem;" onclick="toggleHTTPSPillars()">[ ANALYZE THE THREE PILLARS OF TRUST ]</button>
+                    
+                    <div id="https-pillars" style="display: none; margin-top: 20px; font-size: 0.85rem; text-align: left;">
+                        <p><b style="color: var(--neon-green);">1. ENCRYPTION (Privacy):</b> Scrambles data to prevent eavesdropping. Even if packets are intercepted, they are unreadable without the session key.</p>
+                        
+                        <p style="margin-top:10px;"><b style="color: var(--neon-green);">2. DATA INTEGRITY (Accuracy):</b> Uses digital "seals" (MACs) to ensure data isn't modified or tampered with during transit.</p>
+
+                        <p style="margin-top:10px;"><b style="color: var(--neon-green);">3. AUTHENTICATION (Trust):</b> Validates the website's identity via SSL Certificates signed by trusted Certificate Authorities (CAs).</p>
+                    </div>
+                </div>
+
                 <ul class="data-list">
-                    <li><b>Handshake:</b> Asymmetric encryption establishes a secure link between browser and server.</li>
-                    <li><b>Public/Private Keys:</b> Private key stays on the server; Public key is shared to encrypt data.</li>
-                    <li><b>Indicators:</b> Padlock icons in the URL bar verify the site is using a valid SSL/TLS certificate.</li>
+                    <li><b>The Handshake:</b> A negotiation phase where the client and server agree on encryption algorithms and keys.</li>
+                    <li><b>Asymmetric Start:</b> Uses Public/Private keys to securely exchange a "Session Key."</li>
+                    <li><b>Symmetric Finish:</b> Once established, the "Session Key" is used for fast, bulk data encryption.</li>
                 </ul>
+
+                <div class="terminal-box">
+[CONNECT] ClientHello: Supporting TLS 1.3
+[RECEIVE] ServerHello: Certificate Received (Signed by DigiCert)
+[VERIFY] Certificate Status: VALID
+[EXCHANGE] Generating Symmetric Session Key...
+[SUCCESS] Encrypted tunnel established. Padlock icon ACTIVE.
+                </div>
                 <button class="btn" onclick="startQuiz(5)">Launch Topic Quiz</button>
             </div>
 
@@ -303,6 +405,22 @@ $ openssl enc -aes-256-cbc -salt -in plaintext.txt -out secrets.enc
     </div>
 
     <script>
+        function toggleHTTPSPillars() {
+            const pillars = document.getElementById('https-pillars');
+            pillars.style.display = (pillars.style.display === "none") ? "block" : "none";
+        }
+        function toggleMFAFactors() {
+            const details = document.getElementById('mfa-details');
+            details.style.display = (details.style.display === "none") ? "block" : "none";
+        }
+        function toggleRBACInfo() {
+            const info = document.getElementById('rbac-info');
+            info.style.display = (info.style.display === "none") ? "block" : "none";
+        }
+        function toggleHashInfo() {
+            const info = document.getElementById('hash-info');
+            info.style.display = (info.style.display === "none") ? "block" : "none";
+        }
         function toggleOSI() {
             const details = document.getElementById('osi-details');
             if (details.style.display === "none") {
@@ -322,10 +440,23 @@ $ openssl enc -aes-256-cbc -salt -in plaintext.txt -out secrets.enc
         const quizData = [
             { q: "What is the primary goal of a 'Defense in Depth' strategy?", options: ["Buying expensive firewalls", "Layered security controls", "Using one strong password", "Ignoring internal threats"], correct: 1 },
             { q: "WAF operates at which layer of the OSI model?", options: ["Layer 1", "Layer 3", "Layer 4", "Layer 7"], correct: 3 },
-            { q: "Which encryption method uses a Public Key and a Private Key?", options: ["Symmetric Encryption", "Asymmetric Encryption", "Plaintext", "Hashing"], correct: 1 },
-            { q: "What is the 'Principle of Least Privilege' in RBAC?", options: ["Everyone gets Admin access", "Users get only the minimum access needed", "Access depends on how long you've worked there", "Granting access based on computer speed"], correct: 1 },
-            { q: "A fingerprint scan is an example of which authentication factor?", options: ["Knowledge", "Possession", "Inherence", "Location"], correct: 2 },
-            { q: "What does HTTPS use to secure the 'tunnel' between browser and server?", options: ["UDP", "TLS/SSL", "FTP", "ICMP"], correct: 1 }
+            { q: "Which cryptographic process is strictly a 'one-way street' with no way to reverse the output?", 
+                options: ["Asymmetric Encryption", "Symmetric Encryption", "Hashing", "TLS Handshake"], 
+                correct: 2 },
+            { q: "In the RBAC model, how does a 'User' typically receive 'Permissions'?", 
+                options: ["Permissions are assigned directly to the User", "Users inherit permissions through a Role", "Users create their own permissions", "Admins must approve every single file click"], 
+                correct: 1 },
+            { q: "If a user provides a Password AND a PIN code, why is this NOT technically considered Multi-Factor Authentication?", 
+                options: [
+                    "Because PINs are too short", 
+                    "Because both come from the 'Knowledge' category", 
+                    "Because MFA requires three factors, not two", 
+                    "Because hackers can easily guess PINs"
+                ], 
+                correct: 1 },
+            { q: "Which pillar of HTTPS ensures that a 'Man-in-the-Middle' cannot change the amount of a bank transfer during transit?", 
+                options: ["Encryption", "Data Integrity", "Authentication", "Session Management"], 
+                correct: 1 }
         ];
 
         let currentQuizIndex = -1;
