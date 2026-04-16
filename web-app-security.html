@@ -14,48 +14,72 @@
             --error-red: #ff3131;
         }
 
+        /* --- THE SCROLL SNAP SETUP --- */
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
             background-color: var(--deep-black);
             font-family: 'Consolas', 'Courier New', monospace;
             color: white;
-            overflow: hidden;
+            overflow: hidden; /* Prevent body scroll */
         }
 
-        .dashboard { display: grid; grid-template-columns: 320px 1fr; height: 100vh; }
+        .dashboard { 
+            display: grid; 
+            grid-template-columns: 320px 1fr; 
+            height: 100vh; 
+        }
 
-        .sidebar { background: var(--glass-bg); border-right: 1px solid var(--neon-green); padding: 40px 30px; z-index: 10; }
+        .sidebar { 
+            background: var(--glass-bg); 
+            border-right: 1px solid var(--neon-green); 
+            padding: 40px 30px; 
+            z-index: 10; 
+        }
 
-        /* SCROLL SNAP */
-        .content-area { overflow-y: scroll; scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+        /* This container handles the snapping */
+        .content-area { 
+            overflow-y: scroll; 
+            height: 100vh;
+            scroll-snap-type: y mandatory; /* Locks scroll to sections */
+            scroll-behavior: smooth;
+        }
 
+        /* Each topic is a full "slide" */
         .topic-section {
-            height: 100vh; scroll-snap-align: start; padding: 60px 80px;
-            box-sizing: border-box; display: flex; flex-direction: column;
-            justify-content: center; background: rgba(0, 5, 0, 0.6);
+            height: 100vh;
+            width: 100%;
+            scroll-snap-align: start; /* Align to top of section */
+            scroll-snap-stop: always; /* Prevents skipping slides */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 80px;
+            box-sizing: border-box;
+            background: rgba(0, 5, 0, 0.4);
         }
 
-        .discussion-text { 
+        /* UI Styling */
+        .nav-item { 
+            padding: 15px; cursor: pointer; color: #666; transition: 0.3s; 
+            text-decoration: none; display: block; font-size: 0.8rem; border-radius: 5px; 
+        }
+        .nav-item:hover { color: var(--neon-green); background: rgba(0,255,0,0.05); }
+
+        .discussion-box { 
             background: rgba(255,255,255,0.03); border-left: 4px solid var(--neon-green); 
-            padding: 20px; margin: 15px 0; line-height: 1.6; font-size: 0.95rem; 
+            padding: 25px; margin: 20px 0; line-height: 1.8; color: #ccc;
         }
 
         .example-box {
             background: rgba(57, 255, 20, 0.05); border: 1px dashed var(--neon-green);
-            padding: 15px; margin-top: 10px; color: #fff;
+            padding: 20px; border-radius: 5px;
         }
 
-        .img-frame { border: 1px solid var(--neon-green); padding: 5px; background: #000; margin: 15px 0; max-width: 60%; }
-        .img-frame img { width: 100%; height: auto; }
-
-        .nav-item { padding: 12px; cursor: pointer; color: #666; transition: 0.3s; text-decoration: none; display: block; font-size: 0.8rem; }
-        .nav-item:hover { color: var(--neon-green); }
-
-        .btn { padding: 10px 20px; background: none; border: 1px solid var(--neon-green); color: var(--neon-green); cursor: pointer; font-weight: bold; text-transform: uppercase; margin-top: 10px; }
+        .btn { padding: 12px 24px; background: none; border: 1px solid var(--neon-green); color: var(--neon-green); cursor: pointer; font-weight: bold; margin-top: 20px;}
         .btn:hover { background: var(--neon-green); color: #000; }
 
         #quiz-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 1000; justify-content: center; align-items: center; }
-        .flashcard { background: #000; border: 2px solid var(--neon-green); padding: 40px; width: 600px; }
+        .flashcard { background: #000; border: 2px solid var(--neon-green); padding: 40px; width: 600px; text-align: center; }
         .choice-btn { width: 100%; text-align: left; padding: 12px; margin: 8px 0; background: transparent; border: 1px solid #444; color: #ccc; cursor: pointer; }
         .choice-btn.correct-choice { background: var(--dark-green); color: var(--neon-green); border-color: var(--neon-green); }
         .feedback-flash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: 0.2s; z-index: 1100; }
@@ -63,11 +87,10 @@
 </head>
 <body>
     <div id="feedback" class="feedback-flash"></div>
-
-    <div id="quiz-overlay">
+    <div class="bg-container"></div> <div id="quiz-overlay">
         <div class="flashcard">
             <h3 style="color: var(--neon-green);">[ SYSTEM_VALIDATION ]</h3>
-            <p id="quiz-question"></p>
+            <p id="quiz-question" style="margin-bottom: 20px;"></p>
             <div id="choices-container"></div>
             <div id="quiz-controls" style="margin-top: 20px; display: none;">
                 <button class="btn" onclick="triggerFeedback('correct')">CORRECT</button>
@@ -80,97 +103,95 @@
 
     <div class="dashboard">
         <div class="sidebar">
-            <h2 style="color:var(--neon-green); font-size: 0.8rem; letter-spacing: 2px; border-bottom: 1px solid #222; padding-bottom: 20px; margin-bottom: 20px;">SECURITY_MODULES</h2>
+            <h2 style="color:var(--neon-green); font-size: 0.8rem; border-bottom: 1px solid #222; padding-bottom: 20px; margin-bottom: 20px;">MODULE_NAV</h2>
             <a href="#overview" class="nav-item">00. OVERVIEW</a>
             <a href="#waf" class="nav-item">01. WAF CONTROL</a>
-            <a href="#encrypt" class="nav-item">02. DATA ENCRYPTION</a>
+            <a href="#encrypt" class="nav-item">02. DATA SECURITY</a>
             <a href="#rbac" class="nav-item">03. ACCESS ROLES</a>
             <a href="#mfa" class="nav-item">04. AUTHENTICATION</a>
             <a href="#https" class="nav-item">05. TRANSPORT LAYER</a>
-            <br>
-            <a href="index.html" class="btn" style="font-size: 0.7rem; display: block; text-align: center; text-decoration: none;">LOGOUT</a>
+            <br><br>
+            <a href="index.html" class="btn" style="font-size: 0.7rem; text-decoration: none;">[ DISCONNECT ]</a>
         </div>
 
         <div class="content-area">
             
             <section id="overview" class="topic-section">
-                <h1 style="color: var(--neon-green); font-size: 3rem;">Defense-in-Depth</h1>
-                <p>Security is not a single product, but a process of overlapping layers. If one layer fails, the next one should protect the system.</p>
-                <div class="img-frame">
-                    <img src="Web_application_security_tools_40424a679c.png" alt="Defense Layers Map">
+                <h1 style="color: var(--neon-green); font-size: 3rem;">Defense in Depth</h1>
+                <p>Security is not a single product, but a layered architecture. By separating our controls into different zones, we ensure that if one layer is breached, the others remain secure.</p>
+                <div style="border: 1px solid var(--neon-green); padding: 10px; margin-top: 20px; text-align: center;">
+                    <img src="Web_application_security_tools_40424a679c.png" style="max-width: 80%;" alt="Security Map">
                 </div>
             </section>
 
             <section id="waf" class="topic-section">
-                <h1 style="color: var(--neon-green);">01. WAF (Web App Firewall)</h1>
-                <div class="discussion-text">
-                    <strong>Discussion:</strong> A WAF filters malicious HTTP traffic. Unlike a network firewall, it looks inside the "message" sent to the web app to find hidden code like SQL injections.
+                <h1 style="color: var(--neon-green);">01. Web App Firewall (WAF)</h1>
+                <div class="discussion-box">
+                    <strong>Technical Concept:</strong> A WAF operates at Layer 7 of the OSI model. Unlike traditional firewalls, it analyzes the content of HTTP requests to identify and block malicious code like SQL injections.
                 </div>
                 <div class="example-box">
-                    <strong>Real-World Example:</strong> An e-commerce site uses a WAF to block a hacker from entering <code>' OR 1=1 --</code> into the search bar, which would normally bypass the login.
+                    <strong>Real-World Example:</strong> An e-commerce system uses a WAF to inspect a login form. If it sees <code>' OR 1=1 --</code> in the password field, it identifies it as an injection attack and instantly drops the connection.
                 </div>
-                
-                <button class="btn" onclick="startQuiz(0)">Topic Quiz</button>
+                <button class="btn" onclick="startQuiz(0)">Launch Quiz</button>
             </section>
 
             <section id="encrypt" class="topic-section">
                 <h1 style="color: var(--neon-green);">02. Encrypted Data</h1>
-                <div class="discussion-text">
-                    <strong>Discussion:</strong> Encryption protects "Data at Rest." Even if the server is compromised, the files look like gibberish without the key.
+                <div class="discussion-box">
+                    <strong>Technical Concept:</strong> Information Systems protect data in two states: <em>Data at Rest</em> (on the disk) and <em>Data in Transit</em> (moving over the network). Encryption makes the data useless to anyone without the cryptographic key.
                 </div>
                 <div class="example-box">
-                    <strong>Real-World Example:</strong> A bank stores your credit card number as <code>$2a$12$KIX...</code>. If a hacker steals the database, they cannot use the credit cards because they don't have the decryption key.
+                    <strong>Real-World Example:</strong> If a hacker steals the database of a hospital, they see the patient names, but the medical history is stored as random characters like <code>@#89!xs...</code>. This protects the organization from HIPAA violations.
                 </div>
-                
-                <button class="btn" onclick="startQuiz(1)">Topic Quiz</button>
+                <button class="btn" onclick="startQuiz(1)">Launch Quiz</button>
             </section>
 
             <section id="rbac" class="topic-section">
-                <h1 style="color: var(--neon-green);">03. RBAC (Access Control)</h1>
-                <div class="discussion-text">
-                    <strong>Discussion:</strong> Roles are assigned to jobs, not names. This ensures the <em>Principle of Least Privilege</em>—only giving the access needed for the task.
+                <h1 style="color: var(--neon-green);">03. Role-Based Access Control (RBAC)</h1>
+                <div class="discussion-box">
+                    <strong>Technical Concept:</strong> Access is granted based on the "Role" within the system rather than the user's name. This ensures that permissions are tied to job descriptions, which simplifies auditing and security management.
                 </div>
                 <div class="example-box">
-                    <strong>Real-World Example:</strong> In a university portal, a <strong>Student</strong> can see grades, a <strong>Professor</strong> can input grades, but a <strong>Professor</strong> cannot see another professor's salary records.
+                    <strong>Real-World Example:</strong> In a banking portal, a <strong>Cashier</strong> can process withdrawals, a <strong>Branch Manager</strong> can override limits, but an <strong>IT Support</strong> role cannot see the balance of a private customer's account.
                 </div>
-                
-                <button class="btn" onclick="startQuiz(2)">Topic Quiz</button>
+                <button class="btn" onclick="startQuiz(2)">Launch Quiz</button>
             </section>
 
             <section id="mfa" class="topic-section">
-                <h1 style="color: var(--neon-green);">04. MFA (Authentication)</h1>
-                <div class="discussion-text">
-                    <strong>Discussion:</strong> Password security is dead. MFA adds a physical layer (your phone or fingerprint) so that a stolen password isn't enough to enter.
+                <h1 style="color: var(--neon-green);">04. Multi-Factor Authentication (MFA)</h1>
+                <div class="discussion-box">
+                    <strong>Technical Concept:</strong> MFA requires at least two out of three factors: Something you know (Password), Something you have (Security Key), or Something you are (FaceID/Fingerprint).
                 </div>
                 <div class="example-box">
-                    <strong>Real-World Example:</strong> You log into Instagram. Even with the correct password, it asks for a 6-digit code sent to your phone. This stops a hacker who guessed your password.
+                    <strong>Real-World Example:</strong> A hacker phishes your password for your school account. However, since the school uses MFA, the hacker is blocked when they can't provide the 6-digit code sent to your smartphone.
                 </div>
-                
-                <button class="btn" onclick="startQuiz(3)">Topic Quiz</button>
+                <button class="btn" onclick="startQuiz(3)">Launch Quiz</button>
             </section>
 
             <section id="https" class="topic-section">
-                <h1 style="color: var(--neon-green);">05. HTTPS (Transport Layer)</h1>
-                <div class="discussion-text">
-                    <strong>Discussion:</strong> HTTPS encrypts the "tunnel" between you and the server. It prevents "Man-in-the-Middle" attacks on public Wi-Fi.
+                <h1 style="color: var(--neon-green);">05. HTTPS / TLS</h1>
+                <div class="discussion-box">
+                    <strong>Technical Concept:</strong> HTTPS provides an encrypted tunnel for data. It uses certificates to verify the identity of the server, preventing "Man-in-the-Middle" attacks.
                 </div>
                 <div class="example-box">
-                    <strong>Real-World Example:</strong> When you use your bank's website at Starbucks, HTTPS ensures that the person sitting next to you cannot "sniff" your login credentials out of the air.
+                    <strong>Real-World Example:</strong> When you use your credit card at an online store, HTTPS ensures that the data is encrypted before it leaves your computer, so the person sitting next to you on public Wi-Fi cannot steal it.
                 </div>
-                
-                <button class="btn" onclick="startQuiz(4)">Topic Quiz</button>
+                <button class="btn" onclick="startQuiz(4)">Launch Quiz</button>
             </section>
 
         </div>
     </div>
 
     <script>
+        // NAVIGATION (SMOOTH SCROLL VIA ANCHOR LINKS ALREADY HANDLED BY BROWSER)
+        
+        // QUIZ SYSTEM
         const quizData = [
-            { q: "WAF is which line of defense?", options: ["Internal Database", "First Line / External Perimeter", "Physical Guard", "Email Filter"], correct: 1 },
-            { q: "What happens to encrypted data without a key?", options: ["It stays readable", "It becomes gibberish", "It deletes itself", "It turns into a PDF"], correct: 1 },
-            { q: "A 'Professor' role having grade access is called what?", options: ["Phishing", "RBAC", "Social Engineering", "Cloud Computing"], correct: 1 },
-            { q: "MFA blocks 99% of which type of attack?", options: ["Physical Theft", "Bulk Phishing / Stolen Passwords", "Broken Cables", "Slow Wifi"], correct: 1 },
-            { q: "Where does HTTPS protect data?", options: ["On the Hard Drive", "In Transit (The Tunnel)", "In the Trash Bin", "In the Office"], correct: 1 }
+            { q: "A WAF works at which OSI layer?", options: ["Layer 1 (Physical)", "Layer 3 (Network)", "Layer 7 (Application)", "Layer 12 (Cosmic)"], correct: 2 },
+            { q: "What concept protect data if the physical database is stolen?", options: ["MFA", "Encryption at Rest", "HTTPS", "Antivirus"], correct: 1 },
+            { q: "In RBAC, a 'Manager' role getting specific access is an example of:", options: ["Principle of Least Privilege", "Shadow IT", "Social Engineering", "Cloud Computing"], correct: 0 },
+            { q: "Which of these is a 'Something you have' factor?", options: ["Your Fingerprint", "A 6-digit SMS code", "A Hardware Security Key", "Your Birthday"], correct: 2 },
+            { q: "HTTPS primarily protects data during...", options: ["Storage", "Transit", "Deletion", "Printing"], correct: 1 }
         ];
 
         let currentIdx = 0;
