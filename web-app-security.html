@@ -1,454 +1,307 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web App Security | Global Security Seminar v4.0</title>
-    <style>
-        /* --- CORE THEME: EXPERT TERMINAL --- */
-        :root {
-            --neon-green: #39ff14;
-            --dark-green: #003300;
-            --deep-black: #050505;
-            --warning-red: #ff3131;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web App Security | Global Security Seminar v4.0</title>
+    <style>
+        /* --- CORE THEME: EXPERT TERMINAL --- */
+        :root {
+            --neon-green: #39ff14;
+            --dark-green: #003300;
+            --deep-black: #050505;
+            --warning-red: #ff3131;
+        }
 
-        /* --- ADVANCED ANIMATIONS --- */
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-            100% { transform: translate(0); }
-        }
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
 
-        @keyframes revealItem {
-            from { opacity: 0; transform: translateY(20px); filter: blur(10px); }
-            to { opacity: 1; transform: translateY(0); filter: blur(0); }
-        }
+        @keyframes revealItem {
+            from { opacity: 0; transform: translateY(20px); filter: blur(10px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
 
-        /* Scrolling Grid Animation */
-        @keyframes gridMove {
-            0% { background-position: 0 0; }
-            100% { background-position: 50px 50px; }
-        }
+        @keyframes gridMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 50px 50px; }
+        }
 
-        @keyframes rain {
-            0% { background-position: 0% 0%; }
-            100% { background-position: 0% 1000px; }
-        }
+        @keyframes rain {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 0% 1000px; }
+        }
 
-        @keyframes bgPulse {
-            0% { opacity: 0.3; }
-            50% { opacity: 0.5; }
-            100% { opacity: 0.3; }
-        }
+        @keyframes bgPulse {
+            0% { opacity: 0.3; }
+            50% { opacity: 0.5; }
+            100% { opacity: 0.3; }
+        }
 
-        @keyframes scanline {
-            0% { top: -100%; }
-            100% { top: 100%; }
-        }
+        @keyframes scanline {
+            0% { top: -100%; }
+            100% { top: 100%; }
+        }
 
-        @keyframes noise {
-            0%, 100% { background-position: 0 0; }
-            10% { background-position: -5% -10%; }
-            20% { background-position: -15% 5%; }
-            30% { background-position: 7% -25%; }
-            50% { background-position: -25% 10%; }
-        }
+        @keyframes noise {
+            0%, 100% { background-position: 0 0; }
+            10% { background-position: -5% -10%; }
+            20% { background-position: -15% 5%; }
+            30% { background-position: 7% -25%; }
+            50% { background-position: -25% 10%; }
+        }
 
-        body, html {
-            margin: 0; padding: 0;
-            width: 100%; min-height: 100vh;
-            background-color: var(--deep-black);
-            font-family: 'Consolas', 'Courier New', monospace;
-            color: white;
-            scroll-behavior: smooth;
-            overflow-x: hidden;
-        }
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; min-height: 100vh;
+            background-color: var(--deep-black);
+            font-family: 'Consolas', 'Courier New', monospace;
+            color: white;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
 
-        /* --- THE LAYERED BACKGROUND ENGINE --- */
-        .bg-container {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: 
-                radial-gradient(circle at center, var(--dark-green) 0%, var(--deep-black) 100%),
-                linear-gradient(rgba(0, 51, 0, 0.2) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 51, 0, 0.2) 1px, transparent 1px);
-            background-size: 100% 100%, 50px 50px, 50px 50px;
-            animation: gridMove 4s linear infinite;
-            z-index: -5;
-        }
+        .bg-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: 
+                radial-gradient(circle at center, var(--dark-green) 0%, var(--deep-black) 100%),
+                linear-gradient(rgba(0, 51, 0, 0.2) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 51, 0, 0.2) 1px, transparent 1px);
+            background-size: 100% 100%, 50px 50px, 50px 50px;
+            animation: gridMove 4s linear infinite;
+            z-index: -3;
+        }
 
-        .bg-glow {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 50%, rgba(57, 255, 20, 0.05), transparent 70%);
-            animation: bgPulse 8s ease-in-out infinite;
-            z-index: -4;
-            pointer-events: none;
-        }
+        .bg-glow {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(57, 255, 20, 0.05), transparent 70%);
+            animation: bgPulse 8s ease-in-out infinite;
+            z-index: -2;
+            pointer-events: none;
+        }
 
-        .noise-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Noi_Noise_Texture.png');
-            opacity: 0.05;
-            z-index: -3;
-            animation: noise 0.2s infinite;
-            pointer-events: none;
-        }
+        .data-rain-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(0deg, transparent 0%, rgba(57, 255, 20, 0.05) 50%, transparent 100%);
+            background-size: 1000px 1000px;
+            animation: rain 20s linear infinite;
+            z-index: -1;
+            opacity: 0.6;
+            pointer-events: none;
+        }
 
-        .vignette {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.8) 100%);
-            z-index: -2;
-            pointer-events: none;
-        }
+        body::after {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+            z-index: 9999;
+            background-size: 100% 3px, 3px 100%;
+            pointer-events: none;
+        }
 
-        .data-rain-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: repeating-linear-gradient(0deg, transparent 0%, rgba(57, 255, 20, 0.05) 50%, transparent 100%);
-            background-size: 1000px 1000px;
-            animation: rain 20s linear infinite;
-            z-index: -1;
-            opacity: 0.6;
-            pointer-events: none;
-        }
+        .dashboard { 
+            display: grid; 
+            grid-template-columns: 320px 1fr; 
+            gap: 40px; 
+            padding: 40px; 
+            max-width: 1500px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
 
-        body::after {
-            content: " ";
-            display: block;
-            position: fixed;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
-            z-index: 9999;
-            background-size: 100% 3px, 3px 100%;
-            pointer-events: none;
-        }
+        .sidebar { 
+            background: rgba(0, 10, 0, 0.85); 
+            border: 1px solid var(--neon-green); 
+            padding: 30px; 
+            border-radius: 15px; 
+            position: sticky;
+            top: 40px;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.15);
+            backdrop-filter: blur(5px);
+            height: fit-content;
+        }
 
-        .dashboard { 
-            display: grid; 
-            grid-template-columns: 320px 1fr; 
-            gap: 40px; 
-            padding: 40px; 
-            max-width: 1500px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 10;
-        }
+        .content-area { 
+            background: rgba(0, 5, 0, 0.7); 
+            border: 1px solid rgba(57, 255, 20, 0.3); 
+            padding: 60px; 
+            border-radius: 20px; 
+            backdrop-filter: blur(15px);
+            min-height: 80vh;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+        }
 
-        .sidebar { 
-            background: rgba(0, 10, 0, 0.85); 
-            border: 1px solid var(--neon-green); 
-            padding: 30px; 
-            border-radius: 15px; 
-            position: sticky;
-            top: 40px;
-            box-shadow: 0 0 30px rgba(0, 255, 0, 0.15);
-            backdrop-filter: blur(5px);
-            height: fit-content;
-        }
+        .nav-item { 
+            padding: 15px; cursor: pointer; margin-bottom: 10px; color: #666; 
+            transition: 0.3s; border-radius: 8px; text-transform: uppercase;
+            font-size: 0.8rem; letter-spacing: 1px;
+        }
+        .nav-item:hover { color: var(--neon-green); background: rgba(0, 255, 0, 0.05); }
+        .nav-item.active { background: var(--neon-green); color: black !important; font-weight: bold; box-shadow: 0 0 25px var(--neon-green); }
 
-        .content-area { 
-            background: rgba(0, 5, 0, 0.7); 
-            border: 1px solid rgba(57, 255, 20, 0.3); 
-            padding: 60px; 
-            border-radius: 20px; 
-            backdrop-filter: blur(15px);
-            min-height: 80vh;
-            box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
-        }
+        .topic-content { display: none; }
+        .topic-content.active { display: block; }
 
-        .nav-item { 
-            padding: 15px; 
-            cursor: pointer; 
-            margin-bottom: 10px; 
-            color: #666; 
-            transition: 0.3s;
-            border-radius: 8px;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-        }
-        .nav-item:hover { color: var(--neon-green); background: rgba(0, 255, 0, 0.05); }
-        .nav-item.active { 
-            background: var(--neon-green); 
-            color: black !important; 
-            font-weight: bold;
-            box-shadow: 0 0 25px var(--neon-green);
-        }
+        h1.glitch-text { font-size: 3rem; color: var(--neon-green); margin: 0 0 20px 0; animation: glitch 4s infinite linear alternate-reverse; text-shadow: 0 0 10px var(--neon-green); }
 
-        .topic-content { display: none; }
-        .topic-content.active { display: block; }
+        .data-list { list-style: none; padding: 0; }
+        .data-list li { padding: 15px; margin-bottom: 12px; background: rgba(255,255,255,0.05); border-left: 4px solid var(--neon-green); animation: revealItem 0.6s ease-out forwards; }
 
-        h1.glitch-text { 
-            font-size: 3rem; 
-            color: var(--neon-green); 
-            margin: 0 0 20px 0;
-            animation: glitch 4s infinite linear alternate-reverse;
-            text-shadow: 0 0 10px var(--neon-green);
-        }
+        .terminal-box { background: #000; color: var(--neon-green); padding: 20px; border-radius: 10px; border: 1px solid #333; margin: 20px 0; font-size: 0.9rem; box-shadow: 0 0 20px rgba(0,0,0,1); }
 
-        .data-list { list-style: none; padding: 0; }
-        .data-list li {
-            padding: 15px;
-            margin-bottom: 12px;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; background: rgba(255,255,255,0.05);
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; border-left: 4px solid var(--neon-green);
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; animation: revealItem 0.6s ease-out forwards;
-&nbsp; &nbsp; &nbsp; &nbsp; }
+        .img-container { border: 1px solid var(--neon-green); padding: 10px; background: #000; margin: 20px 0; text-align: center; box-shadow: 0 0 30px rgba(0,0,0,0.8); }
+        .img-container img { max-width: 100%; height: auto; }
 
-&nbsp; &nbsp; &nbsp; &nbsp; .terminal-box {
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; background: #000;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; color: var(--neon-green);
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; padding: 20px;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; border-radius: 10px;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; border: 1px solid #333;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; margin: 20px 0;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; font-size: 0.9rem;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; box-shadow: 0 0 20px rgba(0,0,0,1);
-&nbsp; &nbsp; &nbsp; &nbsp; }
+        .btn { padding: 10px 20px; border: 1px solid var(--neon-green); color: var(--neon-green); background: none; cursor: pointer; text-shadow: 0 0 5px var(--neon-green); font-weight: bold; text-transform: uppercase;}
+        .btn:hover { background: var(--neon-green); color: black; box-shadow: 0 0 15px var(--neon-green); }
 
-&nbsp; &nbsp; &nbsp; &nbsp; .speaker-note {
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; border: 1px dashed var(--neon-green);
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; padding: 20px;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; margin-top: 30px;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; background: rgba(57, 255, 20, 0.05);
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; color: #ccc;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; font-style: italic;
-&nbsp; &nbsp; &nbsp; &nbsp; }
-
-&nbsp; &nbsp; &nbsp; &nbsp; .img-container {
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; border: 1px solid var(--neon-green);
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; padding: 10px;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; background: #000;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; margin: 20px 0;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; text-align: center;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; box-shadow: 0 0 30px rgba(0,0,0,0.8);
-&nbsp; &nbsp; &nbsp; &nbsp; }
-&nbsp; &nbsp; &nbsp; &nbsp; .img-container img { max-width: 100%; height: auto; }
-
-&nbsp; &nbsp; &nbsp; &nbsp; .btn { padding: 10px 20px; border: 1px solid var(--neon-green); color: var(--neon-green); background: none; cursor: pointer; text-shadow: 0 0 5px var(--neon-green); font-weight: bold; text-transform: uppercase;}
-&nbsp; &nbsp; &nbsp; &nbsp; .btn:hover { background: var(--neon-green); color: black; box-shadow: 0 0 15px var(--neon-green); }
-
-&nbsp; &nbsp; &nbsp; &nbsp; /* --- QUIZ STYLES --- */
-&nbsp; &nbsp; &nbsp; &nbsp; #quiz-overlay {
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; display: none;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; position: fixed;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; top: 0; left: 0; width: 100%; height: 100%;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; background: rgba(0,0,0,0.92);
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; z-index: 10000;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; justify-content: center;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; align-items: center;
-&nbsp; &nbsp; &nbsp; &nbsp; }
-
-&nbsp; &nbsp; &nbsp; &nbsp; .quiz-card {
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; background: #000;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; border: 2px solid var(--neon-green);
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; padding: 40px;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; width: 600px;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; box-shadow: 0 0 70px rgba(57, 255, 20, 0.3);
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; text-align: center;
-&nbsp; &nbsp; &nbsp; &nbsp; }
-
-&nbsp; &nbsp; &nbsp; &nbsp; .choice-btn {
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; display: block;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; width: 100%;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; padding: 12px;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; margin: 10px 0;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; background: transparent;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; border: 1px solid #444;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; color: #ccc;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; text-align: left;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; cursor: pointer;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; font-family: inherit;
-&nbsp; &nbsp; &nbsp; &nbsp; }
-
-&nbsp; &nbsp; &nbsp; &nbsp; .choice-btn:hover { border-color: var(--neon-green); color: var(--neon-green); background: rgba(57, 255, 20, 0.05); }
-&nbsp; &nbsp; &nbsp; &nbsp; .choice-btn.selected { background: rgba(57, 255, 20, 0.15); border-color: var(--neon-green); }
-&nbsp; &nbsp; &nbsp; &nbsp; .choice-btn.correct-glow { background: var(--dark-green); color: var(--neon-green); border-color: var(--neon-green); box-shadow: 0 0 20px var(--neon-green); }
-
-&nbsp; &nbsp; </style>
+        #quiz-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 10000; justify-content: center; align-items: center; }
+        .quiz-card { background: #000; border: 2px solid var(--neon-green); padding: 40px; width: 600px; box-shadow: 0 0 70px rgba(57, 255, 20, 0.3); text-align: center; }
+        .choice-btn { display: block; width: 100%; padding: 12px; margin: 10px 0; background: transparent; border: 1px solid #444; color: #ccc; text-align: left; cursor: pointer; font-family: inherit; }
+        .choice-btn:hover { border-color: var(--neon-green); color: var(--neon-green); }
+        .choice-btn.selected { background: rgba(57, 255, 20, 0.15); border-color: var(--neon-green); }
+        .choice-btn.correct-glow { background: var(--dark-green); color: var(--neon-green); border-color: var(--neon-green); box-shadow: 0 0 20px var(--neon-green); }
+    </style>
 </head>
 <body>
-&nbsp; &nbsp; <div class="bg-container"></div>
-&nbsp; &nbsp; <div class="bg-glow"></div>
-&nbsp; &nbsp; <div class="data-rain-overlay"></div>
-&nbsp; &nbsp;&nbsp;
-&nbsp; &nbsp; <div id="quiz-overlay">
-&nbsp; &nbsp; &nbsp; &nbsp; <div class="quiz-card">
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <h3 style="color: var(--neon-green); border-bottom: 1px solid #222; padding-bottom: 10px; letter-spacing: 2px;">[ SYSTEM_VALIDATION ]</h3>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <p id="quiz-question" style="font-size: 1.1rem; margin: 20px 0;"></p>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <div id="choices-container"></div>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <div style="margin-top: 30px;">
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <button class="btn" id="reveal-btn" onclick="revealAnswer()">REVEAL ANSWER</button>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <button class="btn" style="border-color: #555; color: #555;" onclick="closeQuiz()">[ CLOSE ]</button>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </div>
-&nbsp; &nbsp; &nbsp; &nbsp; </div>
-&nbsp; &nbsp; </div>
+    <div class="bg-container"></div>
+    <div class="bg-glow"></div>
+    <div class="data-rain-overlay"></div>
+    
+    <div id="quiz-overlay">
+        <div class="quiz-card">
+            <h3 style="color: var(--neon-green); border-bottom: 1px solid #222; padding-bottom: 10px; letter-spacing: 2px;">[ SYSTEM_VALIDATION ]</h3>
+            <p id="quiz-question" style="font-size: 1.1rem; margin: 20px 0;"></p>
+            <div id="choices-container"></div>
+            <div style="margin-top: 30px;">
+                <button class="btn" id="reveal-btn" onclick="revealAnswer()">REVEAL ANSWER</button>
+                <button class="btn" style="border-color: #555; color: #555;" onclick="closeQuiz()">[ CLOSE ]</button>
+            </div>
+        </div>
+    </div>
 
-&nbsp; &nbsp; <div style="padding: 30px 50px; position: relative; z-index: 20;">
-&nbsp; &nbsp; &nbsp; &nbsp; <button class="btn" onclick="window.location.href='index.html'">[ RETURN_TO_CORE ]</button>
-&nbsp; &nbsp; </div>
+    <div style="padding: 30px 50px; position: relative; z-index: 20;">
+        <button class="btn" onclick="window.location.href='index.html'">[ RETURN_TO_CORE ]</button>
+    </div>
 
-&nbsp; &nbsp; <div class="dashboard">
-&nbsp; &nbsp; &nbsp; &nbsp; <div class="sidebar">
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <h2 style="color:var(--neon-green); font-size: 0.9rem; text-align: center; letter-spacing: 4px; border-bottom: 1px solid #222; padding-bottom: 15px;">SEC_PROT_2026</h2>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <div class="nav-item active" onclick="showTab('m0', this)">00. Web App Security Overview</div>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <div class="nav-item" onclick="showTab('m1', this)">01. WAF Control</div>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <div class="nav-item" onclick="showTab('m2', this)">02. Data Encryption</div>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <div class="nav-item" onclick="showTab('m3', this)">03. Access Roles (RBAC)</div>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <div class="nav-item" onclick="showTab('m4', this)">04. Authentication (MFA)</div>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <div class="nav-item" onclick="showTab('m5', this)">05. Transport Layer (HTTPS)</div>
-&nbsp; &nbsp; &nbsp; &nbsp; </div>
+    <div class="dashboard">
+        <div class="sidebar">
+            <h2 style="color:var(--neon-green); font-size: 0.9rem; text-align: center; letter-spacing: 4px; border-bottom: 1px solid #222; padding-bottom: 15px;">SEC_PROT_2026</h2>
+            <div class="nav-item active" onclick="showTab('m0', this)">00. Web App Security Overview</div>
+            <div class="nav-item" onclick="showTab('m1', this)">01. WAF (Deep Dive)</div>
+            <div class="nav-item" onclick="showTab('m2', this)">02. Data Encryption</div>
+            <div class="nav-item" onclick="showTab('m3', this)">03. Access Roles (RBAC)</div>
+            <div class="nav-item" onclick="showTab('m4', this)">04. Authentication (MFA)</div>
+            <div class="nav-item" onclick="showTab('m5', this)">05. Transport Layer (HTTPS)</div>
+        </div>
 
-&nbsp; &nbsp; &nbsp; &nbsp; <div class="content-area">
+        <div class="content-area">
 
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <div id="m0" class="topic-content active">
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <h1 class="glitch-text">Security Architecture</h1>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <p>Establishing a "Defense in Depth" strategy. Modern web applications require layered technical controls to protect against complex external threats and internal vulnerabilities.</p>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <ul class="data-list">
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <li><b>Defense in Depth:</b> Creating multiple layers of security so if one fails, others protect the system.</li>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <li><b>Perimeter Defense:</b> Filtering malicious requests before they reach the server (WAF).</li>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <li><b>Data Sovereignty:</b> Ensuring information is unreadable without authorization (Encryption).</li>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </ul>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <button class="btn" onclick="startQuiz(0)">Launch Topic Quiz</button>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </div>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <div id="m1" class="topic-content">
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <h1 class="glitch-text">WAF Control</h1>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <p>Web application firewalls (WAFs) are the first line of defense at the application layer. They monitor, filter, and block malicious HTTP/HTTPS traffic to prevent unauthorized data access.</p>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <div class="img-container">
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <img src="image_0.png" alt="WAF Diagram">
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </div>
+            <div id="m0" class="topic-content active">
+                <h1 class="glitch-text">Security Architecture</h1>
+                <p>Establishing a "Defense in Depth" strategy. Modern web applications require layered technical controls to protect against complex external threats and internal vulnerabilities.</p>
+                <div class="img-container">
+                    <img src="Web_application_security_tools_40424a679c.png" alt="Layered Web Security Overview">
+                </div>
+                <ul class="data-list">
+                    <li><b>Defense in Depth:</b> Creating multiple layers of security so if one fails, others protect the system.</li>
+                    <li><b>Perimeter Defense:</b> Filtering malicious requests before they reach the server (WAF).</li>
+                    <li><b>Data Sovereignty:</b> Ensuring information is unreadable without authorization (Encryption).</li>
+                </ul>
+                <button class="btn" onclick="startQuiz(0)">Launch Topic Quiz</button>
+            </div>
+            
+            <div id="m1" class="topic-content">
+                <h1 class="glitch-text">WAF Control</h1>
+                <p>Web application firewalls (WAFs) monitor, filter, and block malicious HTTP/HTTPS traffic to prevent unauthorized data access.</p>
+                
+                <div class="img-container">
+                    <img src="what-is-waf-cf521c4f0020e2a81f70454931d2e21e.webp" alt="WAF Diagram">
+                </div>
 
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <ul class="data-list">
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <li><b>GET/POST Analysis:</b> Inspecting payload verbs for malicious strings.</li>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <li><b>Exploit Mitigation:</b> Designed to counter SQLi, XSS, and dangerous bots.</li>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <li><b>Deployment:</b> Can be network-based, host-based, or cloud-based solutions.</li>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </ul>
+                <div class="img-container">
+                    <img src="4bb1bea4-067f-481a-b29b-1e841f3d751d.jpeg" alt="OSI Layers Diagram">
+                    <p style="color: var(--neon-green); font-size: 0.8rem; margin-top: 10px;">[ FIG 1.2: OSI Reference Model - WAF operates at Layer 7 ]</p>
+                </div>
 
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <div class="terminal-box">
+                <ul class="data-list">
+                    <li><b>HTTP/S Inspection:</b> Analyzing GET/POST verbs for malicious strings.</li>
+                    <li><b>Layer 7 Filtering:</b> Unlike standard firewalls, WAF looks at the application data payload.</li>
+                    <li><b>Deployment:</b> Can be network-based, host-based, or cloud-based solutions.</li>
+                </ul>
+
+                <div class="terminal-box">
 [STATUS] WAF Filtering Active...
 [DETECTED] Malicious pattern in POST request /login.php
 [ACTION] 403 Forbidden - Request Dropped.
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </div>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <button class="btn" onclick="startQuiz(1)">Launch Topic Quiz</button>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </div>
+                </div>
+                <button class="btn" onclick="startQuiz(1)">Launch Topic Quiz</button>
+            </div>
 
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <div id="m2" class="topic-content">
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <h1 class="glitch-text">Data Encryption</h1>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <p>Encryption translates plaintext into ciphertext, ensuring data remains secure even if storage or transmission channels are compromised.</p>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <ul class="data-list">
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <li><b>Symmetric Encryption:</b> Single secret key for both actions.</li>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <li><b>Asymmetric Encryption:</b> Public key for encryption, Private for decryption.</li>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <li><b>Data States:</b> Protecting data 'At Rest' (drives) and 'In Transit' (networks).</li>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </ul>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <div class="terminal-box">
-$ openssl enc -aes-256-cbc -salt -in data.txt -out data.enc
-[SYSTEM] Data translated to Ciphertext.
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </div>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <button class="btn" onclick="startQuiz(2)">Launch Topic Quiz</button>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </div>
+            <div id="m2" class="topic-content">...</div>
+            <div id="m3" class="topic-content">...</div>
+            <div id="m4" class="topic-content">...</div>
+            <div id="m5" class="topic-content">...</div>
 
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <div id="m3" class="topic-content">
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <h1 class="glitch-text">Access Roles (RBAC)</h1>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <p>Role-Based Access Control restricts system access to authorized users based on their predefined roles within the organization.</p>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <ul class="data-list">
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <li><b>Principle of Least Privilege:</b> Users only access what is needed for their job.</li>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <li><b>Role Assignment:</b> Managing permissions through 'Roles' (HR, Finance, IT).</li>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <li><b>Simplified Audit:</b> Prevents 'Permission Creep'.</li>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </ul>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <button class="btn" onclick="startQuiz(3)">Launch Topic Quiz</button>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </div>
+        </div>
+    </div>
 
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <div id="m4" class="topic-content">
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <h1 class="glitch-text">Authentication (MFA)</h1>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <p>Multi-Factor Authentication requires two or more distinct verification types to prove a user's identity.</p>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <ul class="data-list">
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <li><b>Knowledge:</b> Something you know (Passwords).</li>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <li><b>Possession:</b> Something you have (Smartphone).</li>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <li><b>Inherence:</b> Something you are (Biometrics).</li>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </ul>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <div class="terminal-box">
-[AUTH] Password Accepted.
-[PENDING] Awaiting Inherence Factor (Fingerprint Scan)...
-[SUCCESS] Multi-factor handshake complete.
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </div>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <button class="btn" onclick="startQuiz(4)">Launch Topic Quiz</button>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </div>
+    <script>
+        function showTab(id, el) {
+            document.querySelectorAll('.topic-content').forEach(t => t.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            el.classList.add('active');
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
 
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <div id="m5" class="topic-content">
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <h1 class="glitch-text">Transport Layer (HTTPS)</h1>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <p>HTTPS provides an encrypted "tunnel" for data transfer using Transport Layer Security (TLS).</p>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <ul class="data-list">
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <li><b>SSL/TLS Handshake:</b> Negotiating encryption keys between browser and server.</li>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <li><b>Public Key Infrastructure:</b> Asymmetric keys used to verify authenticity.</li>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <li><b>Trust Indicators:</b> Padlock icon and green address bar.</li>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </ul>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <button class="btn" onclick="startQuiz(5)">Launch Topic Quiz</button>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </div>
+        const quizData = [
+            { q: "What is the primary goal of a 'Defense in Depth' strategy?", options: ["Buying expensive firewalls", "Layered security controls", "Using one strong password", "Ignoring internal threats"], correct: 1 },
+            { q: "WAF operates at which layer of the OSI model?", options: ["Layer 1", "Layer 3", "Layer 4", "Layer 7"], correct: 3 }
+        ];
 
-&nbsp; &nbsp; &nbsp; &nbsp; </div>
-&nbsp; &nbsp; </div>
+        let currentQuizIndex = -1;
+        function startQuiz(index) {
+            currentQuizIndex = index;
+            const data = quizData[index];
+            document.getElementById('quiz-question').innerText = data.q;
+            const container = document.getElementById('choices-container');
+            container.innerHTML = '';
+            data.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'choice-btn';
+                btn.innerText = opt;
+                btn.onclick = () => {
+                    document.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                };
+                btn.id = "opt-" + i;
+                container.appendChild(btn);
+            });
+            document.getElementById('reveal-btn').style.display = 'inline-block';
+            document.getElementById('quiz-overlay').style.display = 'flex';
+        }
 
-&nbsp; &nbsp; <script>
-&nbsp; &nbsp; &nbsp; &nbsp; function showTab(id, el) {
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; document.querySelectorAll('.topic-content').forEach(t => t.classList.remove('active'));
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; document.getElementById(id).classList.add('active');
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; el.classList.add('active');
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; window.scrollTo({top: 0, behavior: 'smooth'});
-&nbsp; &nbsp; &nbsp; &nbsp; }
+        function revealAnswer() {
+            if (currentQuizIndex === -1) return;
+            const correctIdx = quizData[currentQuizIndex].correct;
+            document.getElementById("opt-" + correctIdx).classList.add('correct-glow');
+            document.getElementById('reveal-btn').style.display = 'none';
+        }
 
-&nbsp; &nbsp; &nbsp; &nbsp; const quizData = [
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; { q: "What is the primary goal of a 'Defense in Depth' strategy?", options: ["Buying expensive firewalls", "Layered security controls", "Using one strong password", "Ignoring internal threats"], correct: 1 },
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; { q: "WAF operates at which layer of the OSI model?", options: ["Layer 1", "Layer 3", "Layer 4", "Layer 7"], correct: 3 },
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; { q: "Which encryption uses a Public key to encrypt and a Private key to decrypt?", options: ["Symmetric", "Asymmetric", "Plaintext", "Hashing"], correct: 1 },
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; { q: "RBAC helps enforce which security principle?", options: ["Principle of Least Privilege", "Principle of Maximum Speed", "Principle of Open Access", "Principle of Hardware Design"], correct: 0 },
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; { q: "A fingerprint scan is an example of which authentication factor?", options: ["Knowledge", "Possession", "Inherence", "Temporal"], correct: 2 },
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; { q: "HTTPS uses which protocol to encrypt data in transit?", options: ["UDP", "TLS/SSL", "FTP", "SMTP"], correct: 1 }
-&nbsp; &nbsp; &nbsp; &nbsp; ];
-
-&nbsp; &nbsp; &nbsp; &nbsp; let currentQuizIndex = -1;
-&nbsp; &nbsp; &nbsp; &nbsp; function startQuiz(index) {
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; currentQuizIndex = index;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; const data = quizData[index];
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; document.getElementById('quiz-question').innerText = data.q;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; const container = document.getElementById('choices-container');
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; container.innerHTML = '';
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; data.options.forEach((opt, i) => {
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; const btn = document.createElement('button');
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; btn.className = 'choice-btn';
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; btn.innerText = opt;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; btn.onclick = () => {
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; document.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; btn.classList.add('selected');
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; };
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; btn.id = "opt-" + i;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; container.appendChild(btn);
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; });
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; document.getElementById('reveal-btn').style.display = 'inline-block';
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; document.getElementById('quiz-overlay').style.display = 'flex';
-&nbsp; &nbsp; &nbsp; &nbsp; }
-
-&nbsp; &nbsp; &nbsp; &nbsp; function revealAnswer() {
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (currentQuizIndex === -1) return;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; const correctIdx = quizData[currentQuizIndex].correct;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; document.getElementById("opt-" + correctIdx).classList.add('correct-glow');
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; document.getElementById('reveal-btn').style.display = 'none';
-&nbsp; &nbsp; &nbsp; &nbsp; }
-
-&nbsp; &nbsp; &nbsp; &nbsp; function closeQuiz() {
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; document.getElementById('quiz-overlay').style.display = 'none';
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; currentQuizIndex = -1;
-&nbsp; &nbsp; &nbsp; &nbsp; }
-&nbsp; &nbsp; </script>
+        function closeQuiz() {
+            document.getElementById('quiz-overlay').style.display = 'none';
+            currentQuizIndex = -1;
+        }
+    </script>
 </body>
 </html>
