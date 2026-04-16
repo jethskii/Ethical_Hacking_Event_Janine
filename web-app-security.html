@@ -6,7 +6,6 @@
     <title>Web App Security | Expert Terminal v2.1</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* --- REUSING YOUR SYSTEM HACKING STYLES --- */
         :root {
             --neon-green: #39ff14;
             --dark-green: #003300;
@@ -19,24 +18,14 @@
             0% { transform: translate(0); }
             20% { transform: translate(-2px, 2px); }
             40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
             100% { transform: translate(0); }
         }
 
-        @keyframes rain {
-            0% { background-position: 0% 0%; }
-            100% { background-position: 0% 1000px; }
-        }
-
         body, html {
-            margin: 0; padding: 0;
-            width: 100%; min-height: 100vh;
-            overflow-x: hidden; overflow-y: auto;
+            margin: 0; padding: 0; width: 100%; min-height: 100vh;
             background-color: var(--deep-black);
             font-family: 'Consolas', 'Courier New', monospace;
-            color: white;
-            scroll-behavior: smooth;
+            color: white; scroll-behavior: smooth;
         }
 
         .bg-container {
@@ -45,125 +34,64 @@
             z-index: -3;
         }
 
-        .data-rain-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: repeating-linear-gradient(0deg, transparent 0%, rgba(57, 255, 20, 0.05) 50%, transparent 100%), 
-                        repeating-linear-gradient(90deg, transparent 0px, rgba(57, 255, 20, 0.03) 1px, transparent 30px);
-            background-size: 1000px 1000px, 30px 30px;
-            animation: rain 25s linear infinite;
-            z-index: -2; opacity: 0.6;
-        }
+        .dashboard { display: grid; grid-template-columns: 320px 1fr; gap: 40px; padding: 40px; max-width: 1500px; margin: 0 auto; }
 
-        .dashboard { 
-            display: grid; 
-            grid-template-columns: 320px 1fr; 
-            gap: 40px; 
-            padding: 40px; 
-            max-width: 1500px;
-            margin: 0 auto;
-        }
+        .sidebar { background: var(--glass-bg); border: 1px solid var(--neon-green); padding: 30px; border-radius: 15px; position: sticky; top: 40px; }
 
-        .sidebar { 
-            background: var(--glass-bg); 
-            border: 1px solid var(--neon-green); 
-            padding: 30px; 
-            border-radius: 15px; 
-            position: sticky; top: 40px;
-        }
+        .content-area { background: rgba(0, 5, 0, 0.7); border: 1px solid rgba(57, 255, 20, 0.3); padding: 60px; border-radius: 20px; backdrop-filter: blur(20px); min-height: 80vh; }
 
-        .content-area { 
-            background: rgba(0, 5, 0, 0.6); 
-            border: 1px solid rgba(57, 255, 20, 0.3); 
-            padding: 60px; 
-            border-radius: 20px; 
-            backdrop-filter: blur(20px);
-            min-height: 80vh;
-        }
-
-        .nav-item { 
-            padding: 15px; cursor: pointer; margin-bottom: 10px; color: #666; 
-            transition: 0.3s; border-radius: 8px; text-transform: uppercase; font-size: 0.8rem;
-        }
-        .nav-item.active { 
-            background: var(--neon-green); color: black !important; font-weight: bold;
-            box-shadow: 0 0 20px var(--neon-green);
-        }
+        .nav-item { padding: 15px; cursor: pointer; margin-bottom: 10px; color: #666; transition: 0.3s; border-radius: 8px; text-transform: uppercase; font-size: 0.8rem; border: 1px solid transparent; }
+        .nav-item.active { background: var(--neon-green); color: black !important; font-weight: bold; box-shadow: 0 0 20px var(--neon-green); }
 
         .topic-content { display: none; }
         .topic-content.active { display: block; }
 
-        h1.glitch-text { 
-            font-size: 2.8rem; color: var(--neon-green); 
-            animation: glitch 4s infinite linear alternate-reverse;
-        }
+        .definition-box { background: rgba(255,255,255,0.05); border-left: 4px solid var(--neon-green); padding: 20px; margin: 20px 0; line-height: 1.6; }
+        
+        .is-impact { color: var(--neon-green); font-weight: bold; margin-top: 10px; display: block; font-size: 0.9rem; }
 
-        /* --- FLASHCARD MODAL --- */
-        #quiz-overlay {
-            display: none;
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 1000;
-            justify-content: center; align-items: center;
-        }
+        /* --- MULTIPLE CHOICE FLASHCARD --- */
+        #quiz-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; }
+        .flashcard { background: #000; border: 2px solid var(--neon-green); padding: 40px; width: 600px; box-shadow: 0 0 50px rgba(0,255,0,0.2); }
+        
+        .choice-btn { width: 100%; text-align: left; padding: 12px; margin: 8px 0; background: transparent; border: 1px solid #444; color: #ccc; cursor: pointer; font-family: inherit; }
+        .choice-btn:hover { border-color: var(--neon-green); color: var(--neon-green); }
+        .choice-btn.correct-choice { background: var(--dark-green); border-color: var(--neon-green); color: var(--neon-green); }
 
-        .flashcard {
-            background: #000;
-            border: 2px solid var(--neon-green);
-            padding: 40px;
-            width: 500px;
-            text-align: center;
-            box-shadow: 0 0 50px rgba(0,255,0,0.2);
-        }
-
-        .answer-text { display: none; color: var(--neon-green); margin-top: 20px; font-weight: bold; border-top: 1px solid #333; padding-top: 20px;}
-
-        .feedback-flash {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; opacity: 0; transition: 0.3s; z-index: 1100;
-        }
-
-        .btn { padding: 10px 20px; background: none; border: 1px solid var(--neon-green); color: var(--neon-green); cursor: pointer; font-family: inherit; text-transform: uppercase; margin: 5px;}
+        .feedback-flash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: 0.2s; z-index: 1100; }
+        
+        .btn { padding: 10px 20px; background: none; border: 1px solid var(--neon-green); color: var(--neon-green); cursor: pointer; text-transform: uppercase; margin: 5px; text-decoration: none; display: inline-block; font-weight: bold;}
         .btn:hover { background: var(--neon-green); color: #000; }
-        .btn-red { border-color: var(--error-red); color: var(--error-red); }
-        .btn-red:hover { background: var(--error-red); color: #000; }
     </style>
 </head>
 <body>
     <div class="bg-container"></div>
-    <div class="data-rain-overlay"></div>
     <div id="feedback" class="feedback-flash"></div>
 
     <div id="quiz-overlay">
         <div class="flashcard">
-            <h3 style="color: #555;">[ SECURITY_CHECK ]</h3>
-            <p id="quiz-question" style="font-size: 1.2rem; margin: 20px 0;"></p>
+            <h3 style="color: var(--neon-green);">[ SYSTEM_VALIDATION_REQUIRED ]</h3>
+            <p id="quiz-question" style="font-size: 1.1rem; margin-bottom: 20px;"></p>
             
-            <div id="answer-area" class="answer-text">
-                <span style="color: #888; font-size: 0.8rem;">REVEALED_ANSWER:</span><br>
-                <span id="quiz-answer"></span>
-            </div>
+            <div id="choices-container"></div>
 
-            <div style="margin-top: 30px;">
-                <button class="btn" onclick="revealAnswer()">Reveal Answer</button>
-                <div id="judgement-buttons" style="display:none; margin-top: 15px;">
-                    <button class="btn" onclick="triggerFeedback('correct')">CORRECT</button>
-                    <button class="btn btn-red" onclick="triggerFeedback('wrong')">WRONG</button>
-                </div>
-                <br>
-                <button class="btn" style="border:none; color: #444;" onclick="closeQuiz()">[ CLOSE ]</button>
+            <div id="quiz-controls" style="margin-top: 30px; border-top: 1px solid #222; padding-top: 20px; display: none;">
+                <button class="btn" onclick="triggerFeedback('correct')">MARK CORRECT</button>
+                <button class="btn" style="border-color: var(--error-red); color: var(--error-red);" onclick="triggerFeedback('wrong')">MARK WRONG</button>
+                <button class="btn" style="border:none; color: #555;" onclick="closeQuiz()">[ CLOSE ]</button>
             </div>
+            <button id="reveal-btn" class="btn" onclick="revealAnswer()">REVEAL CORRECT ANSWER</button>
         </div>
     </div>
 
     <div style="padding: 30px 50px;">
-        <a href="index.html" class="btn" style="text-decoration: none;">[ EXIT_SESSION ]</a>
+        <a href="index.html" class="btn">[ EXIT_SESSION ]</a>
     </div>
 
     <div class="dashboard">
         <div class="sidebar">
-            <h2 style="color:var(--neon-green); font-size: 0.8rem; text-align: center; letter-spacing: 3px; border-bottom: 1px solid #222; padding-bottom: 15px; margin-bottom: 20px;">SEC_PROTOCOL_v4</h2>
-            <div class="nav-item active" onclick="showTab('w0', this)">00. Overview</div>
-            <div class="nav-item" onclick="showTab('w1', this)">01. Access Control</div>
+            <h2 style="color:var(--neon-green); font-size: 0.8rem; text-align: center; letter-spacing: 3px; border-bottom: 1px solid #222; padding-bottom: 15px;">TOPIC_SELECTION</h2>
+            <div class="nav-item active" onclick="showTab('w1', this)">01. Access Control</div>
             <div class="nav-item" onclick="showTab('w2', this)">02. SQL Injection</div>
             <div class="nav-item" onclick="showTab('w3', this)">03. Crypto Failures</div>
             <div class="nav-item" onclick="showTab('w4', this)">04. Insecure Design</div>
@@ -171,44 +99,84 @@
         </div>
 
         <div class="content-area">
-            <div id="w0" class="topic-content active">
-                <h1 class="glitch-text">Web App Defense</h1>
-                <p>Welcome to the Web Application Security segment. Use the sidebar to navigate topics.</p>
-            </div>
-
-            <div id="w1" class="topic-content">
-                <h1 class="glitch-text">01. Access Control</h1>
-                <p>Failure to restrict users from unauthorized data. It is the #1 vulnerability in Information Systems.</p>
-                <button class="btn" onclick="openQuiz('What IS principle is violated when a regular user can access the admin dashboard?', 'The Principle of Least Privilege')">Launch Quiz</button>
+            <div id="w1" class="topic-content active">
+                <h1 style="color: var(--neon-green);">01. Broken Access Control</h1>
+                <div class="definition-box">
+                    <strong>Definition:</strong> Broken Access Control occurs when a web application fails to properly enforce restrictions on what users are allowed to do. It allows attackers to bypass authorization and perform tasks as if they were privileged users or other account holders.
+                    <span class="is-impact">IS Impact: Threatens Confidentiality and user privacy compliance.</span>
+                </div>
+                <button class="btn" onclick="startQuiz(0)">Launch Topic Quiz</button>
             </div>
 
             <div id="w2" class="topic-content">
-                <h1 class="glitch-text">02. SQL Injection</h1>
-                <p>Inserting malicious code into inputs to manipulate the backend database and bypass security.</p>
-                <button class="btn" onclick="openQuiz('Which aspect of the CIA Triad is most directly damaged by a SQL Injection that deletes data?', 'Integrity')">Launch Quiz</button>
+                <h1 style="color: var(--neon-green);">02. SQL Injection (SQLi)</h1>
+                <div class="definition-box">
+                    <strong>Definition:</strong> An injection attack where an attacker executes malicious SQL statements that control a web application's database server. By inserting code into input fields, hackers can view, modify, or delete data.
+                    <span class="is-impact">IS Impact: Directly compromises Data Integrity and system reliability.</span>
+                </div>
+                <button class="btn" onclick="startQuiz(1)">Launch Topic Quiz</button>
             </div>
 
             <div id="w3" class="topic-content">
-                <h1 class="glitch-text">03. Crypto Failures</h1>
-                <p>Focuses on protecting data at rest and in transit. Weak encryption leads to data privacy leaks.</p>
-                <button class="btn" onclick="openQuiz('Does HTTPS protect data while it is stored on the company server database?', 'No, it only protects data in transit.')">Launch Quiz</button>
+                <h1 style="color: var(--neon-green);">03. Cryptographic Failures</h1>
+                <div class="definition-box">
+                    <strong>Definition:</strong> Previously known as Sensitive Data Exposure, this refers to the failure to protect sensitive data at rest (on the server) or in transit (over the network) using strong encryption methods.
+                    <span class="is-impact">IS Impact: Leads to massive financial penalties and loss of customer trust.</span>
+                </div>
+                <button class="btn" onclick="startQuiz(2)">Launch Topic Quiz</button>
             </div>
 
             <div id="w4" class="topic-content">
-                <h1 class="glitch-text">04. Insecure Design</h1>
-                <p>Architectural flaws that cannot be fixed by just "better coding." Security must be part of the design phase.</p>
-                <button class="btn" onclick="openQuiz('In which stage of the SDLC should security requirements first be established?', 'Requirement Analysis / Planning')">Launch Quiz</button>
+                <h1 style="color: var(--neon-green);">04. Insecure Design</h1>
+                <div class="definition-box">
+                    <strong>Definition:</strong> A category of vulnerabilities that result from flaws in the logic or architecture of the system. It means the system was built without proper security requirements from the start.
+                    <span class="is-impact">IS Impact: High recovery costs; security must be part of the entire SDLC.</span>
+                </div>
+                <button class="btn" onclick="startQuiz(3)">Launch Topic Quiz</button>
             </div>
 
             <div id="w5" class="topic-content">
-                <h1 class="glitch-text">05. Supply Chain</h1>
-                <p>Risks associated with third-party libraries and external APIs used in the Information System.</p>
-                <button class="btn" onclick="openQuiz('What does SBOM stand for?', 'Software Bill of Materials')">Launch Quiz</button>
+                <h1 style="color: var(--neon-green);">05. Supply Chain Risks</h1>
+                <div class="definition-box">
+                    <strong>Definition:</strong> Security risks arising from the use of third-party software, libraries, or APIs. If a component you rely on is compromised, your entire Information System becomes vulnerable.
+                    <span class="is-impact">IS Impact: Requires Software Bill of Materials (SBOM) for governance.</span>
+                </div>
+                <button class="btn" onclick="startQuiz(4)">Launch Topic Quiz</button>
             </div>
         </div>
     </div>
 
     <script>
+        const quizData = [
+            {
+                q: "What IS principle is violated if a student can access the teacher's grading portal?",
+                options: ["Data Integrity", "Principle of Least Privilege", "Business Continuity", "Social Engineering"],
+                correct: 1
+            },
+            {
+                q: "Which aspect of the CIA Triad is damaged if a hacker deletes your entire inventory database via SQLi?",
+                options: ["Confidentiality", "Availability", "Integrity", "Accountability"],
+                correct: 2
+            },
+            {
+                q: "HTTPS protects data 'in transit'. What protects data 'at rest' on the hard drive?",
+                options: ["Firewalls", "Database Encryption", "Strong Passwords", "Anti-Virus"],
+                correct: 1
+            },
+            {
+                q: "Insecure Design is best prevented by including security in which phase?",
+                options: ["Final Testing", "Marketing", "SDLC Planning/Requirements", "Post-Launch Patching"],
+                correct: 2
+            },
+            {
+                q: "What does 'SBOM' stand for in Supply Chain Security?",
+                options: ["Secure Business Online Mode", "System Backup Operations Manual", "Software Bill of Materials", "Standard Base Operating Model"],
+                correct: 2
+            }
+        ];
+
+        let currentQuizIndex = null;
+
         function showTab(id, el) {
             document.querySelectorAll('.topic-content').forEach(t => t.classList.remove('active'));
             document.getElementById(id).classList.add('active');
@@ -216,30 +184,41 @@
             el.classList.add('active');
         }
 
-        // QUIZ SYSTEM LOGIC
-        function openQuiz(q, a) {
-            document.getElementById('quiz-question').innerText = q;
-            document.getElementById('quiz-answer').innerText = a;
-            document.getElementById('answer-area').style.display = 'none';
-            document.getElementById('judgement-buttons').style.display = 'none';
+        function startQuiz(index) {
+            currentQuizIndex = index;
+            const data = quizData[index];
+            document.getElementById('quiz-question').innerText = data.q;
+            const container = document.getElementById('choices-container');
+            container.innerHTML = '';
+            
+            data.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'choice-btn';
+                btn.innerText = `${String.fromCharCode(65 + i)}) ${opt}`;
+                btn.id = `opt-${i}`;
+                container.appendChild(btn);
+            });
+
+            document.getElementById('quiz-controls').style.display = 'none';
+            document.getElementById('reveal-btn').style.display = 'block';
             document.getElementById('quiz-overlay').style.display = 'flex';
         }
 
         function revealAnswer() {
-            document.getElementById('answer-area').style.display = 'block';
-            document.getElementById('judgement-buttons').style.display = 'block';
+            const correctIdx = quizData[currentQuizIndex].correct;
+            document.getElementById(`opt-${correctIdx}`).classList.add('correct-choice');
+            document.getElementById('quiz-controls').style.display = 'block';
+            document.getElementById('reveal-btn').style.display = 'none';
         }
 
         function triggerFeedback(type) {
             const f = document.getElementById('feedback');
-            f.style.background = (type === 'correct') ? 'rgba(0, 255, 0, 0.3)' : 'rgba(255, 0, 0, 0.3)';
+            f.style.background = (type === 'correct') ? 'rgba(0, 255, 0, 0.4)' : 'rgba(255, 0, 0, 0.4)';
             f.style.opacity = '1';
-            setTimeout(() => { f.style.opacity = '0'; }, 500);
+            setTimeout(() => f.style.opacity = '0', 400);
         }
 
-        function closeQuiz() {
-            document.getElementById('quiz-overlay').style.display = 'none';
-        }
+        function closeQuiz() { document.getElementById('quiz-overlay').style.display = 'none'; }
     </script>
 </body>
 </html>
