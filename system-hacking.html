@@ -187,6 +187,8 @@
                     </p>
                 </div>
 
+                
+
                 <h3 style="color:var(--neon-green); letter-spacing: 2px;">[ 🔨 TECHNIQUES FOR BREAKING THE BARRIER ]</h3>
                 <p>When an attacker "breaks the barrier," they are performing <b>Privilege Escalation</b>. They start in Ring 3 and find a way to execute code in Ring 0.</p>
                 
@@ -225,6 +227,139 @@
                     "Peer Note: This is why Kernel Patch Protection and Secure Boot are so critical today. They are the secondary walls built to keep the barrier intact even when a bug is found."
                 </p>
             </div>
+            <div id="m3" class="topic-content active">
+    <h1 class="glitch-text">Memory Corruption</h1>
+    
+    <div class="speaker-context">
+        "Think of memory as a set of fixed-size containers. A Buffer Overflow is like pouring water into a glass until it floods the entire table. In cybersecurity, this isn't just a bug—it’s the 'Holy Grail' of exploitation."
+    </div>
+
+    <div class="terminal-box" style="border-color: var(--neon-green);">
+        <b style="text-transform: uppercase;">[ CORE_DEFINITION ]</b><br>
+        <p style="margin-top: 10px;"><b>Memory Corruption:</b> A class of vulnerabilities where a program writes data outside its strictly defined memory boundaries. This allows ethical hackers to bypass the system's sandbox and gain direct control of the processor.</p>
+    </div>
+
+    <h3 style="color:var(--neon-green); letter-spacing: 2px;">[ 🏛️ THE ARCHITECTURE: THE STACK ]</h3>
+    <p>A program manages tasks using a structure called <b>The Stack</b>—a rigid set of data frames stored in precise order.</p>
+    
+    <div class="highlight-box">
+        <div class="phase-grid">
+            <div class="phase-card">
+                <b style="color:var(--neon-green);">LOCAL VARIABLES</b><br>
+                <small>Temporary buffers used to store data like usernames or calculation results.</small>
+            </div>
+            <div class="phase-card" style="border-left-color: var(--gold);">
+                <b style="color:var(--gold);">RETURN ADDRESS (EIP)</b><br>
+                <small>The 32/64-bit 'GPS coordinate' that tells the CPU which instruction to execute next.</small>
+            </div>
+        </div>
+    </div>
+
+    <h3 style="color:var(--neon-green); letter-spacing: 2px;">[ 🔨 OFFENSIVE TECHNIQUE: THE HIJACK ]</h3>
+    <div class="highlight-box">
+        <b style="color: var(--error-red);">THE BUFFER OVERFLOW</b>
+        <p>When a program receives more data than its buffer was designed to hold, the excess spills into adjacent memory slots.</p>
+        
+        <div class="terminal-box" style="border-style: dashed; border-color: var(--error-red);">
+            <span style="color: #666;">// Memory Logic:</span><br>
+            [ BUFFER ] -> [ CANARY ] -> [ RETURN ADDRESS ]<br>
+            <span style="color: var(--error-red);">[ ATTACKER DATA OVERFLOWS... ]</span><br>
+            [ AAAAAAAAAAAAAAA ] -> [ !!CORRUPTED!! ] -> [ !!HIJACKED_ADDRESS!! ]
+        </div>
+
+        <p><b>The Result:</b> If an attacker overwrites the Return Address, they can redirect the CPU to point to <b>Shellcode</b>—specialized instructions that open a network shell and grant total system control.</p>
+    </div>
+
+    <h3 style="color:var(--neon-green); letter-spacing: 2px;">[ 🛡️ DEFENSIVE SHIELD TECHNOLOGIES ]</h3>
+    <p>Modern operating systems use multiple shields to prevent these memory hijacks:</p>
+    
+    <div class="data-list">
+        <li>
+            <b style="color: var(--neon-green);">ASLR (Address Space Layout Randomization):</b>
+            <br><small>Randomly 'scrambles' memory coordinates on boot so attackers cannot guess where to point the hijacked program.</small>
+        </li>
+        <li>
+            <b style="color: var(--neon-green);">DEP/NX (Data Execution Prevention):</b>
+            <br><small>Marks the stack as 'Non-Executable.' Even if shellcode is placed there, the CPU refuses to run it.</small>
+        </li>
+        <li>
+            <b style="color: var(--neon-green);">STACK CANARIES:</b>
+            <br><small>A secret 'canary' value placed before the Return Address. If the canary is modified (killed) by an overflow, the system crashes the program before the hijack succeeds.</small>
+        </li>
+    </div>
+
+    <div style="margin-top: 40px; border-top: 1px solid #222; padding-top: 20px;">
+        <p style="font-style: italic; color: #666; font-size: 0.85rem; text-align: center;">
+            "Peer Note: Memory corruption is why languages like C and C++ are considered 'dangerous'—they provide direct control over memory. Modern languages like Rust or Java are 'memory-safe' because they have built-in runtime guards."
+        </p>
+    </div>
+
+    <button class="btn" style="width: 100%; margin-top: 20px;" onclick="showTab('quiz', this)">Validate Memory Forensics Knowledge</button>
+</div>
+            <div id="m4" class="topic-content active">
+    <h1 class="glitch-text">AD Dominance</h1>
+    
+    <div class="speaker-context">
+        "When Active Directory falls, the attacker doesn't steal your ID; they become the person who makes the IDs. In a Windows enterprise, AD is the brain—controlling it makes you the 'God' of the network."
+    </div>
+
+    <h3 style="color:var(--neon-green); letter-spacing: 2px;">[ 🏛️ THE PILLAR: KERBEROS TICKETS ]</h3>
+    <p>Active Directory uses the <b>Kerberos</b> protocol. To understand it, think of a <b>VIP Concert System</b>:</p>
+    
+    <div class="highlight-box">
+        <div class="phase-grid">
+            <div class="phase-card">
+                <b style="color:var(--neon-green);">1. IDENTITY CHECK</b><br>
+                <small>You show your ID (Username/Pass) to the 'Bouncer' (The Domain Controller).</small>
+            </div>
+            <div class="phase-card">
+                <b style="color:var(--neon-green);">2. THE VIP PASS</b><br>
+                <small>The DC gives you a <b>Ticket Granting Ticket (TGT)</b> if your ID is valid.</small>
+            </div>
+        </div>
+        <p style="margin-top:15px; border-top: 1px solid #333; padding-top:10px;">
+            <b>Access:</b> You show this pass to enter any 'VIP Lounge' (File Servers, SQL Databases) without showing your ID again.
+        </p>
+    </div>
+
+    <div class="golden-ticket-card">
+        <h2 style="color:var(--gold); margin:0; letter-spacing: 3px;">👑 THE GOLDEN TICKET</h2>
+        <p>By compromising the <b>KRBTGT account</b> (the one that 'signs' every ticket), attackers can forge their own VIP passes. This grants <b>unlimited impersonation</b> of any user—Domain Admin, CEO, or even ghost accounts—lasting for 10+ years.</p>
+    </div>
+
+    <h3 style="color:var(--neon-green); letter-spacing: 2px;">[ 🔨 PATH TO DOMINANCE: TECHNIQUES ]</h3>
+    <div class="phase-grid">
+        <div class="phase-card">
+            <b style="color:var(--gold);">KERBEROASTING</b><br>
+            <small>Requesting service tickets and cracking them offline to find weak service account passwords.</small>
+        </div>
+        <div class="phase-card">
+            <b style="color:var(--gold);">BLOODHOUND ANALYSIS</b><br>
+            <small>Using graph theory to map the shortest path from a regular user to Domain Admin.</small>
+        </div>
+    </div>
+    <ul class="data-list">
+        <li><b>LLMNR/NBT-NS Poisoning:</b> Intercepting network traffic to steal password hashes.</li>
+        <li><b>NTLM Relaying:</b> Capturing an auth session and 'relaying' it to gain access without a password.</li>
+    </ul>
+
+    <h3 style="color:var(--neon-green); letter-spacing: 2px;">[ 🚧 DEFENSIVE HARDENING: TIERED ADMIN ]</h3>
+    <p>To prevent dominance, organizations use <b>Tiered Administration</b> to isolate credentials:</p>
+    <div class="terminal-box" style="border-left: 5px solid var(--neon-green);">
+        <b>Tier 0 (Highest):</b> Domain Controllers. Admins here NEVER log into regular PCs.<br>
+        <b>Tier 1:</b> Server Management.<br>
+        <b>Tier 2:</b> End-user Workstations.<br>
+        <span style="color: var(--error-red);">Rule: If a Tier 0 Admin logs into a compromised Tier 2 PC, their 'God' credentials are stolen instantly.</span>
+    </div>
+
+    <div style="margin-top: 40px; border-top: 1px solid #222; padding-top: 20px;">
+        <p style="font-style: italic; color: #666; font-size: 0.85rem; text-align: center;">
+            "Peer Note: AD Dominance is essentially 'Game Over.' Recovery often requires building a new network from scratch. Rotating the KRBTGT password (twice!) is a standard emergency procedure after a breach."
+        </p>
+    </div>
+
+    <button class="btn" style="width: 100%; margin-top: 20px;" onclick="showTab('m5', this)">Explore Lateral Movement</button>
+</div>
 
             <div id="m1" class="topic-content">...</div>
             <div id="m3" class="topic-content">...</div>
