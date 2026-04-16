@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web App Security | Expert Terminal v2.1</title>
+    <title>Web Security Tools | Expert Terminal v2.1</title>
     <link rel="stylesheet" href="style.css">
     <style>
         :root {
@@ -12,13 +12,6 @@
             --deep-black: #050505;
             --glass-bg: rgba(0, 10, 0, 0.95);
             --error-red: #ff3131;
-        }
-
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            100% { transform: translate(0); }
         }
 
         body, html {
@@ -47,17 +40,16 @@
         .topic-content.active { display: block; }
 
         .definition-box { background: rgba(255,255,255,0.05); border-left: 4px solid var(--neon-green); padding: 20px; margin: 20px 0; line-height: 1.6; }
+        .is-tag { color: var(--neon-green); font-size: 0.7rem; letter-spacing: 2px; margin-bottom: 10px; display: block; }
         
-        .is-impact { color: var(--neon-green); font-weight: bold; margin-top: 10px; display: block; font-size: 0.9rem; }
+        .img-frame { border: 2px solid var(--neon-green); padding: 10px; background: #000; margin: 20px 0; border-radius: 10px; text-align: center; }
+        .img-frame img { max-width: 100%; height: auto; border: 1px solid #333; }
 
-        /* --- MULTIPLE CHOICE FLASHCARD --- */
+        /* --- QUIZ STYLES --- */
         #quiz-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; }
         .flashcard { background: #000; border: 2px solid var(--neon-green); padding: 40px; width: 600px; box-shadow: 0 0 50px rgba(0,255,0,0.2); }
-        
         .choice-btn { width: 100%; text-align: left; padding: 12px; margin: 8px 0; background: transparent; border: 1px solid #444; color: #ccc; cursor: pointer; font-family: inherit; }
-        .choice-btn:hover { border-color: var(--neon-green); color: var(--neon-green); }
         .choice-btn.correct-choice { background: var(--dark-green); border-color: var(--neon-green); color: var(--neon-green); }
-
         .feedback-flash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: 0.2s; z-index: 1100; }
         
         .btn { padding: 10px 20px; background: none; border: 1px solid var(--neon-green); color: var(--neon-green); cursor: pointer; text-transform: uppercase; margin: 5px; text-decoration: none; display: inline-block; font-weight: bold;}
@@ -70,17 +62,15 @@
 
     <div id="quiz-overlay">
         <div class="flashcard">
-            <h3 style="color: var(--neon-green);">[ SYSTEM_VALIDATION_REQUIRED ]</h3>
+            <h3 style="color: var(--neon-green);">[ SECURITY_CHALLENGE_v2 ]</h3>
             <p id="quiz-question" style="font-size: 1.1rem; margin-bottom: 20px;"></p>
-            
             <div id="choices-container"></div>
-
             <div id="quiz-controls" style="margin-top: 30px; border-top: 1px solid #222; padding-top: 20px; display: none;">
-                <button class="btn" onclick="triggerFeedback('correct')">MARK CORRECT</button>
-                <button class="btn" style="border-color: var(--error-red); color: var(--error-red);" onclick="triggerFeedback('wrong')">MARK WRONG</button>
+                <button class="btn" onclick="triggerFeedback('correct')">CORRECT</button>
+                <button class="btn" style="border-color: var(--error-red); color: var(--error-red);" onclick="triggerFeedback('wrong')">WRONG</button>
                 <button class="btn" style="border:none; color: #555;" onclick="closeQuiz()">[ CLOSE ]</button>
             </div>
-            <button id="reveal-btn" class="btn" onclick="revealAnswer()">REVEAL CORRECT ANSWER</button>
+            <button id="reveal-btn" class="btn" onclick="revealAnswer()">REVEAL ANSWER</button>
         </div>
     </div>
 
@@ -90,58 +80,85 @@
 
     <div class="dashboard">
         <div class="sidebar">
-            <h2 style="color:var(--neon-green); font-size: 0.8rem; text-align: center; letter-spacing: 3px; border-bottom: 1px solid #222; padding-bottom: 15px;">TOPIC_SELECTION</h2>
-            <div class="nav-item active" onclick="showTab('w1', this)">01. Access Control</div>
-            <div class="nav-item" onclick="showTab('w2', this)">02. SQL Injection</div>
-            <div class="nav-item" onclick="showTab('w3', this)">03. Crypto Failures</div>
-            <div class="nav-item" onclick="showTab('w4', this)">04. Insecure Design</div>
-            <div class="nav-item" onclick="showTab('w5', this)">05. Supply Chain</div>
+            <h2 style="color:var(--neon-green); font-size: 0.8rem; text-align: center; border-bottom: 1px solid #222; padding-bottom: 15px;">PROTECTION_LAYERS</h2>
+            <div class="nav-item active" onclick="showTab('w0', this)">00. Overview</div>
+            <div class="nav-item" onclick="showTab('w1', this)">01. WAF</div>
+            <div class="nav-item" onclick="showTab('w2', this)">02. Encryption</div>
+            <div class="nav-item" onclick="showTab('w3', this)">03. RBAC</div>
+            <div class="nav-item" onclick="showTab('w4', this)">04. MFA</div>
+            <div class="nav-item" onclick="showTab('w5', this)">05. HTTPS</div>
         </div>
 
         <div class="content-area">
-            <div id="w1" class="topic-content active">
-                <h1 style="color: var(--neon-green);">01. Broken Access Control</h1>
-                <div class="definition-box">
-                    <strong>Definition:</strong> Broken Access Control occurs when a web application fails to properly enforce restrictions on what users are allowed to do. It allows attackers to bypass authorization and perform tasks as if they were privileged users or other account holders.
-                    <span class="is-impact">IS Impact: Threatens Confidentiality and user privacy compliance.</span>
+            
+            <div id="w0" class="topic-content active">
+                <h1 style="color: var(--neon-green); font-size: 3rem;">Defense Strategy</h1>
+                <p>To secure a modern Information System, we must deploy layers of defense. These 5 core tools work together to ensure the Confidentiality, Integrity, and Availability (CIA) of our web application.</p>
+                
+                <div class="img-frame">
+                    <img src="Web_application_security_tools_40424a679c.png" alt="Full Security Map">
                 </div>
-                <button class="btn" onclick="startQuiz(0)">Launch Topic Quiz</button>
+                <p style="color: #888; font-style: italic; text-align: center;">Figure 1.0: The 5 Pillars of Web Application Security</p>
+            </div>
+
+            <div id="w1" class="topic-content">
+                <span class="is-tag">NETWORK_FILTERING</span>
+                <h1 style="color: var(--neon-green);">01. WAF (Web Application Firewall)</h1>
+                <div class="definition-box">
+                    <strong>Definition:</strong> A Web Application Firewall (WAF) acts as a gateway that monitors and filters incoming HTTP traffic. It identifies and blocks malicious requests such as SQL Injection and Cross-Site Scripting (XSS) before they reach the web server.
+                </div>
+                <div class="img-frame" style="border-style: dashed; border-color: #444;">
+                    [Visual: Diagram showing Traffic -> WAF -> Web Server]
+                </div>
+                <button class="btn" onclick="startQuiz(0)">Topic Quiz</button>
             </div>
 
             <div id="w2" class="topic-content">
-                <h1 style="color: var(--neon-green);">02. SQL Injection (SQLi)</h1>
+                <span class="is-tag">DATA_INTEGRITY</span>
+                <h1 style="color: var(--neon-green);">02. Encrypted Data</h1>
                 <div class="definition-box">
-                    <strong>Definition:</strong> An injection attack where an attacker executes malicious SQL statements that control a web application's database server. By inserting code into input fields, hackers can view, modify, or delete data.
-                    <span class="is-impact">IS Impact: Directly compromises Data Integrity and system reliability.</span>
+                    <strong>Definition:</strong> Cryptography transforms readable data into a complex code (ciphertext). In web applications, we focus on "Encryption at Rest"—protecting databases from physical theft—and "Hashing"—storing passwords in an irreversible format.
                 </div>
-                <button class="btn" onclick="startQuiz(1)">Launch Topic Quiz</button>
+                <div class="img-frame" style="border-style: dashed; border-color: #444;">
+                    [Visual: Comparison of Plaintext vs. Hashed Passwords]
+                </div>
+                <button class="btn" onclick="startQuiz(1)">Topic Quiz</button>
             </div>
 
             <div id="w3" class="topic-content">
-                <h1 style="color: var(--neon-green);">03. Cryptographic Failures</h1>
+                <span class="is-tag">ACCESS_MANAGEMENT</span>
+                <h1 style="color: var(--neon-green);">03. RBAC (Role-Based Access Control)</h1>
                 <div class="definition-box">
-                    <strong>Definition:</strong> Previously known as Sensitive Data Exposure, this refers to the failure to protect sensitive data at rest (on the server) or in transit (over the network) using strong encryption methods.
-                    <span class="is-impact">IS Impact: Leads to massive financial penalties and loss of customer trust.</span>
+                    <strong>Definition:</strong> Role-Based Access Control assigns permissions to specific "roles" rather than individual users. For example, an 'Admin' can edit records, while a 'Customer' can only view their own profile. This enforces the Principle of Least Privilege.
                 </div>
-                <button class="btn" onclick="startQuiz(2)">Launch Topic Quiz</button>
+                <div class="img-frame" style="border-style: dashed; border-color: #444;">
+                    [Visual: Organizational Hierarchy showing Admin vs User permissions]
+                </div>
+                <button class="btn" onclick="startQuiz(2)">Topic Quiz</button>
             </div>
 
             <div id="w4" class="topic-content">
-                <h1 style="color: var(--neon-green);">04. Insecure Design</h1>
+                <span class="is-tag">AUTHENTICATION</span>
+                <h1 style="color: var(--neon-green);">04. MFA (Multi-Factor Authentication)</h1>
                 <div class="definition-box">
-                    <strong>Definition:</strong> A category of vulnerabilities that result from flaws in the logic or architecture of the system. It means the system was built without proper security requirements from the start.
-                    <span class="is-impact">IS Impact: High recovery costs; security must be part of the entire SDLC.</span>
+                    <strong>Definition:</strong> MFA requires users to provide at least two different forms of identification before logging in. Typically: Something you know (password) + Something you have (phone/key) or Something you are (biometrics).
                 </div>
-                <button class="btn" onclick="startQuiz(3)">Launch Topic Quiz</button>
+                <div class="img-frame" style="border-style: dashed; border-color: #444;">
+                    [Visual: Smartphone showing an Authenticator App code]
+                </div>
+                <button class="btn" onclick="startQuiz(3)">Topic Quiz</button>
             </div>
 
             <div id="w5" class="topic-content">
-                <h1 style="color: var(--neon-green);">05. Supply Chain Risks</h1>
+                <span class="is-tag">SECURE_TRANSPORT</span>
+                <h1 style="color: var(--neon-green);">05. HTTPS</h1>
                 <div class="definition-box">
-                    <strong>Definition:</strong> Security risks arising from the use of third-party software, libraries, or APIs. If a component you rely on is compromised, your entire Information System becomes vulnerable.
-                    <span class="is-impact">IS Impact: Requires Software Bill of Materials (SBOM) for governance.</span>
+                    <strong>Definition:</strong> HTTPS is the secure version of HTTP. It uses SSL/TLS protocols to encrypt the communication channel between the user and the server. This prevents attackers from "sniffing" or eavesdropping on private data while it travels across the internet.
                 </div>
-                <button class="btn" onclick="startQuiz(4)">Launch Topic Quiz</button>
+                <div class="img-frame" style="border-style: dashed; border-color: #444;">
+                    [Visual: Address bar with the Padlock Icon and 'HTTPS' highlighted]
+                </div>
+                <button class="btn" onclick="startQuiz(4)">Topic Quiz</button>
             </div>
         </div>
     </div>
@@ -149,48 +166,48 @@
     <script>
         const quizData = [
             {
-                q: "What IS principle is violated if a student can access the teacher's grading portal?",
-                options: ["Data Integrity", "Principle of Least Privilege", "Business Continuity", "Social Engineering"],
+                q: "What is the primary role of a WAF?",
+                options: ["Speeding up website loading", "Monitoring/Filtering HTTP traffic", "Encrypting the server hard drive", "Updating the database"],
                 correct: 1
             },
             {
-                q: "Which aspect of the CIA Triad is damaged if a hacker deletes your entire inventory database via SQLi?",
-                options: ["Confidentiality", "Availability", "Integrity", "Accountability"],
+                q: "Which concept protects data even if a hacker gains access to the database files?",
+                options: ["Firewalls", "HTTPS", "Encryption at Rest", "Software Updates"],
                 correct: 2
             },
             {
-                q: "HTTPS protects data 'in transit'. What protects data 'at rest' on the hard drive?",
-                options: ["Firewalls", "Database Encryption", "Strong Passwords", "Anti-Virus"],
+                q: "What IS principle is enforced by using RBAC?",
+                options: ["Shadow IT", "Principle of Least Privilege", "Data Redundancy", "Social Engineering"],
                 correct: 1
             },
             {
-                q: "Insecure Design is best prevented by including security in which phase?",
-                options: ["Final Testing", "Marketing", "SDLC Planning/Requirements", "Post-Launch Patching"],
+                q: "Which of these is a valid 'second factor' in MFA?",
+                options: ["A strong password", "Your home address", "A one-time code on your phone", "Your favorite color"],
                 correct: 2
             },
             {
-                q: "What does 'SBOM' stand for in Supply Chain Security?",
-                options: ["Secure Business Online Mode", "System Backup Operations Manual", "Software Bill of Materials", "Standard Base Operating Model"],
-                correct: 2
+                q: "What does HTTPS protect data during?",
+                options: ["Data in Transit", "Data at Rest", "Data Deletion", "Data Backups"],
+                correct: 0
             }
         ];
 
-        let currentQuizIndex = null;
+        let currentQuizIdx = null;
 
         function showTab(id, el) {
             document.querySelectorAll('.topic-content').forEach(t => t.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             el.classList.add('active');
+            window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
-        function startQuiz(index) {
-            currentQuizIndex = index;
-            const data = quizData[index];
+        function startQuiz(idx) {
+            currentQuizIdx = idx;
+            const data = quizData[idx];
             document.getElementById('quiz-question').innerText = data.q;
             const container = document.getElementById('choices-container');
             container.innerHTML = '';
-            
             data.options.forEach((opt, i) => {
                 const btn = document.createElement('button');
                 btn.className = 'choice-btn';
@@ -198,14 +215,13 @@
                 btn.id = `opt-${i}`;
                 container.appendChild(btn);
             });
-
             document.getElementById('quiz-controls').style.display = 'none';
             document.getElementById('reveal-btn').style.display = 'block';
             document.getElementById('quiz-overlay').style.display = 'flex';
         }
 
         function revealAnswer() {
-            const correctIdx = quizData[currentQuizIndex].correct;
+            const correctIdx = quizData[currentQuizIdx].correct;
             document.getElementById(`opt-${correctIdx}`).classList.add('correct-choice');
             document.getElementById('quiz-controls').style.display = 'block';
             document.getElementById('reveal-btn').style.display = 'none';
