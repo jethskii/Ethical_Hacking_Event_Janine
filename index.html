@@ -8,7 +8,7 @@
         :root {
             --neon-green: #00ff41;
             --dark-bg: #050505;
-            --glass-bg: rgba(0, 0, 0, 0.7); 
+            --glass-bg: rgba(0, 0, 0, 0.75); 
             --border-glow: 0 0 20px rgba(0, 255, 65, 0.6);
         }
 
@@ -23,30 +23,23 @@
             overflow: hidden;
         }
 
-        /* --- VIDEO BACKGROUND: FULL SCREEN FIT --- */
-        .video-wrapper {
+        /* --- THE VIDEO BACKGROUND FIX --- */
+        .video-container {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             z-index: -5;
-            overflow: hidden;
-            background-color: black;
+            background: #000; 
         }
 
         #bg-video {
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover; /* This ensures the video fills the screen without distortion */
-            object-position: center;
-            filter: brightness(0.4) contrast(1.1) saturate(1.2);
-            animation: fadeIn 2s ease-in;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures it fits screen perfectly */
+            filter: brightness(0.4) contrast(1.1);
+            display: block;
         }
 
         /* --- OVERLAYS --- */
@@ -67,44 +60,22 @@
         .scanline {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%);
             background-size: 100% 4px;
             pointer-events: none;
             z-index: 10;
-            opacity: 0.3;
-        }
-
-        /* --- FLOATING DECOR --- */
-        .floating-elements {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -2;
-            pointer-events: none;
-        }
-
-        .icon {
-            position: absolute;
-            color: var(--neon-green);
-            font-size: 1.5rem;
-            opacity: 0.4;
-            animation: floatUp 15s infinite linear;
-        }
-
-        @keyframes floatUp {
-            from { transform: translateY(110vh) rotate(0deg); }
-            to { transform: translateY(-10vh) rotate(360deg); }
+            opacity: 0.2;
         }
 
         /* --- CONTENT --- */
         .page {
+            position: relative;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            text-align: center;
-            /* Creates a slight vignette to focus on center content */
-            background: radial-gradient(circle, transparent 20%, rgba(0,0,0,0.4) 100%);
+            z-index: 1;
         }
 
         .hero-title {
@@ -117,20 +88,15 @@
             animation: flicker 4s infinite;
         }
 
-        @keyframes flicker {
-            0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
-            20%, 24%, 55% { opacity: 0.8; }
-        }
-
         .profile-card {
             margin: 40px;
             padding: 35px;
             border: 2px solid var(--neon-green);
             background: var(--glass-bg);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px); /* Safari support */
             border-radius: 4px;
             box-shadow: var(--border-glow);
-            transition: 0.3s;
         }
 
         .btn-container {
@@ -154,13 +120,17 @@
             background: var(--neon-green);
             color: black;
             box-shadow: 0 0 30px var(--neon-green);
-            transform: scale(1.05);
+        }
+
+        @keyframes flicker {
+            0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
+            20%, 24%, 55% { opacity: 0.8; }
         }
     </style>
 </head>
 <body>
 
-    <div class="video-wrapper">
+    <div class="video-container">
         <video autoplay muted loop playsinline id="bg-video">
             <source src="janine.mp4" type="video/mp4">
             Your browser does not support HTML5 video.
@@ -170,16 +140,9 @@
     <div class="grid-overlay"></div>
     <div class="scanline"></div>
 
-    <div class="floating-elements">
-        <div class="icon" style="left: 10%; animation-duration: 12s;">💻</div>
-        <div class="icon" style="left: 85%; animation-duration: 18s; animation-delay: -5s;">&lt;/&gt;</div>
-        <div class="icon" style="left: 50%; animation-duration: 14s; animation-delay: -2s;">🔐</div>
-        <div class="icon" style="left: 20%; animation-duration: 20s; animation-delay: -8s;">📡</div>
-    </div>
-
     <div class="page">
         <h1 class="hero-title">Ethical Hacking</h1>
-        <div style="letter-spacing: 6px; margin-top: 10px; color: #aaa; font-weight: bold;">SEMINAR EVENT // APRIL 17, 2026</div>
+        <div style="letter-spacing: 6px; margin-top: 10px; color: #888; font-weight: bold;">SEMINAR EVENT // APRIL 17, 2026</div>
 
         <div class="profile-card">
             <div style="font-size: 1.8rem; color: var(--neon-green); font-weight: bold;">
