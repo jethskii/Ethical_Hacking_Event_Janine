@@ -3,180 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ethical Hacking Seminar - Intro</title>
+    <title>Ethical Hacking Seminar</title>
     <style>
         :root {
             --neon-green: #39ff14;
             --dark-green: #003300;
             --deep-black: #050505;
-            --glass-bg: rgba(0, 51, 0, 0.3);
+            --glass-bg: rgba(0, 51, 0, 0.4);
+            --border-glow: 0 0 10px rgba(57, 255, 20, 0.5);
         }
 
         body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
             overflow: hidden;
             background-color: var(--deep-black);
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Consolas', 'Courier New', monospace;
             color: white;
         }
 
-        /* Animated Background Plexus Effect */
-        .background-container {
-            position: absolute;
-            width: 100%;
-            height: 100%;
+        /* Background Effects */
+        .bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle at center, var(--dark-green) 0%, var(--deep-black) 100%);
             z-index: -1;
         }
-
-        .grid-overlay {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(rgba(0, 255, 0, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 0, 0.05) 1px, transparent 1px);
-            background-size: 50px 50px;
+        .grid {
+            position: fixed; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(0, 255, 0, 0.03) 1px, transparent 1px), 
+                              linear-gradient(90deg, rgba(0, 255, 0, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px; z-index: -1;
         }
 
-        /* Scanning Line Effect */
-        .scanline {
-            width: 100%;
-            height: 2px;
-            background: var(--neon-green);
-            opacity: 0.2;
-            position: absolute;
-            bottom: 100%;
-            animation: scan 4s linear infinite;
-            box-shadow: 0 0 15px var(--neon-green);
+        /* Layout Transitions */
+        .page {
+            position: absolute; width: 100%; height: 100%;
+            transition: transform 0.8s cubic-bezier(0.85, 0, 0.15, 1), opacity 0.5s;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
+        .hidden { transform: translateY(-100%); opacity: 0; pointer-events: none; }
 
-        @keyframes scan {
-            0% { bottom: 100%; }
-            100% { bottom: 0%; }
-        }
-
-        /* Main Content UI */
-        .main-frame {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            text-align: center;
-            padding: 20px;
-        }
-
+        /* --- PAGE 1: INTRO --- */
         .hero-title {
-            font-size: 4.5rem;
-            text-transform: uppercase;
-            letter-spacing: 10px;
-            margin: 0;
-            color: var(--neon-green);
-            text-shadow: 0 0 20px rgba(57, 255, 20, 0.6);
-            animation: fadeInDown 1.5s ease-out;
+            font-size: 5rem; text-transform: uppercase; letter-spacing: 12px;
+            color: var(--neon-green); text-shadow: 0 0 20px var(--neon-green);
+            margin: 0; animation: glow 2s infinite alternate;
         }
+        @keyframes glow { from { text-shadow: 0 0 10px var(--neon-green); } to { text-shadow: 0 0 30px var(--neon-green); } }
 
-        .event-date {
-            font-size: 1.5rem;
-            letter-spacing: 5px;
-            margin-top: 10px;
-            color: #ffffff;
-            opacity: 0.8;
-            animation: fadeInUp 2s ease-out;
-        }
-
-        /* Glassmorphism Profile Card */
         .profile-card {
-            margin-top: 50px;
-            padding: 20px 40px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(57, 255, 20, 0.3);
-            border-radius: 15px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
-            animation: zoomIn 1.2s ease-in-out;
+            margin: 40px; padding: 20px; border: 1px solid var(--neon-green);
+            background: var(--glass-bg); backdrop-filter: blur(5px); border-radius: 10px;
         }
 
-        .profile-name {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--neon-green);
-            margin: 0;
+        .btn {
+            padding: 15px 30px; border: 1px solid var(--neon-green);
+            background: transparent; color: var(--neon-green);
+            cursor: pointer; text-transform: uppercase; font-weight: bold;
+            transition: 0.3s; margin: 10px;
+        }
+        .btn:hover { background: var(--neon-green); color: black; box-shadow: var(--border-glow); }
+
+        /* --- PAGE 2: SYSTEM HACKING --- */
+        .content-grid {
+            display: grid; grid-template-columns: 300px 1fr;
+            width: 90%; height: 80%; gap: 30px;
         }
 
-        .profile-title {
-            font-size: 1rem;
-            color: #ccc;
-            margin-top: 5px;
+        .sidebar {
+            border-right: 1px solid var(--neon-green);
+            padding-right: 20px; text-align: left;
+        }
+        .sidebar h2 { color: var(--neon-green); border-bottom: 2px solid var(--neon-green); }
+
+        .topic-list { list-style: none; padding: 0; }
+        .topic-list li {
+            padding: 15px; margin-bottom: 10px;
+            background: rgba(57, 255, 20, 0.1);
+            border-left: 5px solid var(--neon-green);
+            animation: slideIn 0.5s ease-out forwards;
+            opacity: 0;
+        }
+        @keyframes slideIn { from { transform: translateX(-50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        .main-content {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
         }
 
-        /* Topic Badges */
-        .topics-container {
-            display: flex;
-            gap: 20px;
-            margin-top: 40px;
+        .topic-card {
+            background: var(--glass-bg); border: 1px solid rgba(57, 255, 20, 0.2);
+            padding: 20px; border-radius: 8px; position: relative;
+            overflow: hidden; transition: 0.3s;
         }
+        .topic-card:hover { border-color: var(--neon-green); transform: scale(1.02); }
+        .topic-card h3 { color: var(--neon-green); margin-top: 0; }
+        .topic-card p { font-size: 0.9rem; color: #ccc; line-height: 1.4; }
 
-        .badge {
-            padding: 10px 20px;
-            border: 1px solid var(--neon-green);
-            border-radius: 5px;
-            font-size: 0.9rem;
-            background: transparent;
-            transition: 0.3s;
-            cursor: pointer;
-            text-transform: uppercase;
-        }
-
-        .badge:hover {
-            background: var(--neon-green);
-            color: black;
-            box-shadow: 0 0 20px var(--neon-green);
-        }
-
-        /* Keyframes */
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-50px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(50px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes zoomIn {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
-        }
+        /* Back Button */
+        .back-btn { position: absolute; top: 20px; left: 20px; }
 
     </style>
 </head>
 <body>
 
-    <div class="background-container">
-        <div class="grid-overlay"></div>
-        <div class="scanline"></div>
-    </div>
+    <div class="bg"></div>
+    <div class="grid"></div>
 
-    <div class="main-frame">
+    <div id="intro-page" class="page">
         <h1 class="hero-title">Ethical Hacking</h1>
-        <div class="event-date">SEMINAR EVENT // APRIL 17, 2026</div>
+        <div style="letter-spacing: 5px; margin-top: 10px;">SEMINAR EVENT // 2026</div>
 
         <div class="profile-card">
-            <div class="profile-name">Janine K. Mandalones</div>
-            <div class="profile-title">Software Engineer - Application Developer</div>
+            <div style="font-size: 1.5rem; color: var(--neon-green);">Janine K. Mandalones</div>
+            <div style="color: #888;">Software Engineer - Application Developer</div>
         </div>
 
-        <div class="topics-container">
-            <div class="badge">System Hacking</div>
-            <div class="badge">Web Application Security</div>
+        <div>
+            <button class="btn" onclick="showPage('hacking-page')">System Hacking</button>
+            <button class="btn">Web App Security</button>
         </div>
     </div>
 
+    <div id="hacking-page" class="page hidden">
+        <button class="btn back-btn" onclick="showPage('intro-page')"><< TERMINAL_HOME</button>
+        
+        <div class="content-grid">
+            <div class="sidebar">
+                <h2>CORE TOPICS</h2>
+                <ul class="topic-list">
+                    <li style="animation-delay: 0.1s;">01. Reconnaissance</li>
+                    <li style="animation-delay: 0.2s;">02. Vulnerability Analysis</li>
+                    <li style="animation-delay: 0.3s;">03. Exploitation</li>
+                    <li style="animation-delay: 0.4s;">04. Post-Exploitation</li>
+                </ul>
+            </div>
+
+            <div class="main-content">
+                <div class="topic-card">
+                    <h3>Password Cracking</h3>
+                    <p>Techniques including Brute Force, Dictionary Attacks, and Rainbow Tables. Focus on salting and hashing defenses.</p>
+                </div>
+                <div class="topic-card">
+                    <h3>Privilege Escalation</h3>
+                    <p>Moving from a low-level user to Root/Admin access via kernel exploits or misconfigurations.</p>
+                </div>
+                <div class="topic-card">
+                    <h3>Malware Threats</h3>
+                    <p>Analysis of Trojans, Ransomware, and Keyloggers. How they infiltrate and stay persistent in a system.</p>
+                </div>
+                <div class="topic-card" style="border-style: dashed;">
+                    <h3>Metasploit Pro</h3>
+                    <p>Live demonstration of the world's most used penetration testing framework.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+            // Show target page
+            document.getElementById(pageId).classList.remove('hidden');
+        }
+    </script>
 </body>
 </html>
