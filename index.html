@@ -22,139 +22,264 @@
             color: white;
         }
 
-        /* Background Effects */
-        .bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, var(--dark-green) 0%, var(--deep-black) 100%); z-index: -1; }
-        .grid { position: fixed; width: 100%; height: 100%; background-image: linear-gradient(rgba(0, 255, 0, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 0, 0.03) 1px, transparent 1px); background-size: 30px 30px; z-index: -1; }
+        /* --- Background Effects (Common) --- */
+        .bg-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, var(--dark-green) 0%, var(--deep-black) 100%);
+            z-index: -2;
+        }
+        .grid-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 0, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: -1;
+        }
 
-        /* Page Management */
-        .page { position: absolute; width: 100%; height: 100%; transition: all 0.6s ease-in-out; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .hidden { transform: scale(0.9); opacity: 0; pointer-events: none; }
+        /* --- Page Management --- */
+        .page {
+            position: absolute; width: 100%; height: 100%;
+            transition: transform 0.6s cubic-bezier(0.85, 0, 0.15, 1), opacity 0.5s;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .hidden { transform: translateY(-100%); opacity: 0; pointer-events: none; }
 
-        /* INTRO PAGE STYLES */
-        .hero-title { font-size: 5rem; text-transform: uppercase; letter-spacing: 12px; color: var(--neon-green); text-shadow: var(--border-glow); margin: 0; }
-        .profile-card { margin: 40px; padding: 25px; border: 1px solid var(--neon-green); background: var(--glass-bg); backdrop-filter: blur(8px); border-radius: 10px; text-align: center; }
-        
-        /* BUTTONS */
-        .btn { padding: 15px 30px; border: 1px solid var(--neon-green); background: transparent; color: var(--neon-green); cursor: pointer; text-transform: uppercase; font-weight: bold; transition: 0.3s; margin: 10px; }
+        /* --- PAGE 1: INTRO (Your existing UI, polished) --- */
+        .hero-title {
+            font-size: 5rem; text-transform: uppercase; letter-spacing: 12px;
+            color: var(--neon-green); text-shadow: var(--border-glow);
+            margin: 0; animation: glowPulse 2s infinite alternate;
+        }
+        @keyframes glowPulse { from { text-shadow: 0 0 10px var(--neon-green); } to { text-shadow: 0 0 25px var(--neon-green); } }
+
+        .profile-card {
+            margin: 40px; padding: 25px; border: 1px solid var(--neon-green);
+            background: var(--glass-bg); backdrop-filter: blur(8px); border-radius: 10px;
+            text-align: center; animation: zoomIn 1s ease-out;
+        }
+        @keyframes zoomIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+
+        .btn {
+            padding: 15px 30px; border: 1px solid var(--neon-green);
+            background: transparent; color: var(--neon-green);
+            cursor: pointer; text-transform: uppercase; font-weight: bold;
+            transition: 0.3s; margin: 10px;
+        }
         .btn:hover { background: var(--neon-green); color: black; box-shadow: var(--border-glow); }
 
-        /* SYSTEM HACKING DASHBOARD */
-        .dashboard-container { width: 90%; height: 85%; display: grid; grid-template-columns: 320px 1fr; gap: 20px; }
+        /* --- PAGE 2: SYSTEM HACKING DASHBOARD (The big update) --- */
+        .dashboard-container {
+            width: 90%; height: 85%;
+            display: grid; grid-template-columns: 320px 1fr;
+            gap: 20px;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--neon-green);
+            border-radius: 10px;
+            padding: 20px;
+            display: flex; flex-direction: column;
+        }
+        .sidebar h2 {
+            color: var(--neon-green);
+            font-size: 1.2rem;
+            border-bottom: 2px solid var(--neon-green);
+            padding-bottom: 10px; margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .nav-item {
+            padding: 15px; margin: 8px 0;
+            border: 1px solid transparent;
+            cursor: pointer; transition: 0.2s ease;
+            text-transform: uppercase; font-size: 0.9rem;
+            color: #aaa;
+        }
+        .nav-item:hover {
+            border-color: var(--neon-green);
+            background: rgba(57, 255, 20, 0.05);
+            color: var(--neon-green);
+        }
+        .nav-item.active {
+            background: var(--neon-green);
+            color: black; font-weight: bold;
+            box-shadow: var(--border-glow);
+        }
+
+        /* Content Area */
+        .content-area {
+            background: var(--glass-bg);
+            border: 1px solid var(--neon-green);
+            border-radius: 10px;
+            padding: 40px;
+            position: relative;
+            overflow-y: auto;
+        }
+        .content-area::-webkit-scrollbar { width: 8px; }
+        .content-area::-webkit-scrollbar-thumb { background: var(--neon-green); border-radius: 4px; }
+
+        .topic-content { display: none; }
+        .topic-content.active { display: block; animation: contentSlideIn 0.5s ease forwards; }
         
-        .sidebar { background: rgba(0,0,0,0.6); border: 1px solid var(--neon-green); border-radius: 10px; padding: 20px; display: flex; flex-direction: column; }
-        .sidebar h2 { color: var(--neon-green); font-size: 1.2rem; border-bottom: 1px solid var(--neon-green); padding-bottom: 10px; }
-        
-        .nav-item { padding: 15px; margin: 8px 0; border: 1px solid transparent; cursor: pointer; transition: 0.2s; font-size: 0.9rem; }
-        .nav-item:hover { border-color: var(--neon-green); background: rgba(57, 255, 20, 0.05); }
-        .nav-item.active { background: var(--neon-green); color: black; font-weight: bold; }
+        @keyframes contentSlideIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
 
-        .content-area { background: var(--glass-bg); border: 1px solid var(--neon-green); border-radius: 10px; padding: 40px; position: relative; overflow-y: auto; }
-        .topic-content { display: none; animation: fadeIn 0.4s ease; }
-        .topic-content.active { display: block; }
+        h1.topic-title {
+            color: var(--neon-green); font-size: 2.8rem;
+            margin: 0 0 20px 0; text-transform: uppercase;
+        }
+        .topic-description {
+            line-height: 1.7; color: #e0e0e0; font-size: 1.1rem;
+            max-width: 800px;
+        }
+        .cyber-alert {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid red; border-radius: 5px;
+            padding: 15px; margin: 20px 0; color: #ffcccc;
+        }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Image Framing */
+        .img-frame {
+            border: 4px solid var(--neon-green);
+            border-radius: 10px;
+            box-shadow: var(--border-glow);
+            padding: 10px; display: inline-block;
+            margin-bottom: 30px;
+        }
+        .img-frame img { max-width: 100%; height: auto; border-radius: 5px; }
 
-        .tag { display: inline-block; padding: 4px 10px; background: var(--dark-green); color: var(--neon-green); border-radius: 4px; font-size: 0.7rem; margin-bottom: 10px; text-transform: uppercase; }
-        h1.topic-title { color: var(--neon-green); font-size: 2.5rem; margin-top: 10px; }
-        .description { line-height: 1.6; color: #e0e0e0; font-size: 1.1rem; max-width: 800px; }
-        
-        .bullet-list { margin-top: 25px; list-style: none; padding: 0; }
-        .bullet-list li { margin-bottom: 15px; padding-left: 25px; position: relative; }
-        .bullet-list li::before { content: '>'; position: absolute; left: 0; color: var(--neon-green); }
+        /* Data List Styling */
+        .data-list { list-style: none; padding: 0; margin-top: 30px; }
+        .data-list li {
+            position: relative;
+            padding-left: 30px; margin-bottom: 15px;
+            border-bottom: 1px solid rgba(57, 255, 20, 0.1);
+            padding-bottom: 10px;
+        }
+        .data-list li::before {
+            content: '>';
+            position: absolute; left: 0;
+            color: var(--neon-green); font-weight: bold;
+        }
 
-        .back-btn { position: absolute; top: 20px; left: 5%; font-size: 0.8rem; }
+        .back-btn { position: absolute; top: 20px; left: 20px; font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
-    <div class="bg"></div>
-    <div class="grid"></div>
+    <div class="bg-container"></div>
+    <div class="grid-overlay"></div>
 
     <div id="intro-page" class="page">
         <h1 class="hero-title">Ethical Hacking</h1>
-        <div style="letter-spacing: 5px; margin-top: 10px; color: #888;">SEMINAR EVENT // APRIL 17, 2026</div>
+        <div style="letter-spacing: 5px; margin-top: 10px;">SEMINAR EVENT // APRIL 17, 2026</div>
 
         <div class="profile-card">
-            <div style="font-size: 1.8rem; color: var(--neon-green); font-weight: bold;">Janine K. Mandalones</div>
+            <div style="font-size: 1.8rem; color: var(--neon-green);">Janine K. Mandalones</div>
             <div style="color: #ccc; margin-top: 5px;">Software Engineer - Application Developer</div>
         </div>
 
         <div>
-            <button class="btn" onclick="switchPage('hacking-page')">Enter System Hacking</button>
-            <button class="btn" disabled style="opacity: 0.5; cursor: not-allowed;">Web App Security (Locked)</button>
+            <button class="btn" onclick="switchPage('hacking-page')">System Hacking Modules</button>
+            <button class="btn" disabled style="opacity: 0.5; cursor: not-allowed;">Web App Security</button>
         </div>
     </div>
 
     <div id="hacking-page" class="page hidden">
-        <button class="btn back-btn" onclick="switchPage('intro-page')">/RETURN/TO/MAIN/TERMINAL</button>
+        <button class="btn back-btn" onclick="switchPage('intro-page')"><< TERMINAL_HOME</button>
         
         <div class="dashboard-container">
             <div class="sidebar">
                 <h2>SYSTEM_HACKING_OS</h2>
-                <div class="nav-item active" onclick="showTopic('methodology', this)">01. Hacking Cycle</div>
-                <div class="nav-item" onclick="showTopic('passwords', this)">02. Password Cracking</div>
-                <div class="nav-item" onclick="showTopic('privesc', this)">03. Privilege Escalation</div>
-                <div class="nav-item" onclick="showTopic('buffer', this)">04. Buffer Overflow</div>
-                <div class="nav-item" onclick="showTopic('post', this)">05. Post-Exploitation</div>
+                <div class="nav-item active" onclick="showTopic('overview', this)">00. Overview</div>
+                <div class="nav-item" onclick="showTopic('recon', this)">01. Reconnaissance</div>
+                <div class="nav-item" onclick="showTopic('scanning', this)">02. Scanning</div>
+                <div class="nav-item" onclick="showTopic('access', this)">03. Gaining Access</div>
+                <div class="nav-item" onclick="showTopic('maintain', this)">04. Maintaining Access</div>
+                <div class="nav-item" onclick="showTopic('tracks', this)">05. Covering Tracks</div>
             </div>
 
             <div class="content-area">
                 
-                <div id="methodology" class="topic-content active">
-                    <span class="tag">Phase: Identification</span>
-                    <h1 class="topic-title">The Hacking Cycle</h1>
-                    <p class="description">Hacking is a structured process. To defend a system, we must understand the 5 phases of a professional attack.</p>
-                    <ul class="bullet-list">
-                        <li><strong>Reconnaissance:</strong> Gathering information on the target network.</li>
-                        <li><strong>Scanning:</strong> Identifying open ports, live hosts, and service versions.</li>
-                        <li><strong>Gaining Access:</strong> Exploiting vulnerabilities to enter the system.</li>
-                        <li><strong>Maintaining Access:</strong> Establishing persistence via backdoors.</li>
-                    </ul>
+                <div id="overview" class="topic-content active">
+                    <h1 class="topic-title">Ethical Hacking Process</h1>
+                    <div class="topic-description">
+                        <div class="img-frame">
+                            <img src="hacking-process.png" alt="Different Phases of Ethical Hacking diagram">
+                        </div>
+                        <p>Ethical hacking has become a knight in shining armour in the world of cybercrime. While cyberattacks remain rampant across organizations, industries, and the world, ethical hacking gives companies the solution to help them combat this ever-growing problem. There are different phases of ethical hacking.</p>
+                        <div class="cyber-alert">
+                            <strong>[CRITICAL ALERT]:</strong> More often than not, it takes up to 6 months for organizations to realize that there has been a breach. A cyber attack has been said to occur every 39 seconds.
+                        </div>
+                        <p>Organizations employ ethical hackers to simulate a real cyberattack on their systems and networks. This attack comes in different phases, used to pinpoint all areas of weaknesses that the organization faces to work towards strengthening them.</p>
+                    </div>
                 </div>
 
-                <div id="passwords" class="topic-content">
-                    <span class="tag">Phase: Exploitation</span>
-                    <h1 class="topic-title">Password Cracking</h1>
-                    <p class="description">How credentials are bypassed or stolen in modern environments.</p>
-                    <ul class="bullet-list">
-                        <li><strong>Dictionary Attacks:</strong> Using lists of common passwords against a target.</li>
-                        <li><strong>Brute Force:</strong> Calculating every possible combination (time-intensive).</li>
-                        <li><strong>Rainbow Tables:</strong> Using pre-computed hash tables to crack salted passwords faster.</li>
-                        <li><strong>Social Engineering:</strong> Tricking users into revealing credentials.</li>
-                    </ul>
+                <div id="recon" class="topic-content">
+                    <h1 class="topic-title">Phase 1: Reconnaissance</h1>
+                    <div class="topic-description">
+                        <p>This is the first stage in the ethical hacking process. The white-hat hacker collects all the information available about the networks and systems in place, as well as the security measures that have been implemented.</p>
+                        <h3>Types of Reconnaissance:</h3>
+                        <ul class="data-list">
+                            <li><strong>Active reconnaissance:</strong> Looking for information about the target network system, server, or application. Increases the chance of detection.</li>
+                            <li><strong>Passive reconnaissance:</strong> Gaining information about key members, essential facts, IP addresses, and other critical information about the company. Stealthy.</li>
+                        </ul>
+                    </div>
                 </div>
 
-                <div id="privesc" class="topic-content">
-                    <span class="tag">Phase: Escalation</span>
-                    <h1 class="topic-title">Privilege Escalation</h1>
-                    <p class="description">Once inside as a guest, the goal is to become the Administrator (Root).</p>
-                    <ul class="bullet-list">
-                        <li><strong>Vertical Escalation:</strong> Gaining higher-level permissions (Guest -> Admin).</li>
-                        <li><strong>Horizontal Escalation:</strong> Gaining access to another user's files at the same level.</li>
-                        <li><strong>Exploiting Misconfigurations:</strong> Leveraging weak file permissions or unpatched kernel vulnerabilities.</li>
-                    </ul>
+                <div id="scanning" class="topic-content">
+                    <h1 class="topic-title">Phase 2: Scanning Phase</h1>
+                    <div class="topic-description">
+                        <p>This step involves using all the information obtained in the reconnaissance phase and applying it to look for vulnerabilities in the targeted area.</p>
+                        <ul class="data-list">
+                            <li>Scan for open ports or unprotected services.</li>
+                            <li>Vulnerability scans to find weaknesses in company servers (often automated with <span style="color:var(--neon-green)">TOOLS</span>).</li>
+                            <li>Network mapping: finding firewalls, routers, and networks.</li>
+                        </ul>
+                    </div>
                 </div>
 
-                <div id="buffer" class="topic-content">
-                    <span class="tag">Phase: Advanced Exploit</span>
-                    <h1 class="topic-title">Buffer Overflow</h1>
-                    <p class="description">As developers, this is our biggest risk. When a program writes more data to a buffer than it can hold.</p>
-                    <ul class="bullet-list">
-                        <li><strong>Memory Corruption:</strong> Overwriting the Return Address in the stack.</li>
-                        <li><strong>Payload Execution:</strong> Redirecting execution flow to malicious shellcode.</li>
-                        <li><strong>Defenses:</strong> Implementing ASLR, DEP, and safe coding practices (using `strncpy` over `strcpy`).</li>
-                    </ul>
+                <div id="access" class="topic-content">
+                    <h1 class="topic-title">Phase 3: Gaining Access</h1>
+                    <div class="topic-description">
+                        <p>This is where the ethical hacker does the actual hacking. Using information from previous phases, a full-fledged attack is launched. The hacker exploits exposed vulnerabilities and gains control of the system.</p>
+                        <ul class="data-list">
+                            <li>Steal available data.</li>
+                            <li>Corrupt systems.</li>
+                            <li>Inject viruses or other malicious entities.</li>
+                        </ul>
+                    </div>
                 </div>
 
-                <div id="post" class="topic-content">
-                    <span class="tag">Phase: Maintenance</span>
-                    <h1 class="topic-title">Post-Exploitation</h1>
-                    <p class="description">What a hacker does after successfully owning the system.</p>
-                    <ul class="bullet-list">
-                        <li><strong>Pivoting:</strong> Using the hacked system as a jump-box to attack internal servers.</li>
-                        <li><strong>Data Exfiltration:</strong> Quietly moving sensitive company data out of the network.</li>
-                        <li><strong>Clearing Tracks:</strong> Scrubbing Event Logs and bash history to hide footprints.</li>
-                    </ul>
+                <div id="maintain" class="topic-content">
+                    <h1 class="topic-title">Phase 4: Maintaining Access</h1>
+                    <div class="topic-description">
+                        <p>Usually, hackers have a mission to accomplish. Just breaking into the system is not enough. The hacker must maintain access to the server until the goal is fulfilled.</p>
+                        <h3>Key Techniques:</h3>
+                        <ul class="data-list">
+                            <li>Trojans and other Backdoors.</li>
+                            <li>Rootkits.</li>
+                            <li>Launching further attacks from the compromised system.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="tracks" class="topic-content">
+                    <h1 class="topic-title">Phase 5: Covering Tracks</h1>
+                    <div class="topic-description">
+                        <p>This is the final step. A successful simulated attack means leaving the system without a trace. The sign of success is if the security system never realizes that an attack took place at all.</p>
+                        <h3>Measures Taken:</h3>
+                        <ul class="data-list">
+                            <li>Deleting or Corrupting logs.</li>
+                            <li>Modifying log values or registries.</li>
+                            <li>Uninstalling applications and deleting folders created.</li>
+                        </ul>
+                    </div>
                 </div>
 
             </div>
@@ -162,18 +287,24 @@
     </div>
 
     <script>
+        // Transition between Page 1 and Page 2
         function switchPage(pageId) {
+            // Hide all pages
             document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+            // Show target page
             document.getElementById(pageId).classList.remove('hidden');
         }
 
+        // Handle the dynamic content loading within Page 2
         function showTopic(topicId, element) {
-            // Update Sidebar UI
+            // Update Sidebar UI: Remove active class from all nav items
             document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+            // Add active class to clicked item
             element.classList.add('active');
 
-            // Update Content UI
+            // Update Content UI: Hide all content blocks
             document.querySelectorAll('.topic-content').forEach(content => content.classList.remove('active'));
+            // Show target content block
             document.getElementById(topicId).classList.add('active');
         }
     </script>
