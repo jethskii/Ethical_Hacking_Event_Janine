@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instructor Terminal | Advanced System Hacking v5.0</title>
     <style>
-        /* --- CORE THEME (Original Aesthetic Maintained) --- */
+        /* --- CORE THEME --- */
         :root {
             --neon-green: #39ff14;
             --dark-green: #003300;
@@ -136,6 +136,7 @@
             border: 1px solid #333;
             margin: 20px 0;
             font-size: 0.9rem;
+            line-height: 1.5;
         }
 
         .speaker-context {
@@ -144,13 +145,7 @@
             background: rgba(0,0,0,0.8);
             margin-bottom: 30px;
             border-radius: 10px;
-        }
-
-        /* --- FLASHCARD SYSTEM STYLES --- */
-        .flashcard-container {
-            margin-top: 50px;
-            border-top: 2px solid var(--dark-green);
-            padding-top: 40px;
+            line-height: 1.6;
         }
 
         .flashcard {
@@ -224,7 +219,8 @@
             <div class="nav-item active" onclick="showTab('m1', this)">01. The System Hacking Mindset</div>
             <div class="nav-item" onclick="showTab('m2', this)">02. Breaking the OS Barrier</div>
             <div class="nav-item" onclick="showTab('m3', this)">03. Memory Corruption</div>
-            <div class="nav-item" onclick="showTab('m4', this)">04. Kerberos & AD Dominance</div>
+            <div class="nav-item" onclick="showTab('m4', this)">04. AD Dominance & Kerberos</div>
+            <div class="nav-item" onclick="showTab('m5', this)">05. Lateral Movement & Graphs</div>
             <div class="nav-item" onclick="showTab('quiz', this)" style="border: 1px solid var(--neon-green);">[ TEST KNOWLEDGE ]</div>
         </div>
 
@@ -236,7 +232,7 @@
                     "Welcome to the deep end. We aren't just scanning websites anymore. Today, we learn how to take total control of a machine. Remember: in system hacking, if you have user-level access, you're just a guest. If you have root-level access, you're the God of the machine."
                 </div>
                 <h1 class="glitch-text">System Hacking Foundations</h1>
-                <p>System hacking involves cracking the OS security to gain administrative control. It is the core of any penetration testing engagement because it demonstrates the real impact of a vulnerability.</p>
+                <p>System hacking involves cracking the OS security to gain administrative control. It demonstrates the real-world impact of infrastructure vulnerabilities.</p>
                 <ul class="data-list">
                     <li><b>Infiltration:</b> Bypassing perimeter defenses (Firewalls/AV).</li>
                     <li><b>Escalation:</b> Moving from a service account to a System/Admin account.</li>
@@ -246,48 +242,75 @@
 
             <div id="m2" class="topic-content">
                 <h1 class="glitch-text">Breaking the OS Barrier</h1>
-                <p>Most operating systems are built like fortresses, but every fortress has a weak brick. As an instructor, I emphasize searching for misconfigured services over complex code exploits.</p>
+                <p>Most operating systems are built like fortresses, but every fortress has a weak brick. Searching for misconfigured services is often more effective than complex zero-day exploits.</p>
                 <div class="terminal-box">
                     # Enumerating unquoted service paths in Windows<br>
                     wmic service get name,displayname,pathname,startmode | findstr /i "Auto" | findstr /i /v "C:\Windows\\" | findstr /i /v """
                 </div>
-                <p>By finding a service path with a space and no quotes, we can plant a malicious executable that the OS will run instead of the real service.</p>
+                <p>By finding a service path with a space and no quotes, we can plant a malicious executable (e.g., Program.exe) that the OS will run instead of the intended service.</p>
             </div>
 
             <div id="m3" class="topic-content">
                 <h1 class="glitch-text">Memory Corruption & BoF</h1>
-                <p>Buffer Overflows (BoF) occur when a program writes more data to a buffer than it can hold. This spills over into adjacent memory, potentially overwriting the Return Address.</p>
-                
-                
+                <p>Buffer Overflows (BoF) occur when a program writes more data to a buffer than it can hold, spilling into adjacent memory to overwrite the <b>Instruction Pointer (EIP)</b>.</p>
                 
                 <ul class="data-list">
-                    <li><b>Stack Smashing:</b> Overwriting the local variables and the EIP.</li>
-                    <li><b>NOP Sleds:</b> Using \x90 instructions to lead the CPU to your shellcode.</li>
-                    <li><b>The Payoff:</b> Execution of a remote shell directly in system memory, leaving no files on the disk.</li>
+                    <li><b>Stack Smashing:</b> Overwriting local variables to hijack program execution.</li>
+                    <li><b>NOP Sleds:</b> Using \x90 instructions to lead the CPU safely to your shellcode.</li>
+                    <li><b>The Payoff:</b> Execution of a remote shell directly in system memory, leaving no trace on the physical disk.</li>
                 </ul>
             </div>
 
             <div id="m4" class="topic-content">
-                <h1 class="glitch-text">Active Directory (AD) Dominance</h1>
-                <p>In a large-scale corporate environment, individual machines matter less than the <b>Domain Controller (DC)</b>. If you control the DC, you control every user, every computer, and every password in the company.</p>
+                <h1 class="glitch-text">Active Directory Dominance</h1>
+                <p>In large-scale environments, individual machines matter less than the <b>Domain Controller (DC)</b>. Owning the DC means owning every identity in the organization.</p>
+                
+                <div class="speaker-context">
+                    <b style="color: var(--neon-green);">REAL-WORLD INTEL:</b><br>
+                    "Attackers often exploit the <b>Service Account Trap</b>. Many SQL or Printer accounts use weak, non-expiring passwords. By 'Kerberoasting', we request service tickets and crack them offline to gain a foothold."
+                </div>
+
                 <div class="terminal-box">
-                    $ invoke-kerberoast -erroraction silentlycontinue<br>
+                    # Kerberoasting: Extracting service hashes for offline cracking<br>
+                    $ invoke-kerberoast -erroraction silentlycontinue<br><br>
+                    # DCSync: Mimicking a DC to replicate password hashes<br>
                     $ lsadump::dcsync /domain:corp.local /user:administrator
                 </div>
+
                 <ul class="data-list">
-                    <li><b>Golden Ticket:</b> A forged TGT that grants unlimited access for up to 10 years.</li>
-                    <li><b>Silver Ticket:</b> A forged ticket for a specific service (like SQL or File Shares).</li>
+                    <li><b>Golden Ticket:</b> A forged TGT using the <b>KRBTGT</b> hash. It grants 'God Mode' access. <i>Defensive Note: Rotate the KRBTGT key twice to invalidate these.</i></li>
+                    <li><b>Silver Ticket:</b> A forged ticket for specific services (like SQL or File Shares), bypassing the DC entirely during authentication.</li>
+                    <li><b>AD CS Abuse:</b> Exploiting misconfigured Certificate Authorities to impersonate any user via digital certificates.</li>
                 </ul>
+            </div>
+
+            <div id="m5" class="topic-content">
+                <h1 class="glitch-text">Lateral Movement & Graphs</h1>
+                <p>Modern hacking isn't a straight line; it's a map. Tools like <b>BloodHound</b> use graph theory to find hidden relationships between users and computers.</p>
+
+                <div class="speaker-context">
+                    <b style="color: var(--neon-green);">THE ATTACK PATH:</b><br>
+                    "An attacker compromises a Help Desk user. They see that user has local admin on a server where a CFO is logged in. They steal the CFO's hash and use it to access the Finance Server. This is the <b>Path of Least Resistance</b>."
+                </div>
+
+                <ul class="data-list">
+                    <li><b>Pass-the-Hash (PtH):</b> Using an NTLM hash to authenticate without ever knowing the plaintext password.</li>
+                    <li><b>Shadow Admins:</b> Using the <b>AdminSDHolder</b> container to create a hidden 'backdoor' user that automatically regains permissions every 60 minutes.</li>
+                </ul>
+
+                <div class="terminal-box">
+                    # Checking for Shadow Admins with GenericAll privileges<br>
+                    Get-DomainObjectAcl -Identity "Domain Admins" | ? {$_.ActiveDirectoryRights -eq "GenericAll"}
+                </div>
             </div>
 
             <div id="quiz" class="topic-content">
                 <h1 class="glitch-text">Knowledge Validation</h1>
-                <p style="text-align: center; color: #888;">Complete the following assessment to verify your system hacking proficiency.</p>
+                <p style="text-align: center; color: #888;">Complete the assessment to verify your system hacking proficiency.</p>
                 
                 <div class="flashcard">
                     <h3 id="question-text" style="color: var(--neon-green);">Loading Question...</h3>
-                    <div id="options-container">
-                        </div>
+                    <div id="options-container"></div>
                     <div id="reveal-zone">
                         <b id="status-text"></b><br>
                         <span id="explanation-text"></span>
@@ -302,7 +325,6 @@
     </div>
 
     <script>
-        // Tab Management
         function showTab(id, el) {
             document.querySelectorAll('.topic-content').forEach(t => t.classList.remove('active'));
             document.getElementById(id).classList.add('active');
@@ -314,7 +336,6 @@
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
-        // Quiz Data
         const quizData = [
             {
                 q: "What is the primary goal of Privilege Escalation?",
@@ -326,13 +347,19 @@
                 q: "Which register does a Buffer Overflow aim to control?",
                 options: ["EAX", "ESP", "EIP (Instruction Pointer)", "EBP"],
                 correct: 2,
-                exp: "The EIP (Extended Instruction Pointer) tells the CPU which memory address to execute next. Controlling it means controlling the program flow."
+                exp: "The EIP tells the CPU which memory address to execute next. Controlling it means controlling the program flow."
             },
             {
-                q: "What is a 'Golden Ticket' in Active Directory hacking?",
-                options: ["A legal permission to hack", "A forged Ticket Granting Ticket (TGT)", "A password for the CEO", "A tool for cracking WiFi"],
+                q: "What makes a 'Golden Ticket' so powerful?",
+                options: ["It bypasses the firewall", "It is signed by the KRBTGT hash, allowing impersonation of any user", "It uses 2048-bit encryption", "It deletes all system backups"],
                 correct: 1,
-                exp: "A Golden Ticket is a forged TGT that allows an attacker to impersonate any user in the Domain, providing permanent persistence."
+                exp: "Because the attacker has the KRBTGT hash, they can forge tickets that the Domain Controller will trust as legitimate, effectively becoming a 'Shadow Admin'."
+            },
+            {
+                q: "What is 'Pass-the-Hash'?",
+                options: ["Cracking a password with a GPU", "Authenticating using an NTLM hash without the plaintext password", "Sharing passwords with other hackers", "A method to bypass WiFi encryption"],
+                correct: 1,
+                exp: "Pass-the-Hash allows an attacker to use a captured NTLM hash to authenticate to remote servers, bypassing the need for the actual password."
             }
         ];
 
@@ -357,8 +384,6 @@
         function checkAnswer(index, btn) {
             const q = quizData[currentQ];
             const allBtns = document.querySelectorAll('.quiz-option');
-            
-            // Disable all buttons after choice
             allBtns.forEach(b => b.disabled = true);
 
             if(index === q.correct) {
@@ -367,7 +392,7 @@
                 document.getElementById('status-text').style.color = "var(--neon-green)";
             } else {
                 btn.classList.add('wrong');
-                allBtns[q.correct].classList.add('correct'); // Highlight right answer
+                allBtns[q.correct].classList.add('correct');
                 document.getElementById('status-text').innerText = "[ ACCESS DENIED ] Unauthorized Selection.";
                 document.getElementById('status-text').style.color = "var(--error-red)";
             }
