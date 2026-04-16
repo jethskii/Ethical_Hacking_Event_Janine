@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethical Hacking Seminar - Intro</title>
+    <style>
+        :root {
+            --neon-green: #39ff14;
+            --dark-green: #003300;
+            --deep-black: #050505;
+            --glass-bg: rgba(0, 51, 0, 0.3);
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--deep-black);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: white;
+        }
+
+        /* Animated Background Plexus Effect */
+        .background-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, var(--dark-green) 0%, var(--deep-black) 100%);
+            z-index: -1;
+        }
+
+        .grid-overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 0, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 0, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* Scanning Line Effect */
+        .scanline {
+            width: 100%;
+            height: 2px;
+            background: var(--neon-green);
+            opacity: 0.2;
+            position: absolute;
+            bottom: 100%;
+            animation: scan 4s linear infinite;
+            box-shadow: 0 0 15px var(--neon-green);
+        }
+
+        @keyframes scan {
+            0% { bottom: 100%; }
+            100% { bottom: 0%; }
+        }
+
+        /* Main Content UI */
+        .main-frame {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .hero-title {
+            font-size: 4.5rem;
+            text-transform: uppercase;
+            letter-spacing: 10px;
+            margin: 0;
+            color: var(--neon-green);
+            text-shadow: 0 0 20px rgba(57, 255, 20, 0.6);
+            animation: fadeInDown 1.5s ease-out;
+        }
+
+        .event-date {
+            font-size: 1.5rem;
+            letter-spacing: 5px;
+            margin-top: 10px;
+            color: #ffffff;
+            opacity: 0.8;
+            animation: fadeInUp 2s ease-out;
+        }
+
+        /* Glassmorphism Profile Card */
+        .profile-card {
+            margin-top: 50px;
+            padding: 20px 40px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(57, 255, 20, 0.3);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+            animation: zoomIn 1.2s ease-in-out;
+        }
+
+        .profile-name {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--neon-green);
+            margin: 0;
+        }
+
+        .profile-title {
+            font-size: 1rem;
+            color: #ccc;
+            margin-top: 5px;
+        }
+
+        /* Topic Badges */
+        .topics-container {
+            display: flex;
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .badge {
+            padding: 10px 20px;
+            border: 1px solid var(--neon-green);
+            border-radius: 5px;
+            font-size: 0.9rem;
+            background: transparent;
+            transition: 0.3s;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .badge:hover {
+            background: var(--neon-green);
+            color: black;
+            box-shadow: 0 0 20px var(--neon-green);
+        }
+
+        /* Keyframes */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="background-container">
+        <div class="grid-overlay"></div>
+        <div class="scanline"></div>
+    </div>
+
+    <div class="main-frame">
+        <h1 class="hero-title">Ethical Hacking</h1>
+        <div class="event-date">SEMINAR EVENT // APRIL 17, 2026</div>
+
+        <div class="profile-card">
+            <div class="profile-name">Janine K. Mandalones</div>
+            <div class="profile-title">Software Engineer - Application Developer</div>
+        </div>
+
+        <div class="topics-container">
+            <div class="badge">System Hacking</div>
+            <div class="badge">Web Application Security</div>
+        </div>
+    </div>
+
+</body>
+</html>
