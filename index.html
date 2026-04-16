@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ethical Hacking Seminar</title>
+    <title>Ethical Hacking Seminar | Janine K.</title>
     <style>
         :root {
             --neon-green: #39ff14;
             --dark-green: #003300;
             --deep-black: #050505;
             --glass-bg: rgba(0, 51, 0, 0.4);
-            --border-glow: 0 0 10px rgba(57, 255, 20, 0.5);
+            --border-glow: 0 0 15px rgba(57, 255, 20, 0.4);
         }
 
         body, html {
@@ -23,85 +23,46 @@
         }
 
         /* Background Effects */
-        .bg {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, var(--dark-green) 0%, var(--deep-black) 100%);
-            z-index: -1;
-        }
-        .grid {
-            position: fixed; width: 100%; height: 100%;
-            background-image: linear-gradient(rgba(0, 255, 0, 0.03) 1px, transparent 1px), 
-                              linear-gradient(90deg, rgba(0, 255, 0, 0.03) 1px, transparent 1px);
-            background-size: 30px 30px; z-index: -1;
-        }
+        .bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, var(--dark-green) 0%, var(--deep-black) 100%); z-index: -1; }
+        .grid { position: fixed; width: 100%; height: 100%; background-image: linear-gradient(rgba(0, 255, 0, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 0, 0.03) 1px, transparent 1px); background-size: 30px 30px; z-index: -1; }
 
-        /* Layout Transitions */
-        .page {
-            position: absolute; width: 100%; height: 100%;
-            transition: transform 0.8s cubic-bezier(0.85, 0, 0.15, 1), opacity 0.5s;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-        }
-        .hidden { transform: translateY(-100%); opacity: 0; pointer-events: none; }
+        /* Page Management */
+        .page { position: absolute; width: 100%; height: 100%; transition: all 0.6s ease-in-out; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .hidden { transform: scale(0.9); opacity: 0; pointer-events: none; }
 
-        /* --- PAGE 1: INTRO --- */
-        .hero-title {
-            font-size: 5rem; text-transform: uppercase; letter-spacing: 12px;
-            color: var(--neon-green); text-shadow: 0 0 20px var(--neon-green);
-            margin: 0; animation: glow 2s infinite alternate;
-        }
-        @keyframes glow { from { text-shadow: 0 0 10px var(--neon-green); } to { text-shadow: 0 0 30px var(--neon-green); } }
-
-        .profile-card {
-            margin: 40px; padding: 20px; border: 1px solid var(--neon-green);
-            background: var(--glass-bg); backdrop-filter: blur(5px); border-radius: 10px;
-        }
-
-        .btn {
-            padding: 15px 30px; border: 1px solid var(--neon-green);
-            background: transparent; color: var(--neon-green);
-            cursor: pointer; text-transform: uppercase; font-weight: bold;
-            transition: 0.3s; margin: 10px;
-        }
+        /* INTRO PAGE STYLES */
+        .hero-title { font-size: 5rem; text-transform: uppercase; letter-spacing: 12px; color: var(--neon-green); text-shadow: var(--border-glow); margin: 0; }
+        .profile-card { margin: 40px; padding: 25px; border: 1px solid var(--neon-green); background: var(--glass-bg); backdrop-filter: blur(8px); border-radius: 10px; text-align: center; }
+        
+        /* BUTTONS */
+        .btn { padding: 15px 30px; border: 1px solid var(--neon-green); background: transparent; color: var(--neon-green); cursor: pointer; text-transform: uppercase; font-weight: bold; transition: 0.3s; margin: 10px; }
         .btn:hover { background: var(--neon-green); color: black; box-shadow: var(--border-glow); }
 
-        /* --- PAGE 2: SYSTEM HACKING --- */
-        .content-grid {
-            display: grid; grid-template-columns: 300px 1fr;
-            width: 90%; height: 80%; gap: 30px;
-        }
+        /* SYSTEM HACKING DASHBOARD */
+        .dashboard-container { width: 90%; height: 85%; display: grid; grid-template-columns: 320px 1fr; gap: 20px; }
+        
+        .sidebar { background: rgba(0,0,0,0.6); border: 1px solid var(--neon-green); border-radius: 10px; padding: 20px; display: flex; flex-direction: column; }
+        .sidebar h2 { color: var(--neon-green); font-size: 1.2rem; border-bottom: 1px solid var(--neon-green); padding-bottom: 10px; }
+        
+        .nav-item { padding: 15px; margin: 8px 0; border: 1px solid transparent; cursor: pointer; transition: 0.2s; font-size: 0.9rem; }
+        .nav-item:hover { border-color: var(--neon-green); background: rgba(57, 255, 20, 0.05); }
+        .nav-item.active { background: var(--neon-green); color: black; font-weight: bold; }
 
-        .sidebar {
-            border-right: 1px solid var(--neon-green);
-            padding-right: 20px; text-align: left;
-        }
-        .sidebar h2 { color: var(--neon-green); border-bottom: 2px solid var(--neon-green); }
+        .content-area { background: var(--glass-bg); border: 1px solid var(--neon-green); border-radius: 10px; padding: 40px; position: relative; overflow-y: auto; }
+        .topic-content { display: none; animation: fadeIn 0.4s ease; }
+        .topic-content.active { display: block; }
 
-        .topic-list { list-style: none; padding: 0; }
-        .topic-list li {
-            padding: 15px; margin-bottom: 10px;
-            background: rgba(57, 255, 20, 0.1);
-            border-left: 5px solid var(--neon-green);
-            animation: slideIn 0.5s ease-out forwards;
-            opacity: 0;
-        }
-        @keyframes slideIn { from { transform: translateX(-50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .main-content {
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
-        }
+        .tag { display: inline-block; padding: 4px 10px; background: var(--dark-green); color: var(--neon-green); border-radius: 4px; font-size: 0.7rem; margin-bottom: 10px; text-transform: uppercase; }
+        h1.topic-title { color: var(--neon-green); font-size: 2.5rem; margin-top: 10px; }
+        .description { line-height: 1.6; color: #e0e0e0; font-size: 1.1rem; max-width: 800px; }
+        
+        .bullet-list { margin-top: 25px; list-style: none; padding: 0; }
+        .bullet-list li { margin-bottom: 15px; padding-left: 25px; position: relative; }
+        .bullet-list li::before { content: '>'; position: absolute; left: 0; color: var(--neon-green); }
 
-        .topic-card {
-            background: var(--glass-bg); border: 1px solid rgba(57, 255, 20, 0.2);
-            padding: 20px; border-radius: 8px; position: relative;
-            overflow: hidden; transition: 0.3s;
-        }
-        .topic-card:hover { border-color: var(--neon-green); transform: scale(1.02); }
-        .topic-card h3 { color: var(--neon-green); margin-top: 0; }
-        .topic-card p { font-size: 0.9rem; color: #ccc; line-height: 1.4; }
-
-        /* Back Button */
-        .back-btn { position: absolute; top: 20px; left: 20px; }
-
+        .back-btn { position: absolute; top: 20px; left: 5%; font-size: 0.8rem; }
     </style>
 </head>
 <body>
@@ -111,60 +72,109 @@
 
     <div id="intro-page" class="page">
         <h1 class="hero-title">Ethical Hacking</h1>
-        <div style="letter-spacing: 5px; margin-top: 10px;">SEMINAR EVENT // 2026</div>
+        <div style="letter-spacing: 5px; margin-top: 10px; color: #888;">SEMINAR EVENT // APRIL 17, 2026</div>
 
         <div class="profile-card">
-            <div style="font-size: 1.5rem; color: var(--neon-green);">Janine K. Mandalones</div>
-            <div style="color: #888;">Software Engineer - Application Developer</div>
+            <div style="font-size: 1.8rem; color: var(--neon-green); font-weight: bold;">Janine K. Mandalones</div>
+            <div style="color: #ccc; margin-top: 5px;">Software Engineer - Application Developer</div>
         </div>
 
         <div>
-            <button class="btn" onclick="showPage('hacking-page')">System Hacking</button>
-            <button class="btn">Web App Security</button>
+            <button class="btn" onclick="switchPage('hacking-page')">Enter System Hacking</button>
+            <button class="btn" disabled style="opacity: 0.5; cursor: not-allowed;">Web App Security (Locked)</button>
         </div>
     </div>
 
     <div id="hacking-page" class="page hidden">
-        <button class="btn back-btn" onclick="showPage('intro-page')"><< TERMINAL_HOME</button>
+        <button class="btn back-btn" onclick="switchPage('intro-page')">/RETURN/TO/MAIN/TERMINAL</button>
         
-        <div class="content-grid">
+        <div class="dashboard-container">
             <div class="sidebar">
-                <h2>CORE TOPICS</h2>
-                <ul class="topic-list">
-                    <li style="animation-delay: 0.1s;">01. Reconnaissance</li>
-                    <li style="animation-delay: 0.2s;">02. Vulnerability Analysis</li>
-                    <li style="animation-delay: 0.3s;">03. Exploitation</li>
-                    <li style="animation-delay: 0.4s;">04. Post-Exploitation</li>
-                </ul>
+                <h2>SYSTEM_HACKING_OS</h2>
+                <div class="nav-item active" onclick="showTopic('methodology', this)">01. Hacking Cycle</div>
+                <div class="nav-item" onclick="showTopic('passwords', this)">02. Password Cracking</div>
+                <div class="nav-item" onclick="showTopic('privesc', this)">03. Privilege Escalation</div>
+                <div class="nav-item" onclick="showTopic('buffer', this)">04. Buffer Overflow</div>
+                <div class="nav-item" onclick="showTopic('post', this)">05. Post-Exploitation</div>
             </div>
 
-            <div class="main-content">
-                <div class="topic-card">
-                    <h3>Password Cracking</h3>
-                    <p>Techniques including Brute Force, Dictionary Attacks, and Rainbow Tables. Focus on salting and hashing defenses.</p>
+            <div class="content-area">
+                
+                <div id="methodology" class="topic-content active">
+                    <span class="tag">Phase: Identification</span>
+                    <h1 class="topic-title">The Hacking Cycle</h1>
+                    <p class="description">Hacking is a structured process. To defend a system, we must understand the 5 phases of a professional attack.</p>
+                    <ul class="bullet-list">
+                        <li><strong>Reconnaissance:</strong> Gathering information on the target network.</li>
+                        <li><strong>Scanning:</strong> Identifying open ports, live hosts, and service versions.</li>
+                        <li><strong>Gaining Access:</strong> Exploiting vulnerabilities to enter the system.</li>
+                        <li><strong>Maintaining Access:</strong> Establishing persistence via backdoors.</li>
+                    </ul>
                 </div>
-                <div class="topic-card">
-                    <h3>Privilege Escalation</h3>
-                    <p>Moving from a low-level user to Root/Admin access via kernel exploits or misconfigurations.</p>
+
+                <div id="passwords" class="topic-content">
+                    <span class="tag">Phase: Exploitation</span>
+                    <h1 class="topic-title">Password Cracking</h1>
+                    <p class="description">How credentials are bypassed or stolen in modern environments.</p>
+                    <ul class="bullet-list">
+                        <li><strong>Dictionary Attacks:</strong> Using lists of common passwords against a target.</li>
+                        <li><strong>Brute Force:</strong> Calculating every possible combination (time-intensive).</li>
+                        <li><strong>Rainbow Tables:</strong> Using pre-computed hash tables to crack salted passwords faster.</li>
+                        <li><strong>Social Engineering:</strong> Tricking users into revealing credentials.</li>
+                    </ul>
                 </div>
-                <div class="topic-card">
-                    <h3>Malware Threats</h3>
-                    <p>Analysis of Trojans, Ransomware, and Keyloggers. How they infiltrate and stay persistent in a system.</p>
+
+                <div id="privesc" class="topic-content">
+                    <span class="tag">Phase: Escalation</span>
+                    <h1 class="topic-title">Privilege Escalation</h1>
+                    <p class="description">Once inside as a guest, the goal is to become the Administrator (Root).</p>
+                    <ul class="bullet-list">
+                        <li><strong>Vertical Escalation:</strong> Gaining higher-level permissions (Guest -> Admin).</li>
+                        <li><strong>Horizontal Escalation:</strong> Gaining access to another user's files at the same level.</li>
+                        <li><strong>Exploiting Misconfigurations:</strong> Leveraging weak file permissions or unpatched kernel vulnerabilities.</li>
+                    </ul>
                 </div>
-                <div class="topic-card" style="border-style: dashed;">
-                    <h3>Metasploit Pro</h3>
-                    <p>Live demonstration of the world's most used penetration testing framework.</p>
+
+                <div id="buffer" class="topic-content">
+                    <span class="tag">Phase: Advanced Exploit</span>
+                    <h1 class="topic-title">Buffer Overflow</h1>
+                    <p class="description">As developers, this is our biggest risk. When a program writes more data to a buffer than it can hold.</p>
+                    <ul class="bullet-list">
+                        <li><strong>Memory Corruption:</strong> Overwriting the Return Address in the stack.</li>
+                        <li><strong>Payload Execution:</strong> Redirecting execution flow to malicious shellcode.</li>
+                        <li><strong>Defenses:</strong> Implementing ASLR, DEP, and safe coding practices (using `strncpy` over `strcpy`).</li>
+                    </ul>
                 </div>
+
+                <div id="post" class="topic-content">
+                    <span class="tag">Phase: Maintenance</span>
+                    <h1 class="topic-title">Post-Exploitation</h1>
+                    <p class="description">What a hacker does after successfully owning the system.</p>
+                    <ul class="bullet-list">
+                        <li><strong>Pivoting:</strong> Using the hacked system as a jump-box to attack internal servers.</li>
+                        <li><strong>Data Exfiltration:</strong> Quietly moving sensitive company data out of the network.</li>
+                        <li><strong>Clearing Tracks:</strong> Scrubbing Event Logs and bash history to hide footprints.</li>
+                    </ul>
+                </div>
+
             </div>
         </div>
     </div>
 
     <script>
-        function showPage(pageId) {
-            // Hide all pages
+        function switchPage(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
-            // Show target page
             document.getElementById(pageId).classList.remove('hidden');
+        }
+
+        function showTopic(topicId, element) {
+            // Update Sidebar UI
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+            element.classList.add('active');
+
+            // Update Content UI
+            document.querySelectorAll('.topic-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(topicId).classList.add('active');
         }
     </script>
 </body>
