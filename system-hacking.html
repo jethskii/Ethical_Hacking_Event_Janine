@@ -148,6 +148,14 @@
             line-height: 1.6;
         }
 
+        .highlight-box {
+            border: 1px dashed var(--neon-green);
+            padding: 15px;
+            background: rgba(57, 255, 20, 0.05);
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
         .flashcard {
             background: #000;
             border: 1px solid var(--neon-green);
@@ -242,22 +250,45 @@
 
             <div id="m2" class="topic-content">
                 <h1 class="glitch-text">Breaking the OS Barrier</h1>
-                <p>Most operating systems are built like fortresses, but every fortress has a weak brick. Searching for misconfigured services is often more effective than complex zero-day exploits.</p>
+                
+                <div class="speaker-context">
+                    <b style="color: var(--neon-green);">🎤 PRESENTATION MODE - SPEAKER SCRIPT:</b><br>
+                    "Think of your OS like a <b>School Campus</b>. Students are normal users, Teachers are admins, and Security Guards are the system protections. 'Breaking the Barrier' is when someone finds a way into the restricted records room without a key. We study this not to destroy, but to understand how systems fail so we can make them stronger."
+                </div>
+
+                <div class="highlight-box">
+                    <h3 style="margin-top:0; color:var(--neon-green);">The Gatekeeper Concept</h3>
+                    <p>The Operating System (OS) is the ultimate gatekeeper. It manages memory, files, and hardware. Breaking the barrier means:</p>
+                    <ul style="margin:0; padding-left:20px; color:#ccc;">
+                        <li>Gaining unauthorized entry</li>
+                        <li>Escalating privileges (Normal User &rarr; Admin)</li>
+                        <li>Bypassing built-in security rules</li>
+                    </ul>
+                </div>
+
                 <div class="terminal-box">
-                    # Enumerating unquoted service paths in Windows<br>
+                    # THE TECHNICAL REALITY: Enumerating unquoted service paths<br>
                     wmic service get name,displayname,pathname,startmode | findstr /i "Auto" | findstr /i /v "C:\Windows\\" | findstr /i /v """
                 </div>
-                <p>By finding a service path with a space and no quotes, we can plant a malicious executable (e.g., Program.exe) that the OS will run instead of the intended service.</p>
+                
+                <p>By finding a service path with a space and no quotes, we exploit a logic flaw where the OS 'guesses' which file to run, allowing us to plant a malicious executable.</p>
+                
+                <div class="highlight-box" style="border-color: #444;">
+                    <b style="color: var(--neon-green);">WHY THIS MATTERS TODAY:</b><br>
+                    Every business relies on secure OS barriers. Even a small vulnerability—like a missing quote in a file path—can lead to a massive data breach. Awareness is the first line of defense.
+                </div>
             </div>
 
             <div id="m3" class="topic-content">
                 <h1 class="glitch-text">Memory Corruption & BoF</h1>
                 <p>Buffer Overflows (BoF) occur when a program writes more data to a buffer than it can hold, spilling into adjacent memory to overwrite the <b>Instruction Pointer (EIP)</b>.</p>
                 
+                
+                
                 <ul class="data-list">
                     <li><b>Stack Smashing:</b> Overwriting local variables to hijack program execution.</li>
                     <li><b>NOP Sleds:</b> Using \x90 instructions to lead the CPU safely to your shellcode.</li>
-                    <li><b>The Payoff:</b> Execution of a remote shell directly in system memory, leaving no trace on the physical disk.</li>
+                    <li><b>The Payoff:</b> Execution of a remote shell directly in system memory.</li>
                 </ul>
             </div>
 
@@ -267,7 +298,7 @@
                 
                 <div class="speaker-context">
                     <b style="color: var(--neon-green);">REAL-WORLD INTEL:</b><br>
-                    "Attackers often exploit the <b>Service Account Trap</b>. Many SQL or Printer accounts use weak, non-expiring passwords. By 'Kerberoasting', we request service tickets and crack them offline to gain a foothold."
+                    "Attackers often exploit the <b>Service Account Trap</b>. By 'Kerberoasting', we request service tickets and crack them offline to gain a foothold."
                 </div>
 
                 <div class="terminal-box">
@@ -278,24 +309,24 @@
                 </div>
 
                 <ul class="data-list">
-                    <li><b>Golden Ticket:</b> A forged TGT using the <b>KRBTGT</b> hash. It grants 'God Mode' access. <i>Defensive Note: Rotate the KRBTGT key twice to invalidate these.</i></li>
-                    <li><b>Silver Ticket:</b> A forged ticket for specific services (like SQL or File Shares), bypassing the DC entirely during authentication.</li>
-                    <li><b>AD CS Abuse:</b> Exploiting misconfigured Certificate Authorities to impersonate any user via digital certificates.</li>
+                    <li><b>Golden Ticket:</b> A forged TGT using the <b>KRBTGT</b> hash.</li>
+                    <li><b>Silver Ticket:</b> A forged ticket for specific services (like SQL or File Shares).</li>
+                    <li><b>AD CS Abuse:</b> Exploiting misconfigured Certificate Authorities.</li>
                 </ul>
             </div>
 
             <div id="m5" class="topic-content">
                 <h1 class="glitch-text">Lateral Movement & Graphs</h1>
-                <p>Modern hacking isn't a straight line; it's a map. Tools like <b>BloodHound</b> use graph theory to find hidden relationships between users and computers.</p>
+                <p>Modern hacking isn't a straight line; it's a map. Tools like <b>BloodHound</b> use graph theory to find hidden relationships.</p>
 
                 <div class="speaker-context">
                     <b style="color: var(--neon-green);">THE ATTACK PATH:</b><br>
-                    "An attacker compromises a Help Desk user. They see that user has local admin on a server where a CFO is logged in. They steal the CFO's hash and use it to access the Finance Server. This is the <b>Path of Least Resistance</b>."
+                    "This is the <b>Path of Least Resistance</b>. An attacker moves from a low-privilege workstation to a high-value server using stolen credentials or session hijacking."
                 </div>
 
                 <ul class="data-list">
-                    <li><b>Pass-the-Hash (PtH):</b> Using an NTLM hash to authenticate without ever knowing the plaintext password.</li>
-                    <li><b>Shadow Admins:</b> Using the <b>AdminSDHolder</b> container to create a hidden 'backdoor' user that automatically regains permissions every 60 minutes.</li>
+                    <li><b>Pass-the-Hash (PtH):</b> Authenticating with NTLM hashes.</li>
+                    <li><b>Shadow Admins:</b> Using <b>AdminSDHolder</b> to create a hidden 'backdoor' user.</li>
                 </ul>
 
                 <div class="terminal-box">
@@ -306,8 +337,6 @@
 
             <div id="quiz" class="topic-content">
                 <h1 class="glitch-text">Knowledge Validation</h1>
-                <p style="text-align: center; color: #888;">Complete the assessment to verify your system hacking proficiency.</p>
-                
                 <div class="flashcard">
                     <h3 id="question-text" style="color: var(--neon-green);">Loading Question...</h3>
                     <div id="options-container"></div>
@@ -341,25 +370,25 @@
                 q: "What is the primary goal of Privilege Escalation?",
                 options: ["Deleting system logs", "Moving from low-level access to admin/root access", "Installing a keylogger", "Performing a DoS attack"],
                 correct: 1,
-                exp: "Privilege escalation is the act of exploiting a bug or configuration oversight to gain elevated access to resources that are normally protected."
+                exp: "Privilege escalation is the act of exploiting a bug or configuration oversight to gain elevated access."
             },
             {
-                q: "Which register does a Buffer Overflow aim to control?",
+                q: "What does the 'School Campus' analogy represent in OS Hacking?",
+                options: ["The physical location of a server", "The relationship between users, admins, and security protections", "A specific type of malware", "The speed of the network"],
+                correct: 1,
+                exp: "It explains the hierarchy: Students (Users), Teachers (Admins), and Guards (Security controls) within an Operating System."
+            },
+            {
+                q: "What register does a Buffer Overflow aim to control?",
                 options: ["EAX", "ESP", "EIP (Instruction Pointer)", "EBP"],
                 correct: 2,
-                exp: "The EIP tells the CPU which memory address to execute next. Controlling it means controlling the program flow."
-            },
-            {
-                q: "What makes a 'Golden Ticket' so powerful?",
-                options: ["It bypasses the firewall", "It is signed by the KRBTGT hash, allowing impersonation of any user", "It uses 2048-bit encryption", "It deletes all system backups"],
-                correct: 1,
-                exp: "Because the attacker has the KRBTGT hash, they can forge tickets that the Domain Controller will trust as legitimate, effectively becoming a 'Shadow Admin'."
+                exp: "The EIP tells the CPU which memory address to execute next."
             },
             {
                 q: "What is 'Pass-the-Hash'?",
                 options: ["Cracking a password with a GPU", "Authenticating using an NTLM hash without the plaintext password", "Sharing passwords with other hackers", "A method to bypass WiFi encryption"],
                 correct: 1,
-                exp: "Pass-the-Hash allows an attacker to use a captured NTLM hash to authenticate to remote servers, bypassing the need for the actual password."
+                exp: "Pass-the-Hash allows an attacker to use a captured NTLM hash to authenticate to remote servers."
             }
         ];
 
