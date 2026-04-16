@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web App Security | Global Security Seminar v4.0</title>
     <style>
-        /* --- CORE THEME (Your Preferred Aesthetic) --- */
+        /* --- CORE THEME: EXPERT TERMINAL --- */
         :root {
             --neon-green: #39ff14;
             --dark-green: #003300;
             --deep-black: #050505;
+            --warning-red: #ff3131;
         }
 
         @keyframes glitch {
@@ -73,6 +74,7 @@
             position: sticky;
             top: 40px;
             box-shadow: 0 0 30px rgba(0, 255, 0, 0.15);
+            height: fit-content;
         }
 
         .content-area { 
@@ -150,14 +152,65 @@
         }
         .img-container img { max-width: 100%; height: auto; }
 
-        .btn { padding: 10px 20px; border: 1px solid var(--neon-green); color: var(--neon-green); background: none; cursor: pointer;}
+        .btn { padding: 10px 20px; border: 1px solid var(--neon-green); color: var(--neon-green); background: none; cursor: pointer; text-transform: uppercase; font-weight: bold; margin-top: 10px;}
         .btn:hover { background: var(--neon-green); color: black; }
+
+        /* --- QUIZ STYLES --- */
+        #quiz-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .quiz-card {
+            background: #000;
+            border: 2px solid var(--neon-green);
+            padding: 40px;
+            width: 600px;
+            box-shadow: 0 0 50px rgba(57, 255, 20, 0.2);
+            text-align: center;
+        }
+
+        .choice-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: transparent;
+            border: 1px solid #444;
+            color: #ccc;
+            text-align: left;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .choice-btn:hover { border-color: var(--neon-green); color: var(--neon-green); }
+        .choice-btn.selected { background: rgba(57, 255, 20, 0.1); border-color: var(--neon-green); }
+        .choice-btn.correct-glow { background: var(--dark-green); color: var(--neon-green); border-color: var(--neon-green); box-shadow: 0 0 15px var(--neon-green); }
+
     </style>
 </head>
 <body>
     <div class="bg-container"></div>
     <div class="data-rain-overlay"></div>
     
+    <div id="quiz-overlay">
+        <div class="quiz-card">
+            <h3 style="color: var(--neon-green); border-bottom: 1px solid #222; padding-bottom: 10px;">[ SYSTEM_VALIDATION ]</h3>
+            <p id="quiz-question" style="font-size: 1.1rem; margin: 20px 0;"></p>
+            <div id="choices-container"></div>
+            
+            <div style="margin-top: 30px;">
+                <button class="btn" id="reveal-btn" onclick="revealAnswer()">REVEAL ANSWER</button>
+                <button class="btn" style="border-color: #555; color: #555;" onclick="closeQuiz()">[ CLOSE ]</button>
+            </div>
+        </div>
+    </div>
+
     <div style="padding: 30px 50px;">
         <button class="btn" onclick="window.location.href='index.html'">[ RETURN_TO_CORE ]</button>
     </div>
@@ -166,7 +219,6 @@
         <div class="sidebar">
             <h2 style="color:var(--neon-green); font-size: 0.9rem; text-align: center; letter-spacing: 4px; border-bottom: 1px solid #222; padding-bottom: 15px;">SEC_PROT_2026</h2>
             <div class="nav-item active" onclick="showTab('m0', this)">00. Web App Security Overview</div>
-            
             <div class="nav-item" onclick="showTab('m1', this)">01. WAF Control</div>
             <div class="nav-item" onclick="showTab('m2', this)">02. Data Encryption</div>
             <div class="nav-item" onclick="showTab('m3', this)">03. Access Roles (RBAC)</div>
@@ -178,115 +230,149 @@
 
             <div id="m0" class="topic-content active">
                 <h1 class="glitch-text">Security Architecture</h1>
-                <p>Establishing a "Defense in Depth" strategy. Modern web applications require layered technical controls to protect against complex external threats and internal vulnerabilities.</p>
-                
+                <p>Establishing a "Defense in Depth" strategy. Modern web applications require layered technical controls to protect against complex external threats.</p>
                 <div class="img-container">
                     <img src="Web_application_security_tools_40424a679c.png" alt="Layered Web Security Overview">
                 </div>
-
-                <ul class="data-list">
-                    <li><b>Defense in Depth:</b> Creating multiple layers of security so if one fails, others protect the system.</li>
-                    <li><b>Perimeter Defense:</b> Filtering malicious requests before they reach the server (WAF).</li>
-                    <li><b>Data Sovereignty:</b> Ensuring information is unreadable without authorization (Encryption).</li>
-                </ul>
+                <button class="btn" onclick="startQuiz(0)">Launch Topic Quiz</button>
             </div>
             
             <div id="m1" class="topic-content">
                 <h1 class="glitch-text">WAF Control</h1>
-                <p>Web application firewalls (WAFs) are the first line of defense at the application layer. They monitor, filter, and block malicious HTTP/HTTPS traffic to prevent unauthorized data access.</p>
-                
+                <p>Web application firewalls (WAFs) are the first line of defense at the application layer. They monitor, filter, and block malicious HTTP/HTTPS traffic.</p>
                 <ul class="data-list">
                     <li><b>GET/POST Analysis:</b> Inspecting payload verbs for malicious strings.</li>
-                    <li><b>Exploit Mitigation:</b> Designed to counter SQLi, XSS, and dangerous bots.</li>
-                    <li><b>Deployment:</b> Can be network-based, host-based, or cloud-based solutions.</li>
+                    <li><b>Exploit Mitigation:</b> Designed to counter SQLi, XSS, and bots.</li>
                 </ul>
-
-                <div class="terminal-box">
-[STATUS] WAF Filtering Active...
-[DETECTED] Malicious pattern in POST request /login.php
-[ACTION] 403 Forbidden - Request Dropped.
-                </div>
-
-                <div class="speaker-note">
-                    <b>Speaker Dialogue:</b> "Think of the WAF as the security guard at the gate. While a standard firewall looks at who is coming in, the WAF looks at exactly what they are carrying inside their HTTP packets."
-                </div>
+                <button class="btn" onclick="startQuiz(1)">Launch Topic Quiz</button>
             </div>
 
             <div id="m2" class="topic-content">
                 <h1 class="glitch-text">Data Encryption</h1>
                 <p>Encryption translates plaintext into ciphertext, ensuring data remains secure even if storage or transmission channels are compromised.</p>
-
                 <ul class="data-list">
-                    <li><b>Symmetric Encryption:</b> Single secret key for both encryption and decryption.</li>
-                    <li><b>Asymmetric Encryption:</b> Public key for encryption, Private key held by the owner.</li>
-                    <li><b>Data States:</b> Protecting data 'At Rest' (drives) and 'In Transit' (networks).</li>
+                    <li><b>Symmetric Encryption:</b> Single secret key for both actions.</li>
+                    <li><b>Asymmetric Encryption:</b> Public key for encryption, Private for decryption.</li>
                 </ul>
-                
-                <div class="terminal-box">
-$ openssl enc -aes-256-cbc -salt -in data.txt -out data.enc
-[SYSTEM] Data translated to Ciphertext.
-                </div>
+                <button class="btn" onclick="startQuiz(2)">Launch Topic Quiz</button>
             </div>
 
             <div id="m3" class="topic-content">
                 <h1 class="glitch-text">Access Roles (RBAC)</h1>
                 <p>Role-Based Access Control restricts system access to authorized users based on their predefined roles within the organization.</p>
-
                 <ul class="data-list">
                     <li><b>Principle of Least Privilege:</b> Users only access what is needed for their job.</li>
-                    <li><b>Role Assignment:</b> Managing permissions through 'Roles' (HR, Finance, IT) rather than individuals.</li>
-                    <li><b>Audit Integrity:</b> Simplifies tracking and prevents 'Permission Creep'.</li>
+                    <li><b>Simplified Audit:</b> Prevents 'Permission Creep'.</li>
                 </ul>
-
-                <div class="speaker-note">
-                    <b>Speaker Dialogue:</b> "In a bank, a teller can see your balance, but they can't change the bank's firewall settings. That is RBAC in action—restricting horizontal movement."
-                </div>
+                <button class="btn" onclick="startQuiz(3)">Launch Topic Quiz</button>
             </div>
 
             <div id="m4" class="topic-content">
                 <h1 class="glitch-text">Authentication (MFA)</h1>
                 <p>Multi-Factor Authentication requires two or more distinct verification types to prove a user's identity.</p>
-
                 <ul class="data-list">
-                    <li><b>Knowledge:</b> Something you know (Passwords, PINs).</li>
-                    <li><b>Possession:</b> Something you have (Smartphone, Security Keys).</li>
-                    <li><b>Inherence:</b> Something you are (Fingerprints, Face ID).</li>
+                    <li><b>Knowledge:</b> Something you know (Passwords).</li>
+                    <li><b>Possession:</b> Something you have (Smartphone).</li>
+                    <li><b>Inherence:</b> Something you are (Biometrics).</li>
                 </ul>
-
-                <div class="terminal-box">
-[LOGIN] Username: Admin
-[MFA] Enter 6-digit TOTP code...
-[SUCCESS] Identity Verified.
-                </div>
+                <button class="btn" onclick="startQuiz(4)">Launch Topic Quiz</button>
             </div>
 
             <div id="m5" class="topic-content">
                 <h1 class="glitch-text">Transport Layer (HTTPS)</h1>
                 <p>HTTPS provides an encrypted "tunnel" for data transfer using Transport Layer Security (TLS).</p>
-
                 <ul class="data-list">
-                    <li><b>SSL/TLS Handshake:</b> Negotiating encryption keys between browser and server.</li>
-                    <li><b>Public Key Infrastructure:</b> Asymmetric keys used to verify authenticity.</li>
-                    <li><b>Trust Indicators:</b> Padlock icons and modern browser security flags.</li>
+                    <li><b>Confidentiality:</b> Prevents eavesdropping.</li>
+                    <li><b>Trust:</b> Verified through SSL/TLS Certificates.</li>
                 </ul>
-
-                <div class="speaker-note">
-                    <b>Speaker Dialogue:</b> "Without HTTPS, your sensitive data is traveling in a clear glass box. Anyone on the same Wi-Fi can see your passwords. TLS turns that box into lead."
-                </div>
+                <button class="btn" onclick="startQuiz(5)">Launch Topic Quiz</button>
             </div>
 
         </div>
     </div>
 
     <script>
+        // TAB NAVIGATION
         function showTab(id, el) {
             document.querySelectorAll('.topic-content').forEach(t => t.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             el.classList.add('active');
-
             window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        // QUIZ DATA
+        const quizData = [
+            {
+                q: "What is the primary goal of a 'Defense in Depth' strategy?",
+                options: ["Buying the most expensive firewall", "Using overlapping layers of security", "Hiring only one security expert", "Using a single strong password"],
+                correct: 1
+            },
+            {
+                q: "WAF operates at which layer of the OSI model?",
+                options: ["Layer 2 (Data Link)", "Layer 3 (Network)", "Layer 7 (Application)", "Layer 4 (Transport)"],
+                correct: 2
+            },
+            {
+                q: "Which encryption method uses a Public Key and a Private Key?",
+                options: ["Symmetric Encryption", "Asymmetric Encryption", "Hashing", "Encoding"],
+                correct: 1
+            },
+            {
+                q: "What is the 'Principle of Least Privilege' in RBAC?",
+                options: ["Everyone gets Admin access", "Users get only the minimum access needed", "Access depends on how long you've worked there", "Granting access based on computer speed"],
+                correct: 1
+            },
+            {
+                q: "A fingerprint scan is an example of which MFA factor?",
+                options: ["Knowledge", "Possession", "Inherence", "Location"],
+                correct: 2
+            },
+            {
+                q: "What does HTTPS use to secure the 'tunnel' between browser and server?",
+                options: ["UDP", "TLS/SSL", "FTP", "ICMP"],
+                correct: 1
+            }
+        ];
+
+        let currentQuizIndex = -1;
+
+        function startQuiz(index) {
+            currentQuizIndex = index;
+            const data = quizData[index];
+            document.getElementById('quiz-question').innerText = data.q;
+            
+            const container = document.getElementById('choices-container');
+            container.innerHTML = '';
+            
+            data.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'choice-btn';
+                btn.innerText = opt;
+                btn.onclick = () => selectChoice(btn);
+                btn.id = "opt-" + i;
+                container.appendChild(btn);
+            });
+
+            document.getElementById('reveal-btn').style.display = 'inline-block';
+            document.getElementById('quiz-overlay').style.display = 'flex';
+        }
+
+        function selectChoice(btn) {
+            document.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+        }
+
+        function revealAnswer() {
+            if (currentQuizIndex === -1) return;
+            const correctIdx = quizData[currentQuizIndex].correct;
+            document.getElementById("opt-" + correctIdx).classList.add('correct-glow');
+            document.getElementById('reveal-btn').style.display = 'none';
+        }
+
+        function closeQuiz() {
+            document.getElementById('quiz-overlay').style.display = 'none';
+            currentQuizIndex = -1;
         }
     </script>
 </body>
