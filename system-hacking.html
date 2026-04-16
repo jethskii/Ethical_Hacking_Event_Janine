@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instructor Terminal | Advanced System Hacking v5.5</title>
+    <title>Instructor Terminal | Advanced System Hacking v6.3</title>
     <style>
         /* --- CORE THEME & ENHANCED UI --- */
         :root {
@@ -23,6 +23,12 @@
             60% { transform: translate(2px, 2px); }
             80% { transform: translate(2px, -2px); }
             100% { transform: translate(0); }
+        }
+
+        @keyframes gold-glow {
+            0% { box-shadow: 0 0 5px var(--gold); border-color: var(--gold); }
+            50% { box-shadow: 0 0 25px var(--gold); border-color: #fff; }
+            100% { box-shadow: 0 0 5px var(--gold); border-color: var(--gold); }
         }
 
         body, html {
@@ -119,9 +125,23 @@
         .topic-content.active { display: block; }
         
         .quiz-option {
-            display: block; width: 100%; padding: 18px; margin: 12px 0; background: transparent; border: 1px solid #444; color: white; cursor: pointer; transition: 0.3s; border-radius: 10px; font-family: inherit; font-size: 1rem;
+            display: block; width: 100%; padding: 18px; margin: 12px 0; background: transparent; border: 1px solid #444; color: white; cursor: pointer; transition: 0.3s; border-radius: 10px; font-family: inherit; font-size: 1rem; text-align: left;
         }
-        .quiz-option:hover { border-color: var(--neon-green); background: rgba(57, 255, 20, 0.05); }
+        .quiz-option:hover:not(:disabled) { border-color: var(--neon-green); background: rgba(57, 255, 20, 0.05); }
+        .quiz-option.correct { border-color: var(--neon-green); background: rgba(57, 255, 20, 0.1); color: var(--neon-green); }
+        .quiz-option.wrong { border-color: var(--error-red); background: rgba(255, 0, 0, 0.1); color: var(--error-red); }
+
+        .golden-ticket-card {
+            border: 2px solid var(--gold);
+            background: linear-gradient(135deg, rgba(30, 20, 0, 0.9) 0%, rgba(0,0,0,1) 100%);
+            padding: 35px;
+            border-radius: 20px;
+            margin: 40px 0;
+            animation: gold-glow 4s infinite ease-in-out;
+        }
+
+        .impact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        .impact-card { background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 12px; border: 1px solid #333; }
     </style>
 </head>
 <body>
@@ -135,359 +155,148 @@
     <div class="dashboard">
         <div class="sidebar">
             <h2 style="color:var(--neon-green); font-size: 0.8rem; text-align: center; letter-spacing: 5px; margin-bottom: 30px;">MISSION_CONTROL</h2>
-            <div class="nav-item" onclick="showTab('m1', this)">01. Hacking Mindset</div>
-            <div class="nav-item active" onclick="showTab('m2', this)">02. OS Barrier</div>
-            <div class="nav-item" onclick="showTab('m3', this)">03. Memory Corruption</div>
-            <div class="nav-item" onclick="showTab('m4', this)">04. AD Dominance</div>
-            <div class="nav-item" onclick="showTab('m5', this)">05. Lateral Movement</div>
-            <div class="nav-item" onclick="showTab('quiz', this)" style="border: 1px solid var(--neon-green); margin-top: 40px; text-align: center;">[ VALIDATE ]</div>
+            <div class="nav-item active" id="nav-m1" onclick="showTab('m1', this)">01. Hacking Mindset</div>
+            <div class="nav-item" id="nav-m2" onclick="showTab('m2', this)">02. OS Barrier</div>
+            <div class="nav-item" id="nav-m3" onclick="showTab('m3', this)">03. Memory Corruption</div>
+            <div class="nav-item" id="nav-m4" onclick="showTab('m4', this)">04. AD Dominance</div>
+            <div class="nav-item" id="nav-m5" onclick="showTab('m5', this)">05. Lateral Movement</div>
+            <div class="nav-item" id="nav-quiz" onclick="showTab('quiz', this)" style="border: 1px solid var(--neon-green); margin-top: 40px; text-align: center;">[ VALIDATE ]</div>
         </div>
 
         <div class="content-area">
-<div id="m1" class="topic-content active">
-    <h1 class="glitch-text">The System Hacking Mindset</h1>
-    
-    <div class="speaker-note" style="border-style: solid; margin-bottom: 30px;">
-        "Welcome to the deep end. Today, we move beyond basic security concepts and explore how systems are actually compromised. System hacking is not just about breaking in—it’s about understanding how attackers move from simple access to total control. Because in cybersecurity, <b>Access is not equal to Control.</b>"
-    </div>
 
-    <div class="terminal-box" style="margin-bottom: 30px; border-color: var(--neon-green);">
-        <b style="text-transform: uppercase;">[ TERMINOLOGY_DECODE ]</b><br>
-        <p style="margin-top: 10px;"><b>System Hacking:</b> The act of gaining unauthorized access to a computer system or network with the intent to steal data, corrupt files, or perform malicious activities. Unlike general hacking, this specifically targets the <b>OS and software level</b> to seize machine control.</p>
-    </div>
-
-    <div style="background: rgba(57, 255, 20, 0.05); border: 1px solid var(--neon-green); padding: 30px; border-radius: 15px; margin-bottom: 30px;">
-        <h3 style="color:var(--neon-green); margin-top:0; letter-spacing: 2px;">[ 🛠️ THE 5 PHASES OF EXPLOITATION ]</h3>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
-            <div style="background: rgba(0,0,0,0.6); border: 1px solid #333; padding: 15px; border-left: 4px solid var(--neon-green);">
-                <b style="color:var(--neon-green);">1. RECONNAISSANCE</b><br>
-                <span style="font-size: 0.8rem; color: #aaa;">Gathering intelligence (IPs, employee info, footprinting).</span>
-            </div>
-            <div style="background: rgba(0,0,0,0.6); border: 1px solid #333; padding: 15px; border-left: 4px solid var(--neon-green);">
-                <b style="color:var(--neon-green);">2. SCANNING</b><br>
-                <span style="font-size: 0.8rem; color: #aaa;">Identifying open ports and unpatched vulnerabilities.</span>
-            </div>
-        </div>
-
-        <div style="background: rgba(0,0,0,0.6); border: 1px solid #333; padding: 15px; border-left: 4px solid var(--warning-red); margin-bottom: 20px;">
-            <b style="color:var(--warning-red);">3. GAINING ACCESS (INFILTRATION)</b><br>
-            <span style="font-size: 0.8rem; color: #aaa;">The core breach. Exploiting weak passwords or software flaws to enter the system.</span>
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-            <div style="background: rgba(0,0,0,0.6); border: 1px solid #333; padding: 15px; border-left: 4px solid var(--neon-green);">
-                <b style="color:var(--neon-green);">4. MAINTAINING ACCESS</b><br>
-                <span style="font-size: 0.8rem; color: #aaa;">Installing backdoors or rootkits for persistent control.</span>
-            </div>
-            <div style="background: rgba(0,0,0,0.6); border: 1px solid #333; padding: 15px; border-left: 4px solid #888;">
-                <b style="color:#888;">5. CLEARING TRACKS</b><br>
-                <span style="font-size: 0.8rem; color: #aaa;">Deleting log files to hide presence from system admins.</span>
-            </div>
-        </div>
-    </div>
-
-    <h3 style="color:var(--neon-green); letter-spacing: 2px;">[ 🔑 TECHNICAL ATTACK VECTORS ]</h3>
-    <ul class="data-list">
-        <li><b>Password Cracking:</b> Using brute-force or dictionary attacks to guess credentials.</li>
-        <li><b>Privilege Escalation:</b> Moving from a standard 'Guest' to an 'Admin/Root' user.</li>
-        <li><b>Buffer Overflow:</b> Overwhelming memory buffers to force execution of malicious code.</li>
-        <li><b>Spyware/Keyloggers:</b> Recording keystrokes to harvest passwords silently.</li>
-    </ul>
-
-    <div style="margin-top: 40px; border-top: 1px solid #222; padding-top: 20px;">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-            <div style="border: 1px solid var(--warning-red); padding: 15px; border-radius: 8px;">
-                <b style="color: var(--warning-red);">[ BLACK HAT ]</b><br>
-                <small>Malicious intent. Personal gain or damage.</small>
-            </div>
-            <div style="border: 1px solid var(--neon-green); padding: 15px; border-radius: 8px;">
-                <b style="color: var(--neon-green);">[ WHITE HAT ]</b><br>
-                <small>Ethical security experts. Authorized vulnerability testing.</small>
-            </div>
-        </div>
-        
-        <p style="font-style: italic; color: #666; font-size: 0.85rem; margin-top: 20px; text-align: center;">
-            "Peer Note: Always stay on the White Hat side. The industry needs defenders, and legal trouble is a zero-day you can't patch."
-        </p>
-    </div>
-
-    <button class="btn" style="width: 100%; margin-top: 20px;" onclick="startQuiz(1)">Launch System Validation Quiz</button>
-</div>
-            <div id="m2" class="topic-content active">
-                <h1 class="glitch-text">Breaking the OS Barrier</h1>
-                
-                <div class="speaker-context">
-                    "In the architecture of a computer, the <b>Operating System (OS)</b> acts as the ultimate gatekeeper between hardware and software. Breaking the OS barrier involves bypassing the fundamental security protocols designed to isolate user processes from the core system. To understand how this barrier is breached, we must look at how the OS organizes trust and protection."
+            <div id="m1" class="topic-content active">
+                <h1 class="glitch-text">The System Hacking Mindset</h1>
+                <div class="speaker-note">
+                    "Welcome to the deep end. Today, we move beyond basic security concepts and explore how systems are actually compromised. System hacking is not just about breaking in—it’s about understanding how attackers move from simple access to total control. Because in cybersecurity, <b>Access is not equal to Control.</b>"
                 </div>
+                <div class="terminal-box" style="border-color: var(--neon-green);">
+                    <b style="text-transform: uppercase;">[ TERMINOLOGY_DECODE ]</b><br>
+                    <p style="margin-top: 10px;"><b>System Hacking:</b> The act of gaining unauthorized access to a computer system or network with the intent to steal data, corrupt files, or perform malicious activities. Unlike general hacking, this specifically targets the <b>OS and software level</b> to seize machine control.</p>
+                </div>
+                <div style="background: rgba(57, 255, 20, 0.05); border: 1px solid var(--neon-green); padding: 30px; border-radius: 15px; margin-bottom: 30px;">
+                    <h3 style="color:var(--neon-green); margin-top:0; letter-spacing: 2px;">[ 🛠️ THE 5 PHASES OF EXPLOITATION ]</h3>
+                    <div class="phase-grid">
+                        <div class="phase-card"><b>1. RECONNAISSANCE</b><br><small>Gathering intelligence (IPs, Footprinting).</small></div>
+                        <div class="phase-card"><b>2. SCANNING</b><br><small>Identifying open ports and vulnerabilities.</small></div>
+                    </div>
+                    <div class="phase-card" style="border-left-color: var(--error-red); margin-bottom: 20px;">
+                        <b style="color:var(--error-red);">3. GAINING ACCESS (INFILTRATION)</b><br><small>The core breach. Exploiting weak passwords or flaws.</small>
+                    </div>
+                    <div class="phase-grid">
+                        <div class="phase-card"><b>4. MAINTAINING ACCESS</b><br><small>Installing backdoors or rootkits for persistence.</small></div>
+                        <div class="phase-card" style="border-left-color: #888;"><b>5. CLEARING TRACKS</b><br><small>Deleting log files to hide presence from admins.</small></div>
+                    </div>
+                </div>
+                <p style="font-style: italic; color: #666; font-size: 0.85rem; margin-top: 20px; text-align: center;">
+                    "Peer Note: Always stay on the White Hat side. The industry needs defenders, and legal trouble is a zero-day you can't patch."
+                </p>
+                <button class="btn" style="width: 100%; margin-top: 20px;" onclick="showTab('m2', document.getElementById('nav-m2'))">Next: Breaking the OS Barrier ➔</button>
+            </div>
 
+            <div id="m2" class="topic-content">
+                <h1 class="glitch-text">Breaking the OS Barrier</h1>
+                <div class="speaker-context">
+                    "In the architecture of a computer, the <b>Operating System (OS)</b> acts as the ultimate gatekeeper. Breaking the OS barrier involves bypassing the protocols designed to isolate user processes from the core system."
+                </div>
                 <div class="highlight-box">
                     <h3 style="color:var(--neon-green); margin-top:0;">The Campus Analogy</h3>
                     <p>"Imagine your Operating System as a <b>school campus</b>. Barrier breaking is when a restricted student gains unauthorized access to the Principal's files."</p>
                     <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
-                        <div class="phase-card">
-                            <b style="color:var(--neon-green);">👨‍🎓 Students</b><br>
-                            <small>Regular Users: Restricted rooms.</small>
-                        </div>
-                        <div class="phase-card">
-                            <b style="color:var(--neon-green);">👩‍🏫 Teachers</b><br>
-                            <small>Admins: Access sensitive areas.</small>
-                        </div>
-                        <div class="phase-card">
-                            <b style="color:var(--neon-green);">🛡️ Guards</b><br>
-                            <small>OS Protection: Enforce entry rules.</small>
-                        </div>
+                        <div class="phase-card"><b>👨‍🎓 Students</b><br><small>Regular Users: Restricted rooms.</small></div>
+                        <div class="phase-card"><b>👩‍🏫 Teachers</b><br><small>Admins: Access sensitive areas.</small></div>
+                        <div class="phase-card"><b>🛡️ Guards</b><br><small>OS Protection: Enforce entry rules.</small></div>
                     </div>
                 </div>
-
                 <h3 style="color:var(--neon-green); letter-spacing: 2px;">[ 🏛️ ARCHITECTURE: PROTECTION RINGS ]</h3>
                 <div class="highlight-box">
-                    <p>Modern operating systems use hierarchical, hardware-enforced privilege levels:</p>
                     <ul style="list-style: none; padding: 0;">
-                        <li style="margin-bottom: 12px; border-left: 3px solid #555; padding-left: 15px;">
-                            <b style="color: var(--neon-green);">Ring 3 (User Mode):</b> Where apps (Chrome, Word) live. They have the least privilege and cannot talk to hardware directly.
-                        </li>
-                        <li style="margin-bottom: 12px; border-left: 3px solid var(--neon-green); padding-left: 15px;">
-                            <b style="color: var(--neon-green);">Ring 0 (Kernel Mode):</b> The "God Mode." The Kernel has unrestricted access to the CPU and memory.
-                        </li>
+                        <li style="margin-bottom: 12px; border-left: 3px solid #555; padding-left: 15px;"><b style="color: var(--neon-green);">Ring 3 (User Mode):</b> Where apps (Chrome, Word) live. They have the least privilege.</li>
+                        <li style="margin-bottom: 12px; border-left: 3px solid var(--neon-green); padding-left: 15px;"><b style="color: var(--neon-green);">Ring 0 (Kernel Mode):</b> The "God Mode." The Kernel has unrestricted access to the CPU and memory.</li>
                     </ul>
-                    <p style="background: rgba(255,215,0,0.1); padding: 10px; border: 1px solid var(--gold); border-radius: 5px; font-size: 0.9rem;">
-                        <b>The Barrier:</b> The invisible wall between Ring 3 and Ring 0. Applications must use <b>System Calls (syscalls)</b> to ask the Kernel for permission to execute hardware tasks.
+                    <p style="background: rgba(255,215,0,0.1); padding: 10px; border: 1px solid var(--gold); border-radius: 5px;">
+                        <b>The Barrier:</b> The invisible wall. Apps must use <b>System Calls (syscalls)</b> to ask the Kernel for permission.
                     </p>
                 </div>
-
-                
-
-                <h3 style="color:var(--neon-green); letter-spacing: 2px;">[ 🔨 TECHNIQUES FOR BREAKING THE BARRIER ]</h3>
-                <p>When an attacker "breaks the barrier," they are performing <b>Privilege Escalation</b>. They start in Ring 3 and find a way to execute code in Ring 0.</p>
-                
-                <div class="phase-grid">
-                    <div class="phase-card" style="border-left-color: var(--gold);">
-                        <b style="color:var(--gold);">1. Kernel Exploits</b><br>
-                        <small>Exploiting bugs in drivers or the Kernel itself to "trick" the system into running code with full privileges.</small>
-                    </div>
-                    <div class="phase-card" style="border-left-color: var(--gold);">
-                        <b style="color:var(--gold);">2. Token Manipulation</b><br>
-                        <small>Copying the digital "ID badge" (Access Token) of an Admin process and attaching it to a malicious process.</small>
-                    </div>
-                </div>
-
-                <div class="highlight-box">
-                    <b style="color: var(--neon-green);">3. Unquoted Service Paths</b>
-                    <p>A logic flaw where missing quotes in a system path allow attackers to substitute a malicious program.</p>
-                    <div class="terminal-box">
-                        Expected: "C:\Program Files\App.exe"<br>
-                        Broken: C:\Program Files\App.exe<br>
-                        <span style="color: var(--gold);">Result: OS may execute 'C:\Program.exe' with System privileges first.</span>
-                    </div>
-                </div>
-
-                <h3 style="color:var(--error-red); letter-spacing: 2px;">[ 🛡️ WHY THIS MATTERS: THE POINT OF NO RETURN ]</h3>
-                <div class="phase-card" style="border-left-color: var(--error-red); background: rgba(255,0,0,0.05);">
-                    <p>Once an attacker moves from User Mode to Kernel Mode, the system's defenses collapse:</p>
+                <div class="highlight-box" style="border: 1px solid var(--error-red);">
+                    <h3 style="color:var(--error-red); margin-top:0;">🛡️ THE POINT OF NO RETURN</h3>
                     <ul style="font-size: 0.9rem; line-height: 1.6;">
-                        <li><b>Antivirus Neutralization:</b> Security software can be disabled from the "inside."</li>
+                        <li><b>Antivirus Neutralization:</b> They can disable security from the "inside."</li>
                         <li><b>Persistence:</b> Installation of <b>Rootkits</b> that hide below the OS level.</li>
-                        <li><b>Total Data Access:</b> Attackers can read raw data directly from the computer's memory.</li>
+                        <li><b>Total Data Access:</b> Attackers can read raw memory directly.</li>
                     </ul>
                 </div>
-
-                <p style="font-style: italic; color: #666; font-size: 0.85rem; margin-top: 30px; text-align: center; border-top: 1px solid #222; padding-top: 20px;">
-                    "Peer Note: This is why Kernel Patch Protection and Secure Boot are so critical today. They are the secondary walls built to keep the barrier intact even when a bug is found."
+                <p style="font-style: italic; color: #666; font-size: 0.85rem; margin-top: 30px; text-align: center;">
+                    "Peer Note: This is why Kernel Patch Protection and Secure Boot are so critical today. They are the secondary walls built to keep the barrier intact."
                 </p>
+                <button class="btn" style="width: 100%; margin-top: 20px;" onclick="showTab('m3', document.getElementById('nav-m3'))">Next: Memory Corruption ➔</button>
             </div>
-            <div id="m3" class="topic-content active">
-    <h1 class="glitch-text">Memory Corruption</h1>
-    
-    <div class="speaker-context">
-        "Think of memory as a set of fixed-size containers. A Buffer Overflow is like pouring water into a glass until it floods the entire table. In cybersecurity, this isn't just a bug—it’s the 'Holy Grail' of exploitation."
-    </div>
 
-    <div class="terminal-box" style="border-color: var(--neon-green);">
-        <b style="text-transform: uppercase;">[ CORE_DEFINITION ]</b><br>
-        <p style="margin-top: 10px;"><b>Memory Corruption:</b> A class of vulnerabilities where a program writes data outside its strictly defined memory boundaries. This allows ethical hackers to bypass the system's sandbox and gain direct control of the processor.</p>
-    </div>
-
-    <h3 style="color:var(--neon-green); letter-spacing: 2px;">[ 🏛️ THE ARCHITECTURE: THE STACK ]</h3>
-    <p>A program manages tasks using a structure called <b>The Stack</b>—a rigid set of data frames stored in precise order.</p>
-    
-    <div class="highlight-box">
-        <div class="phase-grid">
-            <div class="phase-card">
-                <b style="color:var(--neon-green);">LOCAL VARIABLES</b><br>
-                <small>Temporary buffers used to store data like usernames or calculation results.</small>
+            <div id="m3" class="topic-content">
+                <h1 class="glitch-text">Memory Corruption</h1>
+                <div class="speaker-context">
+                    "Think of memory as a set of fixed-size containers. A Buffer Overflow is like pouring water into a glass until it floods the entire table. In cybersecurity, this is the 'Holy Grail' of exploitation."
+                </div>
+                <div class="terminal-box" style="border-color: var(--neon-green);">
+                    <b style="text-transform: uppercase;">[ CORE_DEFINITION ]</b><br>
+                    <p style="margin-top: 10px;"><b>Memory Corruption:</b> A class of vulnerabilities where a program writes data outside its strictly defined memory boundaries, allowing hackers to gain direct control of the processor.</p>
+                </div>
+                <h3 style="color:var(--neon-green); letter-spacing: 2px;">[ 🏛️ THE ARCHITECTURE: THE STACK ]</h3>
+                <div class="highlight-box">
+                    <div class="phase-grid">
+                        <div class="phase-card"><b>LOCAL VARIABLES</b><br><small>Temporary storage for user data.</small></div>
+                        <div class="phase-card" style="border-left-color: var(--gold);"><b>RETURN ADDRESS (EIP)</b><br><small>The 'GPS coordinate' for the next instruction.</small></div>
+                    </div>
+                </div>
+                <div class="highlight-box">
+                    <b style="color: var(--error-red);">THE HIJACK:</b> Overwriting the <b>Return Address (EIP)</b> allows an attacker to point the CPU to <b>Shellcode</b>, granting total system control.
+                </div>
+                <p style="font-style: italic; color: #666; font-size: 0.85rem; text-align: center; margin-top: 40px;">
+                    "Peer Note: Memory corruption is why languages like C and C++ are considered 'dangerous'—they provide direct control over memory. Modern languages like Rust or Java have built-in runtime guards."
+                </p>
+                <button class="btn" style="width: 100%; margin-top: 20px;" onclick="showTab('m4', document.getElementById('nav-m4'))">Next: AD Dominance ➔</button>
             </div>
-            <div class="phase-card" style="border-left-color: var(--gold);">
-                <b style="color:var(--gold);">RETURN ADDRESS (EIP)</b><br>
-                <small>The 32/64-bit 'GPS coordinate' that tells the CPU which instruction to execute next.</small>
+
+            <div id="m4" class="topic-content">
+                <h1 class="glitch-text">AD Dominance</h1>
+                <div class="speaker-context">
+                    "When Active Directory falls, the attacker doesn't steal your ID; they become the person who makes the IDs. In a Windows enterprise, AD is the brain—controlling it makes you the <b>'God'</b> of the network."
+                </div>
+                <h3 style="color:var(--neon-green); letter-spacing: 2px;">[ 🏛️ THE PILLAR: KERBEROS TICKETS ]</h3>
+                <div class="highlight-box">
+                    <p><b>The Identity Check:</b> You show your ID to the 'Bouncer' (Domain Controller).</p>
+                    <p><b>The VIP Pass:</b> The DC gives you a <b>Ticket Granting Ticket (TGT)</b> if valid.</p>
+                </div>
+                <div class="golden-ticket-card">
+                    <h2 style="color:var(--gold); margin:0;">👑 THE GOLDEN TICKET</h2>
+                    <p>By compromising the <b>KRBTGT account</b>, attackers gain the ability to forge 'VIP Passes', allowing them to impersonate anyone across the entire domain forever.</p>
+                </div>
+                <p style="font-style: italic; color: #666; font-size: 0.85rem; margin-top: 40px; text-align: center;">
+                    "Peer Note: AD Dominance is <b>'Game Over'</b>. Post-breach recovery often requires a total forest rebuild. Rotating the KRBTGT password (twice!) is standard procedure."
+                </p>
+                <button class="btn" style="width: 100%; margin-top: 20px;" onclick="showTab('m5', document.getElementById('nav-m5'))">Next: Lateral Movement ➔</button>
             </div>
-        </div>
-    </div>
 
-    <h3 style="color:var(--neon-green); letter-spacing: 2px;">[ 🔨 OFFENSIVE TECHNIQUE: THE HIJACK ]</h3>
-    <div class="highlight-box">
-        <b style="color: var(--error-red);">THE BUFFER OVERFLOW</b>
-        <p>When a program receives more data than its buffer was designed to hold, the excess spills into adjacent memory slots.</p>
-        
-        <div class="terminal-box" style="border-style: dashed; border-color: var(--error-red);">
-            <span style="color: #666;">// Memory Logic:</span><br>
-            [ BUFFER ] -> [ CANARY ] -> [ RETURN ADDRESS ]<br>
-            <span style="color: var(--error-red);">[ ATTACKER DATA OVERFLOWS... ]</span><br>
-            [ AAAAAAAAAAAAAAA ] -> [ !!CORRUPTED!! ] -> [ !!HIJACKED_ADDRESS!! ]
-        </div>
-
-        <p><b>The Result:</b> If an attacker overwrites the Return Address, they can redirect the CPU to point to <b>Shellcode</b>—specialized instructions that open a network shell and grant total system control.</p>
-    </div>
-
-    <h3 style="color:var(--neon-green); letter-spacing: 2px;">[ 🛡️ DEFENSIVE SHIELD TECHNOLOGIES ]</h3>
-    <p>Modern operating systems use multiple shields to prevent these memory hijacks:</p>
-    
-    <div class="data-list">
-        <li>
-            <b style="color: var(--neon-green);">ASLR (Address Space Layout Randomization):</b>
-            <br><small>Randomly 'scrambles' memory coordinates on boot so attackers cannot guess where to point the hijacked program.</small>
-        </li>
-        <li>
-            <b style="color: var(--neon-green);">DEP/NX (Data Execution Prevention):</b>
-            <br><small>Marks the stack as 'Non-Executable.' Even if shellcode is placed there, the CPU refuses to run it.</small>
-        </li>
-        <li>
-            <b style="color: var(--neon-green);">STACK CANARIES:</b>
-            <br><small>A secret 'canary' value placed before the Return Address. If the canary is modified (killed) by an overflow, the system crashes the program before the hijack succeeds.</small>
-        </li>
-    </div>
-
-    <div style="margin-top: 40px; border-top: 1px solid #222; padding-top: 20px;">
-        <p style="font-style: italic; color: #666; font-size: 0.85rem; text-align: center;">
-            "Peer Note: Memory corruption is why languages like C and C++ are considered 'dangerous'—they provide direct control over memory. Modern languages like Rust or Java are 'memory-safe' because they have built-in runtime guards."
-        </p>
-    </div>
-
-    <button class="btn" style="width: 100%; margin-top: 20px;" onclick="showTab('quiz', this)">Validate Memory Forensics Knowledge</button>
-</div>
-            <div id="m4" class="topic-content active">
-    <h1 class="glitch-text">AD Dominance</h1>
-    
-    <div class="speaker-context">
-        "When Active Directory falls, the attacker doesn't steal your ID; they become the person who makes the IDs. In a Windows enterprise, AD is the brain—controlling it makes you the 'God' of the network."
-    </div>
-
-    <h3 style="color:var(--neon-green); letter-spacing: 2px;">[ 🏛️ THE PILLAR: KERBEROS TICKETS ]</h3>
-    <p>Active Directory uses the <b>Kerberos</b> protocol. To understand it, think of a <b>VIP Concert System</b>:</p>
-    
-    <div class="highlight-box">
-        <div class="phase-grid">
-            <div class="phase-card">
-                <b style="color:var(--neon-green);">1. IDENTITY CHECK</b><br>
-                <small>You show your ID (Username/Pass) to the 'Bouncer' (The Domain Controller).</small>
-            </div>
-            <div class="phase-card">
-                <b style="color:var(--neon-green);">2. THE VIP PASS</b><br>
-                <small>The DC gives you a <b>Ticket Granting Ticket (TGT)</b> if your ID is valid.</small>
-            </div>
-        </div>
-        <p style="margin-top:15px; border-top: 1px solid #333; padding-top:10px;">
-            <b>Access:</b> You show this pass to enter any 'VIP Lounge' (File Servers, SQL Databases) without showing your ID again.
-        </p>
-    </div>
-
-    <div class="golden-ticket-card">
-        <h2 style="color:var(--gold); margin:0; letter-spacing: 3px;">👑 THE GOLDEN TICKET</h2>
-        <p>By compromising the <b>KRBTGT account</b> (the one that 'signs' every ticket), attackers can forge their own VIP passes. This grants <b>unlimited impersonation</b> of any user—Domain Admin, CEO, or even ghost accounts—lasting for 10+ years.</p>
-    </div>
-
-    <h3 style="color:var(--neon-green); letter-spacing: 2px;">[ 🔨 PATH TO DOMINANCE: TECHNIQUES ]</h3>
-    <div class="phase-grid">
-        <div class="phase-card">
-            <b style="color:var(--gold);">KERBEROASTING</b><br>
-            <small>Requesting service tickets and cracking them offline to find weak service account passwords.</small>
-        </div>
-        <div class="phase-card">
-            <b style="color:var(--gold);">BLOODHOUND ANALYSIS</b><br>
-            <small>Using graph theory to map the shortest path from a regular user to Domain Admin.</small>
-        </div>
-    </div>
-    <ul class="data-list">
-        <li><b>LLMNR/NBT-NS Poisoning:</b> Intercepting network traffic to steal password hashes.</li>
-        <li><b>NTLM Relaying:</b> Capturing an auth session and 'relaying' it to gain access without a password.</li>
-    </ul>
-
-    <h3 style="color:var(--neon-green); letter-spacing: 2px;">[ 🚧 DEFENSIVE HARDENING: TIERED ADMIN ]</h3>
-    <p>To prevent dominance, organizations use <b>Tiered Administration</b> to isolate credentials:</p>
-    <div class="terminal-box" style="border-left: 5px solid var(--neon-green);">
-        <b>Tier 0 (Highest):</b> Domain Controllers. Admins here NEVER log into regular PCs.<br>
-        <b>Tier 1:</b> Server Management.<br>
-        <b>Tier 2:</b> End-user Workstations.<br>
-        <span style="color: var(--error-red);">Rule: If a Tier 0 Admin logs into a compromised Tier 2 PC, their 'God' credentials are stolen instantly.</span>
-    </div>
-
-    <div style="margin-top: 40px; border-top: 1px solid #222; padding-top: 20px;">
-        <p style="font-style: italic; color: #666; font-size: 0.85rem; text-align: center;">
-            "Peer Note: AD Dominance is essentially 'Game Over.' Recovery often requires building a new network from scratch. Rotating the KRBTGT password (twice!) is a standard emergency procedure after a breach."
-        </p>
-    </div>
-
-    <button class="btn" style="width: 100%; margin-top: 20px;" onclick="showTab('m5', this)">Explore Lateral Movement</button>
-</div>
             <div id="m5" class="topic-content">
-    <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 30px;">
-        <h1 class="glitch-text" style="margin:0;">Lateral Movement</h1>
-        <div style="flex-grow: 1; height: 2px; background: linear-gradient(90deg, var(--neon-green), transparent);"></div>
-    </div>
+                <h1 class="glitch-text">Lateral Movement</h1>
+                <div class="speaker-context">
+                    "Lateral movement is the art of moving room-to-room inside a building after sneaking through a window. Once a hacker is past the perimeter, this is their primary mission."
+                </div>
+                <div class="phase-grid">
+                    <div class="phase-card"><b>THE PIVOT</b><br><small>Landing on a low-security machine to reach high-value targets like the Domain Controller.</small></div>
+                    <div class="phase-card"><b>CREDENTIAL HARVESTING</b><br><small>Stealing password hashes from memory (LSASS) to move to the next machine.</small></div>
+                </div>
+                <div class="highlight-box">
+                    <h3 style="color:var(--neon-green); margin-top:0;">📊 NETWORK AS A GRAPH</h3>
+                    <p>To a hacker, users/devices are <b>Nodes</b> and permissions are <b>Edges</b>. Tools like BloodHound map the shortest path to 'Domain Admin'.</p>
+                </div>
+                <p style="font-style: italic; color: #666; font-size: 0.85rem; margin-top: 40px; text-align: center;">
+                    "Peer Note: Internal Security is as vital as the Firewall. Make the network as 'noisy' and difficult to navigate as possible!"
+                </p>
+                <button class="btn" style="width: 100%; margin-top: 20px;" onclick="showTab('quiz', document.getElementById('nav-quiz'))">Next: Final Validation ➔</button>
+            </div>
 
-    <div class="speaker-context">
-        "Lateral movement is the process of navigating through a network after an initial foothold. If the breach is the front door, <b>Lateral Movement</b> is moving from room to room to find the vault."
-    </div>
-
-    <h3 style="color:var(--neon-green); letter-spacing: 2px;">[ 📍 THE STRATEGY: THE PIVOT ]</h3>
-    <div class="highlight-box">
-        <p>Attackers land on low-security machines (e.g., a receptionist laptop) and use them as <b>Pivot Points</b> to reach high-value targets like the Finance database or Domain Controller.</p>
-    </div>
-
-    <h3 style="color:var(--neon-green); letter-spacing: 2px;">[ 🔨 THE 3-STEP EXPLOIT LOOP ]</h3>
-    <div class="phase-grid">
-        <div class="phase-card">
-            <b style="color:var(--neon-green);">1. INTERNAL RECON</b><br>
-            <small>Scanning the local machine for file shares, connected servers, and active user sessions.</small>
-        </div>
-        <div class="phase-card">
-            <b style="color:var(--neon-green);">2. CREDENTIAL HARVESTING</b><br>
-            <small>Stealing password hashes from memory (LSASS) to 'become' an admin without knowing their password.</small>
-        </div>
-    </div>
-    <div class="phase-card" style="margin-top:20px; border-left-color: var(--gold);">
-        <b style="color:var(--gold);">3. REMOTE ACCESS</b><br>
-        <small>Using legitimate tools like <b>RDP</b>, <b>SSH</b>, or <b>PsExec</b> to log into the next machine. Because credentials are 'valid', security tools often stay silent.</small>
-    </div>
-
-    <h3 style="color:var(--neon-green); letter-spacing: 2px; margin-top: 40px;">[ 📊 VISUALIZING THE NETWORK AS A GRAPH ]</h3>
-    <div class="impact-grid">
-        <div class="impact-card">
-            <b>Nodes & Edges</b><br>
-            <small>To a hacker, users/devices are <b>Nodes</b> and permissions/connections are <b>Edges</b>. Tools like BloodHound find the shortest path to 'Domain Admin'.</small>
-        </div>
-        <div class="impact-card">
-            <b>The 'Sneak' Analogy</b><br>
-            <small>Entering one classroom, then moving to faculty rooms, then the computer lab, until reaching the registrar's office.</small>
-        </div>
-    </div>
-
-    <div class="highlight-box" style="border: 1px solid var(--neon-green); background: rgba(0, 255, 0, 0.02); margin-top: 30px;">
-        <h3 style="color:var(--neon-green); margin-top:0;">🛡️ DEFENSIVE COUNTERMEASURES</h3>
-        <ul style="color: #ccc; font-size: 0.9rem; line-height: 1.6;">
-            <li><b>Micro-segmentation:</b> Isolating network zones so a breach in one "room" can't spread.</li>
-            <li><b>Honeytokens:</b> Fake credentials in memory that trigger an alarm the moment an attacker touches them.</li>
-            <li><b>PAM (Privileged Access Management):</b> Ensuring Admin credentials are never stored on standard user machines.</li>
-        </ul>
-    </div>
-
-    <div style="margin-top: 40px; text-align: center; border: 1px dashed #333; padding: 25px; border-radius: 15px;">
-        <p style="font-style: italic; color: #666; font-size: 0.85rem; margin: 0;">
-            "Peer Note: Internal Security is as vital as the Firewall. Once a hacker is past the perimeter, lateral movement is their primary mission. Make the network as 'noisy' and difficult to navigate as possible!"
-        </p>
-    </div>
-
-   <div id="quiz" class="topic-content">
+            <div id="quiz" class="topic-content">
                 <h1 class="glitch-text">Validation: Mission Briefing</h1>
                 <div id="quiz-container" class="highlight-box" style="min-height: 400px;">
                     <div id="progress-bar" style="width: 100%; height: 5px; background: #222; margin-bottom: 20px; border-radius: 5px;">
@@ -502,7 +311,7 @@
 
                     <div id="feedback-zone" style="display: none; margin-top: 30px; padding: 20px; border: 1px solid #333; border-radius: 10px; background: rgba(0,0,0,0.4);">
                         <b id="feedback-status"></b>
-                        <p id="feedback-explanation" style="margin-top: 10px; color: #aaa;"></p>
+                        <p id="feedback-explanation" style="margin-top: 10px; color: #aaa; font-size: 0.95rem;"></p>
                         <button class="btn" onclick="loadNextQuestion()" style="margin-top: 15px; width: 100%;">PROCEED TO NEXT UPLINK ➔</button>
                     </div>
 
@@ -521,7 +330,7 @@
         const flashcards = [
             {
                 cat: "Hacking Mindset",
-                q: "Which phase of system hacking involves gathering intelligence like IP addresses and footprinting?",
+                q: "Which phase involves gathering intelligence like IP addresses and employee info?",
                 options: ["Scanning", "Reconnaissance", "Maintaining Access", "Privilege Escalation"],
                 correct: 1,
                 exp: "Reconnaissance is the initial phase where an attacker maps out the target organization."
@@ -531,26 +340,26 @@
                 q: "In the Protection Ring model, where does the OS Kernel reside?",
                 options: ["Ring 3", "Ring 1", "Ring 0", "The User Mode"],
                 correct: 2,
-                exp: "Ring 0 (Kernel Mode) is 'God Mode' with unrestricted access to CPU and memory."
+                exp: "Ring 0 (Kernel Mode) is 'God Mode' with unrestricted access to hardware and memory."
             },
             {
                 cat: "Memory Corruption",
-                q: "What component is overwritten during a Buffer Overflow to hijack the program's control flow?",
+                q: "What component is overwritten during a Buffer Overflow to hijack control flow?",
                 options: ["The Local Variable", "The Instruction Pointer (EIP)", "The Data Buffer", "The Power Supply"],
                 correct: 1,
                 exp: "Overwriting the Instruction Pointer (EIP) allows an attacker to point the CPU to malicious Shellcode."
             },
             {
                 cat: "AD Dominance",
-                q: "Which specific account is targeted during a 'Golden Ticket' attack?",
+                q: "Which specific account is targeted to forge passes in a Golden Ticket attack?",
                 options: ["Administrator", "Guest", "KRBTGT", "SYSTEM"],
                 correct: 2,
-                exp: "KRBTGT signs all Kerberos tickets. Stealing its hash allows unlimited impersonation."
+                exp: "The KRBTGT account signs all tickets; stealing its hash allows unlimited impersonation."
             },
             {
                 cat: "Lateral Movement",
-                q: "What is the primary objective of 'The Pivot' in a network attack?",
-                options: ["To delete logs", "To move from a low-security machine to a high-value target", "To fix a firewall", "To reset a password"],
+                q: "What is the primary objective of 'The Pivot'?",
+                options: ["Delete logs", "Move from a low-security foothold to a high-value target", "Fix a firewall", "Reset a password"],
                 correct: 1,
                 exp: "Pivoting uses a minor foothold to launch attacks against more sensitive internal systems."
             }
