@@ -28,6 +28,23 @@
             to { opacity: 1; transform: translateY(0); filter: blur(0); }
         }
 
+        /* Scrolling Grid Animation */
+        @keyframes gridMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 50px 50px; }
+        }
+
+        @keyframes rain {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 0% 1000px; }
+        }
+
+        @keyframes bgPulse {
+            0% { opacity: 0.3; }
+            50% { opacity: 0.5; }
+            100% { opacity: 0.3; }
+        }
+
         @keyframes scanline {
             0% { top: -100%; }
             100% { top: 100%; }
@@ -41,16 +58,6 @@
             50% { background-position: -25% 10%; }
         }
 
-        @keyframes gridMove {
-            0% { background-position: 0 0; }
-            100% { background-position: 50px 50px; }
-        }
-
-        @keyframes rain {
-            0% { background-position: 0% 0%; }
-            100% { background-position: 0% 1000px; }
-        }
-
         body, html {
             margin: 0; padding: 0;
             width: 100%; min-height: 100vh;
@@ -61,21 +68,24 @@
             overflow-x: hidden;
         }
 
-        /* --- THE LAYERED BACKGROUND STACK --- */
+        /* --- THE LAYERED BACKGROUND ENGINE --- */
         .bg-container {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, var(--dark-green) 0%, var(--deep-black) 100%);
+            background: 
+                radial-gradient(circle at center, var(--dark-green) 0%, var(--deep-black) 100%),
+                linear-gradient(rgba(0, 51, 0, 0.2) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 51, 0, 0.2) 1px, transparent 1px);
+            background-size: 100% 100%, 50px 50px, 50px 50px;
+            animation: gridMove 4s linear infinite;
             z-index: -5;
         }
 
-        .grid-overlay {
+        .bg-glow {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: 
-                linear-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 0, 0.1) 1px, transparent 1px);
-            background-size: 45px 45px;
-            animation: gridMove 10s linear infinite;
+            background: radial-gradient(circle at 50% 50%, rgba(57, 255, 20, 0.05), transparent 70%);
+            animation: bgPulse 8s ease-in-out infinite;
             z-index: -4;
+            pointer-events: none;
         }
 
         .noise-overlay {
@@ -98,22 +108,22 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: repeating-linear-gradient(0deg, transparent 0%, rgba(57, 255, 20, 0.05) 50%, transparent 100%);
             background-size: 1000px 1000px;
-            animation: rain 25s linear infinite;
+            animation: rain 20s linear infinite;
             z-index: -1;
-            opacity: 0.5;
+            opacity: 0.6;
             pointer-events: none;
         }
 
         .scanner-line {
-            position: fixed; top: 0; left: 0; width: 100%; height: 4px;
+            position: fixed; top: 0; left: 0; width: 100%; height: 5px;
             background: rgba(57, 255, 20, 0.1);
-            box-shadow: 0 0 15px var(--neon-green);
+            box-shadow: 0 0 20px var(--neon-green);
             z-index: 9999;
-            animation: scanline 10s linear infinite;
+            animation: scanline 8s linear infinite;
             pointer-events: none;
         }
 
-        /* --- DASHBOARD --- */
+        /* --- MAIN DASHBOARD LAYOUT --- */
         .dashboard { 
             display: grid; 
             grid-template-columns: 320px 1fr; 
@@ -133,7 +143,7 @@
             position: sticky;
             top: 40px;
             box-shadow: 0 0 30px rgba(0, 255, 0, 0.15);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(5px);
             height: fit-content;
         }
 
@@ -144,7 +154,7 @@
             border-radius: 20px; 
             backdrop-filter: blur(15px);
             min-height: 80vh;
-            box-shadow: inset 0 0 50px black;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
         }
 
         .nav-item { 
@@ -158,7 +168,7 @@
             font-size: 0.8rem;
             letter-spacing: 1px;
         }
-        .nav-item:hover { color: var(--neon-green); background: rgba(57, 255, 20, 0.1); }
+        .nav-item:hover { color: var(--neon-green); background: rgba(0, 255, 0, 0.05); }
         .nav-item.active { 
             background: var(--neon-green); 
             color: black !important; 
@@ -167,7 +177,7 @@
         }
 
         .topic-content { display: none; }
-        .topic-content.active { display: block; animation: revealItem 0.5s ease-out; }
+        .topic-content.active { display: block; }
 
         h1.glitch-text { 
             font-size: 3rem; 
@@ -181,8 +191,9 @@
         .data-list li {
             padding: 15px;
             margin-bottom: 12px;
-            background: rgba(255,255,255,0.03);
+            background: rgba(255,255,255,0.05);
             border-left: 4px solid var(--neon-green);
+            animation: revealItem 0.6s ease-out forwards;
         }
 
         .terminal-box {
@@ -211,10 +222,11 @@
             background: #000;
             margin: 20px 0;
             text-align: center;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
         }
         .img-container img { max-width: 100%; height: auto; }
 
-        .btn { padding: 10px 20px; border: 1px solid var(--neon-green); color: var(--neon-green); background: none; cursor: pointer; text-transform: uppercase; font-weight: bold; margin-top: 10px;}
+        .btn { padding: 10px 20px; border: 1px solid var(--neon-green); color: var(--neon-green); background: none; cursor: pointer; text-shadow: 0 0 5px var(--neon-green);}
         .btn:hover { background: var(--neon-green); color: black; box-shadow: 0 0 15px var(--neon-green); }
 
         /* --- QUIZ STYLES --- */
@@ -222,7 +234,7 @@
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
+            background: rgba(0,0,0,0.92);
             z-index: 10000;
             justify-content: center;
             align-items: center;
@@ -250,7 +262,7 @@
             font-family: inherit;
         }
 
-        .choice-btn:hover { border-color: var(--neon-green); color: var(--neon-green); }
+        .choice-btn:hover { border-color: var(--neon-green); color: var(--neon-green); background: rgba(57, 255, 20, 0.05); }
         .choice-btn.selected { background: rgba(57, 255, 20, 0.15); border-color: var(--neon-green); }
         .choice-btn.correct-glow { background: var(--dark-green); color: var(--neon-green); border-color: var(--neon-green); box-shadow: 0 0 20px var(--neon-green); }
 
@@ -258,7 +270,7 @@
 </head>
 <body>
     <div class="bg-container"></div>
-    <div class="grid-overlay"></div>
+    <div class="bg-glow"></div>
     <div class="noise-overlay"></div>
     <div class="vignette"></div>
     <div class="data-rain-overlay"></div>
@@ -266,7 +278,7 @@
     
     <div id="quiz-overlay">
         <div class="quiz-card">
-            <h3 style="color: var(--neon-green); border-bottom: 1px solid #222; padding-bottom: 10px;">[ SYSTEM_VALIDATION ]</h3>
+            <h3 style="color: var(--neon-green); border-bottom: 1px solid #222; padding-bottom: 10px; letter-spacing: 2px;">[ SYSTEM_VALIDATION ]</h3>
             <p id="quiz-question" style="font-size: 1.1rem; margin: 20px 0;"></p>
             <div id="choices-container"></div>
             
@@ -296,47 +308,76 @@
 
             <div id="m0" class="topic-content active">
                 <h1 class="glitch-text">Security Architecture</h1>
-                <p>Establishing a "Defense in Depth" strategy. Modern web applications require layered technical controls.</p>
+                <p>Establishing a "Defense in Depth" strategy. Modern web applications require layered technical controls to protect against complex external threats and internal vulnerabilities.</p>
                 <div class="img-container">
                     <img src="Web_application_security_tools_40424a679c.png" alt="Layered Web Security Overview">
                 </div>
+                <ul class="data-list">
+                    <li><b>Defense in Depth:</b> Creating multiple layers of security so if one fails, others protect the system.</li>
+                    <li><b>Perimeter Defense:</b> Filtering malicious requests before they reach the server (WAF).</li>
+                    <li><b>Data Sovereignty:</b> Ensuring information is unreadable without authorization (Encryption).</li>
+                </ul>
                 <button class="btn" onclick="startQuiz(0)">Launch Topic Quiz</button>
             </div>
             
             <div id="m1" class="topic-content">
                 <h1 class="glitch-text">WAF Control</h1>
-                <p>Web application firewalls (WAFs) are the first line of defense at the application layer.</p>
-                <div class="img-container">
-                    <img src="what-is-waf-cf521c4f0020e2a81f70454931d2e21e.webp" alt="WAF Diagram">
+                <p>Web application firewalls (WAFs) are the first line of defense at the application layer. They monitor, filter, and block malicious HTTP/HTTPS traffic to prevent unauthorized data access.</p>
+                <ul class="data-list">
+                    <li><b>GET/POST Analysis:</b> Inspecting payload verbs for malicious strings.</li>
+                    <li><b>Exploit Mitigation:</b> Designed to counter SQLi, XSS, and dangerous bots.</li>
+                    <li><b>Deployment:</b> Can be network-based, host-based, or cloud-based solutions.</li>
+                </ul>
+                <div class="terminal-box">
+[STATUS] WAF Filtering Active...
+[DETECTED] Malicious pattern in POST request /login.php
+[ACTION] 403 Forbidden - Request Dropped.
                 </div>
                 <button class="btn" onclick="startQuiz(1)">Launch Topic Quiz</button>
             </div>
 
             <div id="m2" class="topic-content">
                 <h1 class="glitch-text">Data Encryption</h1>
-                <p>Ensuring data confidentiality by translating plaintext into ciphertext.</p>
+                <p>Encryption translates plaintext into ciphertext, ensuring data remains secure even if storage or transmission channels are compromised.</p>
                 <ul class="data-list">
-                    <li><b>Symmetric:</b> Single key for encryption/decryption.</li>
-                    <li><b>Asymmetric:</b> Public/Private key infrastructure.</li>
+                    <li><b>Symmetric Encryption:</b> Single secret key for both actions.</li>
+                    <li><b>Asymmetric Encryption:</b> Public key for encryption, Private for decryption.</li>
                 </ul>
+                <div class="terminal-box">
+$ openssl enc -aes-256-cbc -salt -in data.txt -out data.enc
+[SYSTEM] Data translated to Ciphertext.
+                </div>
                 <button class="btn" onclick="startQuiz(2)">Launch Topic Quiz</button>
             </div>
 
             <div id="m3" class="topic-content">
                 <h1 class="glitch-text">Access Roles (RBAC)</h1>
-                <p>Assigning permissions based on organizational roles to maintain the Principle of Least Privilege.</p>
+                <p>Role-Based Access Control restricts system access to authorized users based on their predefined roles within the organization.</p>
+                <ul class="data-list">
+                    <li><b>Principle of Least Privilege:</b> Users only access what is needed for their job.</li>
+                    <li><b>Role Assignment:</b> Managing permissions through 'Roles' (HR, Finance, IT).</li>
+                </ul>
                 <button class="btn" onclick="startQuiz(3)">Launch Topic Quiz</button>
             </div>
 
             <div id="m4" class="topic-content">
                 <h1 class="glitch-text">Authentication (MFA)</h1>
-                <p>Verification through Knowledge (Password), Possession (Phone), and Inherence (Biometrics).</p>
+                <p>Multi-Factor Authentication requires two or more distinct verification types to prove a user's identity.</p>
+                <ul class="data-list">
+                    <li><b>Knowledge:</b> Something you know (Passwords).</li>
+                    <li><b>Possession:</b> Something you have (Smartphone).</li>
+                    <li><b>Inherence:</b> Something you are (Biometrics).</li>
+                </ul>
                 <button class="btn" onclick="startQuiz(4)">Launch Topic Quiz</button>
             </div>
 
             <div id="m5" class="topic-content">
                 <h1 class="glitch-text">Transport Layer (HTTPS)</h1>
-                <p>Secure data transmission using SSL/TLS protocols to prevent eavesdropping.</p>
+                <p>HTTPS provides an encrypted "tunnel" for data transfer using Transport Layer Security (TLS).</p>
+                <ul class="data-list">
+                    <li><b>SSL/TLS Handshake:</b> Negotiating encryption keys between browser and server.</li>
+                    <li><b>Public Key Infrastructure:</b> Asymmetric keys used to verify authenticity.</li>
+                </ul>
                 <button class="btn" onclick="startQuiz(5)">Launch Topic Quiz</button>
             </div>
 
@@ -353,21 +394,22 @@
         }
 
         const quizData = [
-            { q: "What is 'Defense in Depth'?", options: ["One strong wall", "Layered security", "Buying hardware", "Using passwords"], correct: 1 },
-            { q: "WAF operates at which layer?", options: ["Layer 2", "Layer 3", "Layer 4", "Layer 7"], correct: 3 },
-            { q: "Which uses Public/Private keys?", options: ["Symmetric", "Asymmetric", "Plaintext", "None"], correct: 1 },
-            { q: "RBAC helps prevent...", options: ["Broken screens", "Permission creep", "Fast internet", "Hard drive failure"], correct: 1 },
-            { q: "MFA 'Inherence' is...", options: ["Password", "Phone", "Fingerprint", "USB key"], correct: 2 },
-            { q: "HTTPS uses which protocol?", options: ["FTP", "TLS/SSL", "SMTP", "UDP"], correct: 1 }
+            { q: "What is the primary goal of a 'Defense in Depth' strategy?", options: ["Buying the most expensive firewall", "Using overlapping layers of security", "Hiring only one security expert", "Using a single strong password"], correct: 1 },
+            { q: "WAF operates at which layer of the OSI model?", options: ["Layer 2 (Data Link)", "Layer 3 (Network)", "Layer 7 (Application)", "Layer 4 (Transport)"], correct: 2 },
+            { q: "Which encryption method uses a Public Key and a Private Key?", options: ["Symmetric Encryption", "Asymmetric Encryption", "Hashing", "Encoding"], correct: 1 },
+            { q: "What is the 'Principle of Least Privilege' in RBAC?", options: ["Everyone gets Admin access", "Users get only the minimum access needed", "Access depends on how long you've worked there", "Granting access based on computer speed"], correct: 1 },
+            { q: "A fingerprint scan is an example of which MFA factor?", options: ["Knowledge", "Possession", "Inherence", "Location"], correct: 2 },
+            { q: "What does HTTPS use to secure the 'tunnel' between browser and server?", options: ["UDP", "TLS/SSL", "FTP", "ICMP"], correct: 1 }
         ];
 
         let currentQuizIndex = -1;
         function startQuiz(index) {
             currentQuizIndex = index;
-            document.getElementById('quiz-question').innerText = quizData[index].q;
+            const data = quizData[index];
+            document.getElementById('quiz-question').innerText = data.q;
             const container = document.getElementById('choices-container');
             container.innerHTML = '';
-            quizData[index].options.forEach((opt, i) => {
+            data.options.forEach((opt, i) => {
                 const btn = document.createElement('button');
                 btn.className = 'choice-btn';
                 btn.innerText = opt;
@@ -383,12 +425,16 @@
         }
 
         function revealAnswer() {
+            if (currentQuizIndex === -1) return;
             const correctIdx = quizData[currentQuizIndex].correct;
             document.getElementById("opt-" + correctIdx).classList.add('correct-glow');
             document.getElementById('reveal-btn').style.display = 'none';
         }
 
-        function closeQuiz() { document.getElementById('quiz-overlay').style.display = 'none'; }
+        function closeQuiz() {
+            document.getElementById('quiz-overlay').style.display = 'none';
+            currentQuizIndex = -1;
+        }
     </script>
 </body>
 </html>
