@@ -12,6 +12,7 @@
             --dark-green: #003300;
             --deep-black: #050505;
             --glass-bg: rgba(0, 10, 0, 0.95);
+            --error-red: #ff3131;
         }
 
         @keyframes glitch {
@@ -21,11 +22,6 @@
             60% { transform: translate(2px, 2px); }
             80% { transform: translate(2px, -2px); }
             100% { transform: translate(0); }
-        }
-
-        @keyframes revealItem {
-            from { opacity: 0; transform: translateY(20px); filter: blur(10px); }
-            to { opacity: 1; transform: translateY(0); filter: blur(0); }
         }
 
         @keyframes rain {
@@ -58,14 +54,6 @@
             z-index: -2; opacity: 0.6;
         }
 
-        .grid-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: linear-gradient(rgba(0, 255, 0, 0.03) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(0, 255, 0, 0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
-            z-index: -1;
-        }
-
         .dashboard { 
             display: grid; 
             grid-template-columns: 320px 1fr; 
@@ -81,7 +69,6 @@
             padding: 30px; 
             border-radius: 15px; 
             position: sticky; top: 40px;
-            box-shadow: 0 0 30px rgba(0, 255, 0, 0.15);
         }
 
         .content-area { 
@@ -97,7 +84,6 @@
             padding: 15px; cursor: pointer; margin-bottom: 10px; color: #666; 
             transition: 0.3s; border-radius: 8px; text-transform: uppercase; font-size: 0.8rem;
         }
-        .nav-item:hover { color: var(--neon-green); background: rgba(0, 255, 0, 0.05); transform: translateX(5px); }
         .nav-item.active { 
             background: var(--neon-green); color: black !important; font-weight: bold;
             box-shadow: 0 0 20px var(--neon-green);
@@ -109,48 +95,68 @@
         h1.glitch-text { 
             font-size: 2.8rem; color: var(--neon-green); 
             animation: glitch 4s infinite linear alternate-reverse;
-            text-transform: uppercase;
         }
 
-        .is-focus-tag {
-            background: var(--dark-green);
-            color: var(--neon-green);
-            padding: 5px 12px;
-            font-size: 0.8rem;
-            border-radius: 4px;
-            display: inline-block;
-            margin-bottom: 20px;
-            border: 1px solid var(--neon-green);
+        /* --- FLASHCARD MODAL --- */
+        #quiz-overlay {
+            display: none;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            justify-content: center; align-items: center;
         }
 
-        .qa-container {
-            margin-top: 30px;
-            background: rgba(57, 255, 20, 0.05);
-            border: 1px dashed var(--neon-green);
-            padding: 20px;
-            border-radius: 10px;
+        .flashcard {
+            background: #000;
+            border: 2px solid var(--neon-green);
+            padding: 40px;
+            width: 500px;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(0,255,0,0.2);
         }
 
-        .data-list { list-style: none; padding: 0; }
-        .data-list li {
-            padding: 12px; margin-bottom: 10px;
-            background: rgba(255,255,255,0.03);
-            border-left: 4px solid var(--neon-green);
-            animation: revealItem 0.5s ease-out forwards;
-            opacity: 0;
+        .answer-text { display: none; color: var(--neon-green); margin-top: 20px; font-weight: bold; border-top: 1px solid #333; padding-top: 20px;}
+
+        .feedback-flash {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; opacity: 0; transition: 0.3s; z-index: 1100;
         }
 
-        .btn { padding: 10px 20px; text-decoration: none; border: 1px solid var(--neon-green); color: var(--neon-green); font-weight: bold; text-transform: uppercase;}
-        .btn:hover { background: var(--neon-green); color: black; box-shadow: 0 0 15px var(--neon-green); }
+        .btn { padding: 10px 20px; background: none; border: 1px solid var(--neon-green); color: var(--neon-green); cursor: pointer; font-family: inherit; text-transform: uppercase; margin: 5px;}
+        .btn:hover { background: var(--neon-green); color: #000; }
+        .btn-red { border-color: var(--error-red); color: var(--error-red); }
+        .btn-red:hover { background: var(--error-red); color: #000; }
     </style>
 </head>
 <body>
     <div class="bg-container"></div>
-    <div class="data-rain-overlay"></div> 
-    <div class="grid-overlay"></div>
-    
+    <div class="data-rain-overlay"></div>
+    <div id="feedback" class="feedback-flash"></div>
+
+    <div id="quiz-overlay">
+        <div class="flashcard">
+            <h3 style="color: #555;">[ SECURITY_CHECK ]</h3>
+            <p id="quiz-question" style="font-size: 1.2rem; margin: 20px 0;"></p>
+            
+            <div id="answer-area" class="answer-text">
+                <span style="color: #888; font-size: 0.8rem;">REVEALED_ANSWER:</span><br>
+                <span id="quiz-answer"></span>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <button class="btn" onclick="revealAnswer()">Reveal Answer</button>
+                <div id="judgement-buttons" style="display:none; margin-top: 15px;">
+                    <button class="btn" onclick="triggerFeedback('correct')">CORRECT</button>
+                    <button class="btn btn-red" onclick="triggerFeedback('wrong')">WRONG</button>
+                </div>
+                <br>
+                <button class="btn" style="border:none; color: #444;" onclick="closeQuiz()">[ CLOSE ]</button>
+            </div>
+        </div>
+    </div>
+
     <div style="padding: 30px 50px;">
-        <a href="index.html" class="btn">[ EXIT_SESSION ]</a>
+        <a href="index.html" class="btn" style="text-decoration: none;">[ EXIT_SESSION ]</a>
     </div>
 
     <div class="dashboard">
@@ -158,100 +164,47 @@
             <h2 style="color:var(--neon-green); font-size: 0.8rem; text-align: center; letter-spacing: 3px; border-bottom: 1px solid #222; padding-bottom: 15px; margin-bottom: 20px;">SEC_PROTOCOL_v4</h2>
             <div class="nav-item active" onclick="showTab('w0', this)">00. Overview</div>
             <div class="nav-item" onclick="showTab('w1', this)">01. Access Control</div>
-            <div class="nav-item" onclick="showTab('w2', this)">02. Data Integrity</div>
+            <div class="nav-item" onclick="showTab('w2', this)">02. SQL Injection</div>
             <div class="nav-item" onclick="showTab('w3', this)">03. Crypto Failures</div>
             <div class="nav-item" onclick="showTab('w4', this)">04. Insecure Design</div>
             <div class="nav-item" onclick="showTab('w5', this)">05. Supply Chain</div>
-            <div class="nav-item" onclick="showTab('w6', this)">06. Social Engineering</div>
-            <div class="nav-item" onclick="showTab('w7', this)">07. Continuity (BCP)</div>
         </div>
 
         <div class="content-area">
-            
             <div id="w0" class="topic-content active">
                 <h1 class="glitch-text">Web App Defense</h1>
-                <p>Web Application Security focuses on the tactical defense of Information Systems. As a Software Engineer, you must ensure that the user interface doesn't become a gateway for organizational collapse.</p>
-                <div style="font-size: 1.1rem; border-left: 5px solid var(--neon-green); padding-left: 20px; margin: 30px 0; color: #ccc;">
-                    "In an Information System, the web app is the most visible and vulnerable front door."
-                </div>
+                <p>Welcome to the Web Application Security segment. Use the sidebar to navigate topics.</p>
             </div>
 
             <div id="w1" class="topic-content">
-                <h1 class="glitch-text">01. Broken Access Control</h1>
-                <div class="is-focus-tag">IS Focus: Identity & Access Management</div>
-                <p>Failure to enforce restrictions on what authenticated users are allowed to do. Attackers exploit these flaws to access unauthorized accounts or sensitive files.</p>
-                <ul class="data-list" style="animation-delay: 0.1s;">
-                    <li>Bypassing access control checks by modifying the URL.</li>
-                    <li>Permitting viewing or editing someone else's account.</li>
-                    <li>Elevation of privilege (acting as admin while logged in as user).</li>
-                </ul>
-                <div class="qa-container">
-                    <strong>Q:</strong> How does this affect an Information System?<br>
-                    <strong>A:</strong> It violates the <b>Confidentiality</b> aspect of the CIA triad, leading to massive data leaks.
-                </div>
+                <h1 class="glitch-text">01. Access Control</h1>
+                <p>Failure to restrict users from unauthorized data. It is the #1 vulnerability in Information Systems.</p>
+                <button class="btn" onclick="openQuiz('What IS principle is violated when a regular user can access the admin dashboard?', 'The Principle of Least Privilege')">Launch Quiz</button>
             </div>
 
             <div id="w2" class="topic-content">
-                <h1 class="glitch-text">02. Injection (SQLi)</h1>
-                <div class="is-focus-tag">IS Focus: Data Integrity & Reliability</div>
-                <p>SQL Injection occurs when untrusted data is sent to an interpreter as part of a command or query. The attacker’s hostile data can trick the interpreter into executing unintended commands.</p>
-                <div class="qa-container">
-                    <strong>Ice Breaker:</strong> Can a "name" field delete an entire company's history?<br>
-                    <strong>Answer:</strong> Yes, if the system doesn't sanitize the input, a hacker can enter a "DROP TABLE" command.
-                </div>
+                <h1 class="glitch-text">02. SQL Injection</h1>
+                <p>Inserting malicious code into inputs to manipulate the backend database and bypass security.</p>
+                <button class="btn" onclick="openQuiz('Which aspect of the CIA Triad is most directly damaged by a SQL Injection that deletes data?', 'Integrity')">Launch Quiz</button>
             </div>
 
             <div id="w3" class="topic-content">
-                <h1 class="glitch-text">03. Cryptographic Failures</h1>
-                <div class="is-focus-tag">IS Focus: Compliance & Governance</div>
-                <p>Formerly known as Sensitive Data Exposure. This is the root cause of data privacy violations. It involves the lack of protection for data at rest and in transit.</p>
-                <ul class="data-list">
-                    <li>Using old hashing algorithms like MD5.</li>
-                    <li>Transmitting sensitive data in clear text (HTTP instead of HTTPS).</li>
-                    <li>Poor key management in the Information System.</li>
-                </ul>
+                <h1 class="glitch-text">03. Crypto Failures</h1>
+                <p>Focuses on protecting data at rest and in transit. Weak encryption leads to data privacy leaks.</p>
+                <button class="btn" onclick="openQuiz('Does HTTPS protect data while it is stored on the company server database?', 'No, it only protects data in transit.')">Launch Quiz</button>
             </div>
 
             <div id="w4" class="topic-content">
                 <h1 class="glitch-text">04. Insecure Design</h1>
-                <div class="is-focus-tag">IS Focus: SDLC Management</div>
-                <p>A new category for 2026 focusing on risks related to design flaws. If the design is insecure, no amount of perfect coding can save the system.</p>
-                <div class="qa-container">
-                    <strong>Q:</strong> What phase of the SDLC should security start?<br>
-                    <strong>A:</strong> The Requirements phase. Security must be "baked in," not "sprinkled on."
-                </div>
+                <p>Architectural flaws that cannot be fixed by just "better coding." Security must be part of the design phase.</p>
+                <button class="btn" onclick="openQuiz('In which stage of the SDLC should security requirements first be established?', 'Requirement Analysis / Planning')">Launch Quiz</button>
             </div>
 
             <div id="w5" class="topic-content">
-                <h1 class="glitch-text">05. Supply Chain Risks</h1>
-                <div class="is-focus-tag">IS Focus: Third-Party Risk Management</div>
-                <p>Modern apps are built with third-party components. If a library you use in your Information System has a vulnerability, you are vulnerable too.</p>
-                <ul class="data-list">
-                    <li>Using outdated versions of React, Angular, or Node.js.</li>
-                    <li>Lack of an SBOM (Software Bill of Materials).</li>
-                </ul>
+                <h1 class="glitch-text">05. Supply Chain</h1>
+                <p>Risks associated with third-party libraries and external APIs used in the Information System.</p>
+                <button class="btn" onclick="openQuiz('What does SBOM stand for?', 'Software Bill of Materials')">Launch Quiz</button>
             </div>
-
-            <div id="w6" class="topic-content">
-                <h1 class="glitch-text">06. Social Engineering</h1>
-                <div class="is-focus-tag">IS Focus: Human Resource Security</div>
-                <p>Psychological manipulation of people into performing actions or divulging confidential information. In 2026, AI deepfakes make this harder to detect.</p>
-                <div class="qa-container">
-                    <strong>Q:</strong> What is the weakest link in any Information System?<br>
-                    <strong>A:</strong> The human user.
-                </div>
-            </div>
-
-            <div id="w7" class="topic-content">
-                <h1 class="glitch-text">07. Continuity (BCP)</h1>
-                <div class="is-focus-tag">IS Focus: Business Continuity Planning</div>
-                <p>The "Availability" of the Information System. Security must ensure that the web application remains accessible even during an attack or system failure.</p>
-                <ul class="data-list">
-                    <li>Protection against DDoS (Distributed Denial of Service).</li>
-                    <li>Implementing robust data backup and recovery cycles.</li>
-                </ul>
-            </div>
-
         </div>
     </div>
 
@@ -261,7 +214,31 @@
             document.getElementById(id).classList.add('active');
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             el.classList.add('active');
-            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        // QUIZ SYSTEM LOGIC
+        function openQuiz(q, a) {
+            document.getElementById('quiz-question').innerText = q;
+            document.getElementById('quiz-answer').innerText = a;
+            document.getElementById('answer-area').style.display = 'none';
+            document.getElementById('judgement-buttons').style.display = 'none';
+            document.getElementById('quiz-overlay').style.display = 'flex';
+        }
+
+        function revealAnswer() {
+            document.getElementById('answer-area').style.display = 'block';
+            document.getElementById('judgement-buttons').style.display = 'block';
+        }
+
+        function triggerFeedback(type) {
+            const f = document.getElementById('feedback');
+            f.style.background = (type === 'correct') ? 'rgba(0, 255, 0, 0.3)' : 'rgba(255, 0, 0, 0.3)';
+            f.style.opacity = '1';
+            setTimeout(() => { f.style.opacity = '0'; }, 500);
+        }
+
+        function closeQuiz() {
+            document.getElementById('quiz-overlay').style.display = 'none';
         }
     </script>
 </body>
