@@ -2,116 +2,245 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>System Hacking | Expert Modules</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Hacking | Expert Terminal</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .dashboard { display: grid; grid-template-columns: 320px 1fr; gap: 25px; padding: 30px; height: 85vh; margin-top: 10px; }
-        .sidebar { background: rgba(0,0,0,0.8); border: 1px solid var(--neon-green); padding: 20px; border-radius: 12px; box-shadow: inset 0 0 10px var(--dark-green); }
-        .content-area { background: var(--glass-bg); border: 1px solid var(--neon-green); padding: 45px; border-radius: 12px; overflow-y: auto; backdrop-filter: blur(15px); }
-        
-        .nav-item { padding: 18px; cursor: pointer; border-left: 3px solid transparent; margin-bottom: 8px; color: #888; transition: 0.3s; background: rgba(255,255,255,0.02); }
-        .nav-item:hover { color: var(--neon-green); background: rgba(57, 255, 20, 0.05); }
-        .nav-item.active { border-left: 3px solid var(--neon-green); color: var(--neon-green); background: rgba(57, 255, 20, 0.1); font-weight: bold; }
+        /* --- Advanced Animations --- */
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
 
-        .topic-content { display: none; animation: slideUp 0.4s ease-out; }
+        @keyframes scanline {
+            0% { bottom: 100%; }
+            100% { bottom: 0%; }
+        }
+
+        @keyframes revealItem {
+            from { opacity: 0; transform: translateX(-20px); filter: blur(5px); }
+            to { opacity: 1; transform: translateX(0); filter: blur(0); }
+        }
+
+        /* --- UI Layout --- */
+        .dashboard { 
+            display: grid; 
+            grid-template-columns: 350px 1fr; 
+            gap: 30px; 
+            padding: 40px; 
+            height: 82vh; 
+            margin-top: 10px;
+            perspective: 1000px;
+        }
+
+        .sidebar { 
+            background: rgba(0, 15, 0, 0.9); 
+            border: 1px solid var(--neon-green); 
+            padding: 25px; 
+            border-radius: 15px; 
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
+        }
+
+        .content-area { 
+            background: rgba(0, 5, 0, 0.85); 
+            border: 1px solid var(--neon-green); 
+            padding: 50px; 
+            border-radius: 15px; 
+            overflow-y: auto; 
+            backdrop-filter: blur(20px);
+            position: relative;
+        }
+
+        /* Scanning effect inside the content area */
+        .content-area::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 2px;
+            background: rgba(57, 255, 20, 0.2);
+            animation: scanline 6s linear infinite;
+            pointer-events: none;
+        }
+
+        /* Navigation Items */
+        .nav-item { 
+            padding: 20px; 
+            cursor: pointer; 
+            margin-bottom: 12px; 
+            color: #666; 
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            background: rgba(0, 255, 0, 0.03);
+            border: 1px solid transparent;
+            border-radius: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .nav-item:hover { color: var(--neon-green); transform: scale(1.05); border-color: rgba(0,255,0,0.3); }
+        .nav-item.active { 
+            background: var(--neon-green); 
+            color: black !important; 
+            font-weight: 900; 
+            box-shadow: 0 0 30px var(--neon-green);
+        }
+
+        /* Content Styling */
+        .topic-content { display: none; }
         .topic-content.active { display: block; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .speaker-note { background: rgba(57, 255, 20, 0.1); border-left: 4px solid var(--neon-green); padding: 15px; margin: 20px 0; font-style: italic; color: #cfc; }
-        .tech-box { background: #000; border: 1px dashed var(--neon-green); padding: 15px; font-family: monospace; font-size: 0.9rem; color: #39ff14; margin: 15px 0; }
-        .img-frame { border: 2px solid var(--neon-green); padding: 5px; background: #000; display: block; margin: 20px auto; max-width: 80%; box-shadow: 0 0 20px rgba(57, 255, 20, 0.2); }
-        
-        h1 { font-size: 2.5rem; margin-top: 0; color: var(--neon-green); text-transform: uppercase; letter-spacing: 2px; }
-        h3 { color: var(--neon-green); border-bottom: 1px solid var(--dark-green); padding-bottom: 5px; }
-        p { line-height: 1.8; color: #eee; }
-        ul li { margin-bottom: 12px; color: #ccc; }
-        b { color: var(--neon-green); }
+        h1.glitch-text { 
+            font-size: 3rem; 
+            color: var(--neon-green); 
+            margin-bottom: 30px; 
+            animation: glitch 3s infinite;
+        }
+
+        .data-list li {
+            opacity: 0;
+            animation: revealItem 0.5s ease-out forwards;
+            padding: 12px;
+            border-left: 2px solid var(--dark-green);
+            margin-bottom: 10px;
+            background: rgba(255,255,255,0.02);
+        }
+
+        /* Staggered Delay for list items (10 items deep) */
+        .data-list li:nth-child(1) { animation-delay: 0.1s; }
+        .data-list li:nth-child(2) { animation-delay: 0.2s; }
+        .data-list li:nth-child(3) { animation-delay: 0.3s; }
+        .data-list li:nth-child(4) { animation-delay: 0.4s; }
+        .data-list li:nth-child(5) { animation-delay: 0.5s; }
+        .data-list li:nth-child(6) { animation-delay: 0.6s; }
+
+        .img-frame { 
+            border: 2px solid var(--neon-green); 
+            padding: 10px; 
+            background: #000; 
+            border-radius: 12px; 
+            box-shadow: 0 0 40px rgba(57, 255, 20, 0.2);
+            transition: 0.5s;
+            cursor: crosshair;
+        }
+        .img-frame:hover { transform: scale(1.02) rotate(1deg); border-color: white; }
+
+        .speaker-box {
+            background: linear-gradient(90deg, var(--dark-green), transparent);
+            border-left: 5px solid var(--neon-green);
+            padding: 20px;
+            margin: 25px 0;
+            font-family: 'Segoe UI', sans-serif;
+            font-style: italic;
+            color: #afff94;
+        }
+
+        .tech-snippet {
+            background: #000;
+            border: 1px solid #333;
+            color: var(--neon-green);
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            position: relative;
+        }
+        .tech-snippet::before { content: "TERMINAL_OUTPUT"; font-size: 0.6rem; position: absolute; top: -10px; right: 10px; background: #333; padding: 2px 5px; }
+
     </style>
 </head>
 <body>
     <div class="bg-container"></div>
     <div class="grid-overlay"></div>
     
-    <div style="padding: 15px 30px;">
-        <a href="index.html" class="btn" style="padding: 8px 20px; font-size: 0.8rem;">[ ESC ] EXIT TERMINAL</a>
+    <div style="padding: 20px 40px;">
+        <a href="index.html" class="btn" style="border-radius: 50px; font-size: 0.7rem;">[X] DISCONNECT_SESSION</a>
     </div>
 
     <div class="dashboard">
         <div class="sidebar">
-            <h2 style="color:var(--neon-green); letter-spacing: 3px; font-size: 1rem; text-align: center;">VULNERABILITY_LIFECYCLE</h2>
-            <div class="nav-item active" onclick="showTab('intro', this)">00. OVERVIEW & IMPACT</div>
-            <div class="nav-item" onclick="showTab('recon', this)">01. RECONNAISSANCE</div>
-            <div class="nav-item" onclick="showTab('scan', this)">02. SCANNING & ENUMERATION</div>
-            <div class="nav-item" onclick="showTab('access', this)">03. GAINING ACCESS (EXPLOIT)</div>
-            <div class="nav-item" onclick="showTab('maintain', this)">04. PERSISTENCE & PRIV-ESC</div>
-            <div class="nav-item" onclick="showTab('cover', this)">05. TRACK OBFUSCATION</div>
+            <div style="text-align: center; margin-bottom: 30px;">
+                <div style="font-size: 0.7rem; color: var(--neon-green); opacity: 0.5;">ENCRYPTED LINK ESTABLISHED</div>
+                <h2 style="color:white; margin: 5px 0;">SYSTEM MODULES</h2>
+            </div>
+            <div class="nav-item active" onclick="showTab('m0', this)">00. Overview & Impact</div>
+            <div class="nav-item" onclick="showTab('m1', this)">01. Reconnaissance</div>
+            <div class="nav-item" onclick="showTab('m2', this)">02. Scanning Phase</div>
+            <div class="nav-item" onclick="showTab('m3', this)">03. Gaining Access</div>
+            <div class="nav-item" onclick="showTab('m4', this)">04. Maintaining Access</div>
+            <div class="nav-item" onclick="showTab('m5', this)">05. Covering Tracks</div>
         </div>
 
         <div class="content-area">
             
-            <div id="intro" class="topic-content active">
-                <h1>The State of Cyber Warfare</h1>
-                <p>As a Software Engineer, I see security not as a feature, but as the foundation. Today, the average time to detect a breach is <b>212 days</b>. Hackers aren't "breaking in"; they are logging in using leaked credentials or exploiting unpatched logic.</p>
+            <div id="m0" class="topic-content active">
+                <h1 class="glitch-text">Knight in Armour</h1>
+                <p>In the digital age, <b>Ethical Hacking</b> is the frontline defense. As cyberattacks become more rampant, we provide the solution to combat this ever-growing global problem.</p>
+                
+                <div class="speaker-box">
+                    "A cyber attack occurs every 39 seconds. Age-old systems are not equipped to handle them. We are here to simulate, identify, and strengthen."
+                </div>
+
                 <div class="img-frame">
-                    <img src="hacking-process.png" style="width:100%;">
+                    <img src="hacking-process.png" style="width:100%;" alt="Hacking Process">
                 </div>
-                <div class="speaker-note">
-                    "Every 39 seconds, a system is targeted. Our goal today is to understand the mind of the attacker to build better defenses."
-                </div>
-            </div>
 
-            <div id="recon" class="topic-content">
-                <h1>Phase 01: Reconnaissance</h1>
-                <p>Information is the most valuable asset. Before a single line of code is run, we gather intelligence.</p>
-                <ul>
-                    <li><b>Passive Recon:</b> Utilizing OSINT (Open Source Intelligence), LinkedIn, and Google Dorking to find employee habits and tech stacks.</li>
-                    <li><b>Active Recon:</b> Directly interacting with the target server via DNS interrogation or social engineering calls.</li>
-                </ul>
-                <div class="tech-box">> whois target-domain.com <br>> nslookup -type=mx target-domain.com</div>
-            </div>
-
-            <div id="scan" class="topic-content">
-                <h1>Phase 02: Scanning & Enumeration</h1>
-                <p>This is where we identify the "doors and windows." We look for services, versions, and misconfigurations.</p>
-                <ul>
-                    <li><b>Port Scanning:</b> Using tools like Nmap to find open "gates" (SSH, HTTP, SMB).</li>
-                    <li><b>Vulnerability Scanning:</b> Automated tools (Nessus/OpenVAS) checking for known CVEs.</li>
-                    <li><b>Banner Grabbing:</b> Determining exactly what software version is running to find specific exploits.</li>
-                </ul>
-                <div class="tech-box">> nmap -sV -T4 target-ip-address</div>
-            </div>
-
-            <div id="access" class="topic-content">
-                <h1>Phase 03: Gaining Access</h1>
-                <p>The "Hollywood" moment. We use the vulnerability found in Phase 2 to bypass security controls.</p>
-                <h3>Common Vectors:</h3>
-                <ul>
-                    <li><b>Buffer Overflows:</b> Overwriting memory to execute custom shellcode.</li>
-                    <li><b>Web Exploits:</b> SQL Injection or Cross-Site Scripting (XSS).</li>
-                    <li><b>Client-Side Attacks:</b> Sending a weaponized PDF or Office document to an employee.</li>
-                </ul>
-                <div class="speaker-note">"Access is gained through the weakest link—often a human or an unpatched legacy server."</div>
-            </div>
-
-            <div id="maintain" class="topic-content">
-                <h1>Phase 04: Maintaining Access</h1>
-                <p>One-time access is useless. A professional needs to ensure they can come back even if the system reboots.</p>
-                <ul>
-                    <li><b>Privilege Escalation:</b> Moving from a low-level user to <b>Root/Administrator</b>.</li>
-                    <li><b>Persistence:</b> Installing Rootkits, Backdoors, or creating hidden Admin accounts.</li>
-                    <li><b>Pivoting:</b> Using the first hacked computer to attack other machines inside the network.</li>
+                <ul class="data-list">
+                    <li><b>Critical Window:</b> Organizations take up to 6 months to realize a breach has occurred.</li>
+                    <li><b>Continuous Upgrades:</b> Regular updates to IT security are the only way to safeguard data.</li>
+                    <li><b>The Goal:</b> Identify all vulnerabilities and exploit them to pinpoint areas of weakness.</li>
                 </ul>
             </div>
 
-            <div id="cover" class="topic-content">
-                <h1>Phase 05: Track Obfuscation</h1>
-                <p>The mark of a master is silence. If the Blue Team (defenders) never finds the logs, the attack never "happened."</p>
-                <ul>
-                    <li><b>Log Manipulation:</b> Deleting specific entries in Syslog or Windows Event Viewer.</li>
-                    <li><b>Steganography:</b> Hiding stolen data inside harmless images to smuggle it out.</li>
-                    <li><b>Reverse Shell Cleanup:</b> Deleting temporary scripts and binaries used during the exploit.</li>
+            <div id="m1" class="topic-content">
+                <h1 class="glitch-text">Reconnaissance</h1>
+                <p>The collection phase. We gather everything available about the network and implemented security measures.</p>
+                <ul class="data-list">
+                    <li><b>Passive Recon:</b> Stealthy gathering of IP addresses, employee data, and company facts.</li>
+                    <li><b>Active Recon:</b> Directly probing the system. Riskier, but yields higher quality technical data.</li>
+                    <li><b>The OSINT Advantage:</b> Using public information to map the attack surface easily.</li>
                 </ul>
-                <div class="tech-box"># history -c <br># rm -rf /tmp/exploit_payload</div>
+                <div class="tech-snippet">> performing_osint_scan... [COMPLETE] <br>> 14 public IP addresses identified.</div>
+            </div>
+
+            <div id="m2" class="topic-content">
+                <h1 class="glitch-text">Scanning & Mapping</h1>
+                <p>Applying intelligence to find the specific "open windows" in the target architecture.</p>
+                <ul class="data-list">
+                    <li><b>Port Scanning:</b> Finding unprotected services and open ports.</li>
+                    <li><b>Vulnerability Scans:</b> Automated tools identifying weaknesses in company servers.</li>
+                    <li><b>Network Mapping:</b> Locating firewalls, routers, and host networks for the strategy.</li>
+                </ul>
+            </div>
+
+            <div id="m3" class="topic-content">
+                <h1 class="glitch-text">Gaining Access</h1>
+                <p>The "Point of Infiltration." We launch a full-fledged attack on the identified exposed vulnerabilities.</p>
+                <ul class="data-list">
+                    <li><b>Exploitation:</b> Gaining full control of the system or network.</li>
+                    <li><b>Action on Objectives:</b> Stealing data, corrupting systems, or injecting viruses.</li>
+                    <li><b>Malicious Entities:</b> Manipulating the environment to the hacker's benefit.</li>
+                </ul>
+            </div>
+
+            <div id="m4" class="topic-content">
+                <h1 class="glitch-text">Persistence</h1>
+                <p>Ensuring the connection remains stable even after reboots or security sweeps.</p>
+                <ul class="data-list">
+                    <li><b>Trojans & Backdoors:</b> Maintaining a secret "side door" into the server.</li>
+                    <li><b>Rootkits:</b> Hiding the hacker's presence at the OS kernel level.</li>
+                    <li><b>Ongoing Damage:</b> Using the access to launch secondary attacks deeper into the organization.</li>
+                </ul>
+            </div>
+
+            <div id="m5" class="topic-content">
+                <h1 class="glitch-text">Track Obfuscation</h1>
+                <p>Leaving the system without a trace. If successful, the security system never realizes an attack occurred.</p>
+                <ul class="data-list">
+                    <li><b>Log Manipulation:</b> Deleting or corrupting system logs and registry values.</li>
+                    <li><b>Resource Cleanup:</b> Deleting folders and uninstalling all applications used.</li>
+                    <li><b>Total Erasure:</b> Removing all traces of activity to avoid detection.</li>
+                </ul>
+                <div class="tech-snippet"># shred -uzv /var/log/*.log <br># rm -rf /bin/backdoor <br># echo "Session: Invisible"</div>
             </div>
 
         </div>
@@ -119,10 +248,21 @@
 
     <script>
         function showTab(id, el) {
+            // Content Switch
             document.querySelectorAll('.topic-content').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById(id).classList.add('active');
+            
+            // Nav Item Switch
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             el.classList.add('active');
+
+            // Reset animations for the list items in the new tab
+            const items = document.getElementById(id).querySelectorAll('li');
+            items.forEach((item, index) => {
+                item.style.animation = 'none';
+                item.offsetHeight; // Trigger reflow
+                item.style.animation = `revealItem 0.5s ease-out forwards ${0.1 * (index + 1)}s`;
+            });
         }
     </script>
 </body>
