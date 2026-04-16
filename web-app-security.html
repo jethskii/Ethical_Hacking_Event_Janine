@@ -216,11 +216,24 @@
             
             <div id="m1" class="topic-content">
                 <h1 class="glitch-text">WAF Control</h1>
-                <p>Web application firewalls (WAFs) are the first line of defense at the application layer. They provide visibility into application data at the HTTP layer.</p>
+                <p>Web application firewalls (WAFs) are the first line of defense at the application layer. They provide visibility into application data at the <b>HTTP Application Layer (Layer 7)</b>.</p>
                 
                 <div class="img-container">
                     <img src="4bb1bea4-067f-481a-b29b-1e841f3d751d.jpeg" alt="OSI Layers Diagram">
                     <p style="color: var(--neon-green); font-size: 0.8rem; margin-top: 10px;">[ FIG 1.2: OSI Reference Model - WAF operates at Layer 7 ]</p>
+                </div>
+
+                <div style="margin: 20px 0; border: 1px solid #333; padding: 15px; background: rgba(0,0,0,0.5);">
+                    <button class="btn" style="font-size: 0.7rem;" onclick="toggleOSI()">[ TOGGLE OSI DETAILS ]</button>
+                    <div id="osi-details" style="display: none; margin-top: 20px; font-size: 0.85rem; text-align: left;">
+                        <p><b style="color: var(--neon-green);">L7 Application:</b> Direct interaction with software (HTTP/FTP). Where WAF lives.</p>
+                        <p><b style="color: var(--neon-green);">L6 Presentation:</b> Data translation, encryption, and compression.</p>
+                        <p><b style="color: var(--neon-green);">L5 Session:</b> Manages connections and conversations between devices.</p>
+                        <p><b style="color: var(--neon-green);">L4 Transport:</b> End-to-end communication (TCP/UDP). Standard firewalls live here.</p>
+                        <p><b style="color: var(--neon-green);">L3 Network:</b> Logical physical path determination (IP Routing).</p>
+                        <p><b style="color: var(--neon-green);">L2 Data Link:</b> Physical addressing (MAC) and frame management.</p>
+                        <p><b style="color: var(--neon-green);">L1 Physical:</b> Raw bitstream transmission over hardware (Cables/Wi-Fi).</p>
+                    </div>
                 </div>
 
                 <ul class="data-list">
@@ -296,6 +309,14 @@ $ openssl enc -aes-256-cbc -salt -in plaintext.txt -out secrets.enc
     </div>
 
     <script>
+        function toggleOSI() {
+            const details = document.getElementById('osi-details');
+            if (details.style.display === "none") {
+                details.style.display = "block";
+            } else {
+                details.style.display = "none";
+            }
+        }
         function showTab(id, el) {
             document.querySelectorAll('.topic-content').forEach(t => t.classList.remove('active'));
             document.getElementById(id).classList.add('active');
