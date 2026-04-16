@@ -3,227 +3,311 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Security Tools | Expert Terminal v2.1</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Web App Security | Expert Terminal v3.0</title>
     <style>
         :root {
             --neon-green: #39ff14;
             --dark-green: #003300;
             --deep-black: #050505;
-            --glass-bg: rgba(0, 10, 0, 0.95);
-            --error-red: #ff3131;
+            --warning-red: #ff3131;
         }
 
+        /* --- Animations --- */
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        @keyframes rain {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 0% 1000px; }
+        }
+
+        /* --- Layout & Global --- */
         body, html {
-            margin: 0; padding: 0; width: 100%; height: 100%;
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
             background-color: var(--deep-black);
             font-family: 'Consolas', 'Courier New', monospace;
-            color: white; overflow: hidden;
+            color: #e0e0e0;
+            overflow: hidden; /* We will scroll the content-area instead */
         }
 
-        .dashboard { display: grid; grid-template-columns: 320px 1fr; height: 100vh; }
-        .sidebar { background: var(--glass-bg); border-right: 1px solid var(--neon-green); padding: 40px 30px; z-index: 10; }
+        .bg-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, var(--dark-green) 0%, var(--deep-black) 100%);
+            z-index: -3;
+        }
 
-        .content-area { overflow-y: scroll; scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+        .data-rain-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(0deg, transparent 0%, rgba(57, 255, 20, 0.05) 50%, transparent 100%);
+            background-size: 1000px 1000px;
+            animation: rain 30s linear infinite;
+            z-index: -2;
+            opacity: 0.4;
+        }
+
+        .dashboard { 
+            display: grid; 
+            grid-template-columns: 300px 1fr; 
+            height: 100vh;
+        }
+
+        /* --- Sidebar --- */
+        .sidebar { 
+            background: rgba(0, 15, 0, 0.9); 
+            border-right: 1px solid var(--neon-green); 
+            padding: 40px 25px; 
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        .nav-item { 
+            padding: 15px; 
+            cursor: pointer; 
+            margin-bottom: 8px; 
+            color: #888; 
+            transition: 0.3s;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            text-decoration: none;
+            border-left: 3px solid transparent;
+            display: block;
+        }
+        .nav-item:hover { color: var(--neon-green); background: rgba(57, 255, 20, 0.1); }
+        .nav-item.active { 
+            background: var(--neon-green); 
+            color: black !important; 
+            font-weight: bold;
+            border-left: 3px solid white;
+        }
+
+        /* --- Scroll Snap Content --- */
+        .content-area { 
+            overflow-y: scroll; 
+            scroll-snap-type: y mandatory; 
+            scroll-behavior: smooth;
+            padding: 0;
+        }
 
         .topic-section {
-            height: 100vh; scroll-snap-align: start; padding: 40px 80px;
-            box-sizing: border-box; display: flex; flex-direction: column;
-            justify-content: center; background: rgba(0, 5, 0, 0.4);
+            min-height: 100vh;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            padding: 80px 100px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.4);
+            border-bottom: 1px solid rgba(57, 255, 20, 0.1);
         }
 
-        .discussion-box { 
-            background: rgba(255,255,255,0.03); border-left: 4px solid var(--neon-green); 
-            padding: 20px; margin: 15px 0; line-height: 1.5; font-size: 0.9rem; 
+        h1.glitch-text { 
+            font-size: 2.8rem; 
+            color: var(--neon-green); 
+            margin-bottom: 25px;
+            animation: glitch 5s infinite linear;
         }
 
-        .img-frame { border: 1px solid var(--neon-green); padding: 5px; background: #000; margin: 15px 0; max-width: 60%; align-self: center; }
-        .img-frame img { width: 100%; height: auto; }
+        h3 { color: var(--neon-green); margin-top: 30px; text-transform: uppercase; letter-spacing: 2px; }
 
-        #doc-overlay { 
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.98); z-index: 2000; justify-content: center; align-items: center; 
-        }
-        .doc-card { 
-            background: #000; border: 1px solid var(--neon-green); padding: 40px; 
-            width: 85%; max-height: 85vh; overflow-y: auto;
+        .data-list { list-style: none; padding: 0; }
+        .data-list li {
+            padding: 15px;
+            margin-bottom: 12px;
+            background: rgba(255,255,255,0.05);
+            border-left: 3px solid var(--neon-green);
         }
 
-        .nav-item { padding: 12px; cursor: pointer; color: #666; transition: 0.3s; text-decoration: none; display: block; font-size: 0.8rem; }
-        .nav-item:hover { color: var(--neon-green); background: rgba(0,255,0,0.05); }
+        .btn { 
+            padding: 10px 20px; 
+            text-decoration: none; 
+            border: 1px solid var(--neon-green); 
+            color: var(--neon-green); 
+            font-weight: bold; 
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            display: inline-block;
+        }
+        .btn:hover { background: var(--neon-green); color: black; }
 
-        .btn { padding: 10px 20px; background: none; border: 1px solid var(--neon-green); color: var(--neon-green); cursor: pointer; font-weight: bold; text-transform: uppercase; margin-top: 10px; display: inline-block; }
-        .btn:hover { background: var(--neon-green); color: #000; }
+        .img-container {
+            border: 1px solid var(--neon-green);
+            padding: 10px;
+            background: #000;
+            margin: 20px 0;
+            max-width: 80%;
+            text-align: center;
+        }
+        .img-container img { max-width: 100%; height: auto; }
 
-        #quiz-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 1000; justify-content: center; align-items: center; }
-        .flashcard { background: #000; border: 2px solid var(--neon-green); padding: 40px; width: 600px; text-align: center; }
-        .choice-btn { width: 100%; text-align: left; padding: 12px; margin: 8px 0; background: transparent; border: 1px solid #444; color: #ccc; cursor: pointer; font-family: inherit; }
-        .choice-btn.correct-choice { background: var(--dark-green); color: var(--neon-green); border-color: var(--neon-green); }
-        .feedback-flash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: 0.2s; z-index: 1100; }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--deep-black); }
+        ::-webkit-scrollbar-thumb { background: var(--dark-green); border: 1px solid var(--neon-green); }
+
     </style>
 </head>
 <body>
-    <div id="feedback" class="feedback-flash"></div>
 
-    <div id="doc-overlay">
-        <div class="doc-card">
-            <h2 id="doc-title" style="color: var(--neon-green); border-bottom: 1px solid #333; padding-bottom: 15px;"></h2>
-            <div id="doc-content" style="line-height: 1.8; color: #ccc; white-space: pre-wrap;"></div>
-            <button class="btn" style="margin-top: 30px;" onclick="closeDoc()">[ CLOSE_DEEP_DIVE ]</button>
-        </div>
-    </div>
-
-    <div id="quiz-overlay">
-        <div class="flashcard">
-            <h3 style="color: var(--neon-green);">[ SECURITY_CHALLENGE ]</h3>
-            <p id="quiz-question" style="margin-bottom: 20px;"></p>
-            <div id="choices-container"></div>
-            <div id="quiz-controls" style="margin-top: 20px; display: none;">
-                <button class="btn" onclick="triggerFeedback('correct')">CORRECT</button>
-                <button class="btn" style="border-color: var(--error-red); color: var(--error-red);" onclick="triggerFeedback('wrong')">WRONG</button>
-                <button class="btn" onclick="closeQuiz()">NEXT_TOPIC</button>
-            </div>
-            <button id="reveal-btn" class="btn" onclick="revealAnswer()">REVEAL_ANSWER</button>
-        </div>
-    </div>
+    <div class="bg-container"></div>
+    <div class="data-rain-overlay"></div>
 
     <div class="dashboard">
         <div class="sidebar">
-            <h2 style="color:var(--neon-green); font-size: 0.8rem; border-bottom: 1px solid #222; padding-bottom: 20px; margin-bottom: 20px;">MODULE_NAV</h2>
-            <a href="#overview" class="nav-item">00. OVERVIEW</a>
-            <a href="#waf" class="nav-item">01. WAF CONTROL</a>
-            <a href="#encrypt" class="nav-item">02. DATA SECURITY</a>
-            <a href="#rbac" class="nav-item">03. ACCESS ROLES</a>
-            <a href="#mfa" class="nav-item">04. AUTHENTICATION</a>
-            <a href="#https" class="nav-item">05. TRANSPORT LAYER</a>
+            <h2 style="color:var(--neon-green); font-size: 0.8rem; text-align: center; letter-spacing: 4px; margin-bottom: 40px; border-bottom: 1px solid #222; padding-bottom: 20px;">SECURITY_LAB_v3</h2>
+            
+            <a href="#overview" class="nav-item active">00. Overview</a>
+            <a href="#waf" class="nav-item">01. WAF Control</a>
+            <a href="#encrypt" class="nav-item">02. Data Encryption</a>
+            <a href="#rbac" class="nav-item">03. Access Roles (RBAC)</a>
+            <a href="#mfa" class="nav-item">04. Authentication (MFA)</a>
+            <a href="#https" class="nav-item">05. Transport Layer (HTTPS)</a>
+
+            <div style="margin-top: auto;">
+                <a href="index.html" class="btn" style="width: 100%; text-align: center; box-sizing: border-box;">[ EXIT_SYSTEM ]</a>
+            </div>
         </div>
 
-        <div class="content-area">
+        <div class="content-area" id="scrollBox">
+            
             <section id="overview" class="topic-section">
-                <h1 style="color: var(--neon-green); font-size: 3rem;">Defense-in-Depth</h1>
-                <p>Establishing multi-layered security protocols to ensure Information System integrity.</p>
-                <div class="img-frame">
-                    <img src="Web_application_security_tools_40424a679c.png" alt="Defense Layers Map">
+                <h1 class="glitch-text">Web App Defense</h1>
+                <p>Establishing multi-layered security protocols to ensure Information System integrity. Defensive strategies focus on mitigation, filtering, and rigorous access control.</p>
+                
+                <div class="img-container">
+                    
                 </div>
+
+                <h3>Seminar Foundations:</h3>
+                <ul class="data-list">
+                    <li>Establishing a "Defense in Depth" architecture.</li>
+                    <li>Protecting the CIA Triad (Confidentiality, Integrity, Availability).</li>
+                    <li>Implementing technical controls for compliance (PCI DSS, GDPR).</li>
+                </ul>
             </section>
 
             <section id="waf" class="topic-section">
-                <h1 style="color: var(--neon-green);">01. WAF Control</h1>
-                <div class="discussion-box">
-                    <strong>Summary:</strong> Web Application Firewalls (WAFs) act as Layer 7 defense, monitoring and filtering HTTP traffic to block zero-day exploits and malicious bots.
+                <h1 class="glitch-text">01. WAF Control</h1>
+                <p>Web Application Firewalls monitor, filter, and block HTTP traffic to and from a web application. They function at Layer 7 of the OSI model.</p>
+                
+                <div class="img-container">
+                    
                 </div>
-                <div class="img-frame">
-                    <img src="what-is-waf-cf521c4f0020e2a81f70454931d2e21e.webp" alt="WAF Diagram">
-                </div>
-                <button class="btn" onclick="openDoc(0)">VIEW FULL DISCUSSION</button>
-                <button class="btn" onclick="startQuiz(0)">LAUNCH WAF QUIZ</button>
+
+                <h3>Technical Parameters:</h3>
+                <ul class="data-list">
+                    <li><b>Payload Inspection:</b> Analyzing GET, POST, PUT, and DELETE requests.</li>
+                    <li><b>Exploit Mitigation:</b> Defending against SQL Injection, XSS, and malicious bots.</li>
+                    <li><b>Visibility:</b> Cloud-based vs. Host-based deployment strategies.</li>
+                </ul>
             </section>
 
             <section id="encrypt" class="topic-section">
-                <h1 style="color: var(--neon-green);">02. Data Encryption</h1>
-                <div class="discussion-box">
-                    <strong>Summary:</strong> Protecting information by translating plaintext into ciphertext. Essential for safeguarding data at rest (storage) and data in transit (network).
+                <h1 class="glitch-text">02. Data Encryption</h1>
+                <p>Translating plaintext into ciphertext to ensure that even if data is stolen, it remains unreadable without a cryptographic key.</p>
+                
+                <div class="img-container">
+                    
                 </div>
-                <button class="btn" onclick="openDoc(1)">VIEW FULL DISCUSSION</button>
-                <button class="btn" onclick="startQuiz(1)">LAUNCH ENCRYPTION QUIZ</button>
+
+                <h3>Encryption States:</h3>
+                <ul class="data-list">
+                    <li><b>Data at Rest:</b> Encrypting stored assets on hard drives and databases.</li>
+                    <li><b>Data in Transit:</b> Protecting packets during network transfer.</li>
+                    <li><b>Asymmetric Infrastructure:</b> Utilizing public/private key pairs for higher security.</li>
+                </ul>
             </section>
 
             <section id="rbac" class="topic-section">
-                <h1 style="color: var(--neon-green);">03. Role-Based Access Control</h1>
-                <div class="discussion-box">
-                    <strong>Summary:</strong> A security model that authorizes access based on predefined roles, simplifying management in large organizations and mitigating insider threats.
+                <h1 class="glitch-text">03. Access Roles (RBAC)</h1>
+                <p>Granting permissions based on a user's role within an organization. This limits horizontal and vertical privilege escalation.</p>
+                
+                <div class="img-container">
+                    
                 </div>
-                <button class="btn" onclick="openDoc(2)">VIEW FULL DISCUSSION</button>
-                <button class="btn" onclick="startQuiz(2)">LAUNCH RBAC QUIZ</button>
+
+                <h3>Governance Benefits:</h3>
+                <ul class="data-list">
+                    <li><b>Least Privilege:</b> Users only access resources required for their role.</li>
+                    <li><b>Simplified Audit:</b> Easier to track permissions in large-scale enterprises.</li>
+                    <li><b>Insider Threat Mitigation:</b> Limits damage from negligent or malicious employees.</li>
+                </ul>
             </section>
 
             <section id="mfa" class="topic-section">
-                <h1 style="color: var(--neon-green);">04. Multifactor Authentication</h1>
-                <div class="discussion-box">
-                    <strong>Summary:</strong> Combining knowledge, possession, and inherence factors to prove identity and minimize the risk of unauthorized access.
+                <h1 class="glitch-text">04. Authentication (MFA)</h1>
+                <p>Moving beyond passwords by requiring two or more verification factors from distinct categories: Knowledge, Possession, and Inherence.</p>
+                
+                <div class="img-container">
+                    
                 </div>
-                <button class="btn" onclick="openDoc(3)">VIEW FULL DISCUSSION</button>
-                <button class="btn" onclick="startQuiz(3)">LAUNCH MFA QUIZ</button>
+
+                <h3>Authentication Factors:</h3>
+                <ul class="data-list">
+                    <li><b>Knowledge:</b> Passwords or PIN numbers.</li>
+                    <li><b>Possession:</b> Security tokens or smartphone authenticator apps.</li>
+                    <li><b>Inherence:</b> Biometrics like fingerprints and facial recognition.</li>
+                </ul>
             </section>
 
             <section id="https" class="topic-section">
-                <h1 style="color: var(--neon-green);">05. Transport Layer (HTTPS)</h1>
-                <div class="discussion-box">
-                    <strong>Summary:</strong> The secure version of HTTP using TLS/SSL to encrypt browser-website communications and verify server authenticity.
+                <h1 class="glitch-text">05. Transport Layer</h1>
+                <p>HTTPS (Hypertext Transfer Protocol Secure) provides an encrypted tunnel for communication using Transport Layer Security (TLS).</p>
+                
+                <div class="img-container">
+                    
                 </div>
-                <button class="btn" onclick="openDoc(4)">VIEW FULL DISCUSSION</button>
-                <button class="btn" onclick="startQuiz(4)">LAUNCH HTTPS QUIZ</button>
+
+                <h3>TLS Handshake:</h3>
+                <ul class="data-list">
+                    <li><b>Confidentiality:</b> Prevents eavesdropping on public networks.</li>
+                    <li><b>Integrity:</b> Ensures data is not modified during transit.</li>
+                    <li><b>Authenticity:</b> Certificates verify the server's identity to the user.</li>
+                </ul>
             </section>
+
         </div>
     </div>
 
     <script>
-        const fullDocs = [
-            {
-                title: "01. Web Application Firewalls (WAF)",
-                content: "WAFs are critical for websites, mobile apps, and APIs. They monitor and block packets at the HTTP application layer. Essential for banks and social media to protect sensitive data. WAFs can be network, host, or cloud-based. They inspect GET, POST, PUT, and DELETE requests, headers, and body strings for malicious patterns to ensure PCI DSS compliance."
-            },
-            {
-                title: "02. Data Encryption & Cryptography",
-                content: "Data encryption translates plaintext into ciphertext using secret keys. Symmetric encryption uses one key for both encryption and decryption. Asymmetric encryption uses a private key (held by owner) and a public key (shared with recipient). It protects data at rest (hard drives) and in transit (transferred over networks)."
-            },
-            {
-                title: "03. Role-Based Access Control (RBAC)",
-                content: "RBAC authorizes access based on predefined roles (e.g., HR, Finance, Analyst). This simplifies access management and maintains security for digital and physical assets. By restricting users to only the resources needed for their roles, RBAC defends against malicious insiders and negligent employees."
-            },
-            {
-                title: "04. MFA Examples and Methods",
-                content: "MFA involves two or more verification types across three categories:\n1. Knowledge: Something you know (Passwords/PINs).\n2. Possession: Something you have (Smartphone/Tokens).\n3. Inherence: Something you are (Fingerprints/Face ID). Biometric (inherence) factors are deemed most secure as they are difficult to replicate."
-            },
-            {
-                title: "05. What is HTTPS?",
-                content: "HTTPS is the secure version of HTTP, using Transport Layer Security (TLS) to encrypt data transfer. It uses asymmetric public key infrastructure: a private key on the web server to decrypt, and a public key available to everyone to encrypt. Browsers flag all non-HTTPS sites as 'Not Secure' to encourage data safety."
-            }
-        ];
-
-        const quizData = [
-            { q: "A WAF inspects data at which OSI layer?", options: ["Layer 3", "Layer 4", "Layer 7", "Layer 2"], correct: 2 },
-            { q: "Which encryption uses different Public and Private keys?", options: ["Symmetric", "Asymmetric", "Plaintext", "Hashing"], correct: 1 },
-            { q: "RBAC assigns permissions based on what?", options: ["Username", "Job Role", "Age", "Laptop Model"], correct: 1 },
-            { q: "A fingerprint scan is what type of authentication factor?", options: ["Knowledge", "Possession", "Inherence", "Social"], correct: 2 },
-            { q: "HTTPS uses which protocol for communication security?", options: ["FTP", "SMTP", "TLS/SSL", "UDP"], correct: 2 }
-        ];
-
-        let currentIdx = 0;
-        function openDoc(idx) {
-            document.getElementById('doc-title').innerText = fullDocs[idx].title;
-            document.getElementById('doc-content').innerText = fullDocs[idx].content;
-            document.getElementById('doc-overlay').style.display = 'flex';
-        }
-        function closeDoc() { document.getElementById('doc-overlay').style.display = 'none'; }
-        function startQuiz(idx) {
-            currentIdx = idx;
-            document.getElementById('quiz-question').innerText = quizData[idx].q;
-            const container = document.getElementById('choices-container');
-            container.innerHTML = '';
-            quizData[idx].options.forEach((opt, i) => {
-                const btn = document.createElement('button');
-                btn.className = 'choice-btn';
-                btn.innerText = opt;
-                btn.id = `opt-${i}`;
-                container.appendChild(btn);
+        const scrollBox = document.getElementById('scrollBox');
+        const navItems = document.querySelectorAll('.nav-item');
+        
+        // Update sidebar active state on scroll
+        scrollBox.addEventListener('scroll', () => {
+            let currentId = "";
+            const sections = document.querySelectorAll('.topic-section');
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollBox.scrollTop >= sectionTop - 100) {
+                    currentId = section.getAttribute('id');
+                }
             });
-            document.getElementById('quiz-controls').style.display = 'none';
-            document.getElementById('reveal-btn').style.display = 'block';
-            document.getElementById('quiz-overlay').style.display = 'flex';
-        }
-        function revealAnswer() {
-            document.getElementById(`opt-${quizData[currentIdx].correct}`).classList.add('correct-choice');
-            document.getElementById('quiz-controls').style.display = 'block';
-            document.getElementById('reveal-btn').style.display = 'none';
-        }
-        function triggerFeedback(type) {
-            const f = document.getElementById('feedback');
-            f.style.background = (type === 'correct') ? 'rgba(0, 255, 0, 0.4)' : 'rgba(255, 0, 0, 0.4)';
-            f.style.opacity = '1';
-            setTimeout(() => f.style.opacity = '0', 300);
-        }
-        function closeQuiz() { document.getElementById('quiz-overlay').style.display = 'none'; }
+
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href') === `#${currentId}`) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Ensure sidebar clicks highlight immediately
+        navItems.forEach(item => {
+            item.addEventListener('click', function() {
+                navItems.forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
     </script>
 </body>
 </html>
