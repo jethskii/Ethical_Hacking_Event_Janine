@@ -5,12 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web App Security | Global Security Seminar v4.0</title>
     <style>
-        /* --- CORE THEME: EXPERT TERMINAL --- */
+        /* --- CORE THEME (Your Preferred Aesthetic) --- */
         :root {
             --neon-green: #39ff14;
             --dark-green: #003300;
             --deep-black: #050505;
-            --warning-red: #ff3131;
         }
 
         @keyframes glitch {
@@ -74,7 +73,6 @@
             position: sticky;
             top: 40px;
             box-shadow: 0 0 30px rgba(0, 255, 0, 0.15);
-            height: fit-content;
         }
 
         .content-area { 
@@ -132,7 +130,6 @@
             border: 1px solid #333;
             margin: 20px 0;
             font-size: 0.9rem;
-            white-space: pre-wrap;
         }
 
         .speaker-note {
@@ -153,7 +150,7 @@
         }
         .img-container img { max-width: 100%; height: auto; }
 
-        .btn { padding: 10px 20px; border: 1px solid var(--neon-green); color: var(--neon-green); background: none; cursor: pointer; text-transform: uppercase; font-weight: bold; }
+        .btn { padding: 10px 20px; border: 1px solid var(--neon-green); color: var(--neon-green); background: none; cursor: pointer;}
         .btn:hover { background: var(--neon-green); color: black; }
     </style>
 </head>
@@ -168,7 +165,9 @@
     <div class="dashboard">
         <div class="sidebar">
             <h2 style="color:var(--neon-green); font-size: 0.9rem; text-align: center; letter-spacing: 4px; border-bottom: 1px solid #222; padding-bottom: 15px;">SEC_PROT_2026</h2>
-            <div class="nav-item active" onclick="showTab('m1', this)">01. WAF Control</div>
+            <div class="nav-item active" onclick="showTab('m0', this)">00. Web App Security Overview</div>
+            
+            <div class="nav-item" onclick="showTab('m1', this)">01. WAF Control</div>
             <div class="nav-item" onclick="showTab('m2', this)">02. Data Encryption</div>
             <div class="nav-item" onclick="showTab('m3', this)">03. Access Roles (RBAC)</div>
             <div class="nav-item" onclick="showTab('m4', this)">04. Authentication (MFA)</div>
@@ -176,13 +175,26 @@
         </div>
 
         <div class="content-area">
+
+            <div id="m0" class="topic-content active">
+                <h1 class="glitch-text">Security Architecture</h1>
+                <p>Establishing a "Defense in Depth" strategy. Modern web applications require layered technical controls to protect against complex external threats and internal vulnerabilities.</p>
+                
+                <div class="img-container">
+                    <img src="Web_application_security_tools_40424a679c.png" alt="Layered Web Security Overview">
+                </div>
+
+                <ul class="data-list">
+                    <li><b>Defense in Depth:</b> Creating multiple layers of security so if one fails, others protect the system.</li>
+                    <li><b>Perimeter Defense:</b> Filtering malicious requests before they reach the server (WAF).</li>
+                    <li><b>Data Sovereignty:</b> Ensuring information is unreadable without authorization (Encryption).</li>
+                </ul>
+            </div>
             
-            <div id="m1" class="topic-content active">
+            <div id="m1" class="topic-content">
                 <h1 class="glitch-text">WAF Control</h1>
                 <p>Web application firewalls (WAFs) are the first line of defense at the application layer. They monitor, filter, and block malicious HTTP/HTTPS traffic to prevent unauthorized data access.</p>
                 
-                
-
                 <ul class="data-list">
                     <li><b>GET/POST Analysis:</b> Inspecting payload verbs for malicious strings.</li>
                     <li><b>Exploit Mitigation:</b> Designed to counter SQLi, XSS, and dangerous bots.</li>
@@ -203,8 +215,6 @@
             <div id="m2" class="topic-content">
                 <h1 class="glitch-text">Data Encryption</h1>
                 <p>Encryption translates plaintext into ciphertext, ensuring data remains secure even if storage or transmission channels are compromised.</p>
-                
-                
 
                 <ul class="data-list">
                     <li><b>Symmetric Encryption:</b> Single secret key for both encryption and decryption.</li>
@@ -221,8 +231,6 @@ $ openssl enc -aes-256-cbc -salt -in data.txt -out data.enc
             <div id="m3" class="topic-content">
                 <h1 class="glitch-text">Access Roles (RBAC)</h1>
                 <p>Role-Based Access Control restricts system access to authorized users based on their predefined roles within the organization.</p>
-                
-                
 
                 <ul class="data-list">
                     <li><b>Principle of Least Privilege:</b> Users only access what is needed for their job.</li>
@@ -238,8 +246,6 @@ $ openssl enc -aes-256-cbc -salt -in data.txt -out data.enc
             <div id="m4" class="topic-content">
                 <h1 class="glitch-text">Authentication (MFA)</h1>
                 <p>Multi-Factor Authentication requires two or more distinct verification types to prove a user's identity.</p>
-                
-                
 
                 <ul class="data-list">
                     <li><b>Knowledge:</b> Something you know (Passwords, PINs).</li>
@@ -257,8 +263,6 @@ $ openssl enc -aes-256-cbc -salt -in data.txt -out data.enc
             <div id="m5" class="topic-content">
                 <h1 class="glitch-text">Transport Layer (HTTPS)</h1>
                 <p>HTTPS provides an encrypted "tunnel" for data transfer using Transport Layer Security (TLS).</p>
-                
-                
 
                 <ul class="data-list">
                     <li><b>SSL/TLS Handshake:</b> Negotiating encryption keys between browser and server.</li>
