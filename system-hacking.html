@@ -3,10 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Hacking | Expert Terminal v2.0</title>
+    <title>System Hacking | Expert Terminal v2.1 (Animated)</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* --- Advanced Animations --- */
+        /* --- CORE THEME (Ensure these are in your style.css or here) --- */
+        :root {
+            --neon-green: #39ff14;
+            --dark-green: #003300;
+            --deep-black: #050505;
+        }
+
+        /* --- 1. NEW ADVANCED ANIMATIONS & GLITCH --- */
         @keyframes glitch {
             0% { transform: translate(0); }
             20% { transform: translate(-2px, 2px); }
@@ -21,71 +28,116 @@
             to { opacity: 1; transform: translateY(0); filter: blur(0); }
         }
 
-        /* --- Scrollable Layout --- */
+        /* !!! NEW: MOVING DATA RAIN BACKGROUND !!! */
+        @keyframes rain {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 0% 1000px; } /* Controls vertical speed and distance */
+        }
+
+        /* --- Layout & Dynamic Background --- */
         body, html {
             margin: 0; padding: 0;
             width: 100%;
             min-height: 100vh;
             overflow-x: hidden;
-            overflow-y: auto; /* The whole page is now scrollable */
+            overflow-y: auto; /* Whole page scrolls */
             background-color: var(--deep-black);
             font-family: 'Consolas', 'Courier New', monospace;
             color: white;
             scroll-behavior: smooth;
         }
 
+        /* This is the background layer structure for the moving effect */
+        .bg-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, var(--dark-green) 0%, var(--deep-black) 100%);
+            z-index: -3;
+        }
+
+        /* !!! NEW: The Animated Data Rain Overlay !!! */
+        .data-rain-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            /* Uses repeating text gradient to create falling columns */
+            background: repeating-linear-gradient(0deg,
+                transparent 0%,
+                rgba(57, 255, 20, 0.05) 50%,
+                transparent 100%
+            ), repeating-linear-gradient(90deg,
+                transparent 0px,
+                rgba(57, 255, 20, 0.03) 1px,
+                transparent 30px
+            );
+            background-size: 1000px 1000px, 30px 30px; /* Controls grain and vertical density */
+            animation: rain 25s linear infinite; /* The moving animation */
+            z-index: -2;
+            opacity: 0.6; /* Keeps it subtle so text remains readable */
+        }
+
+        .grid-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 0, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -1;
+            opacity: 0.8;
+        }
+
+        /* --- Main UI (Polished) --- */
         .dashboard { 
             display: grid; 
             grid-template-columns: 320px 1fr; 
             gap: 40px; 
             padding: 40px; 
-            max-width: 1400px;
+            max-width: 1500px;
             margin: 0 auto;
             align-items: start;
         }
 
-        /* STICKY SIDEBAR: Stays visible while you scroll the content */
+        /* Sticky Sidebar */
         .sidebar { 
-            background: rgba(0, 10, 0, 0.95); 
+            background: rgba(0, 10, 0, 0.95); /* Darker sidebar for contrast */
             border: 1px solid var(--neon-green); 
-            padding: 25px; 
+            padding: 30px; 
             border-radius: 15px; 
             position: sticky;
             top: 40px;
-            box-shadow: 0 0 30px rgba(0, 255, 0, 0.1);
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.15);
             z-index: 100;
         }
 
         .content-area { 
-            background: rgba(0, 5, 0, 0.7); 
-            border: 1px solid var(--neon-green); 
+            background: rgba(0, 5, 0, 0.6); /* Translucent so the background movement is visible */
+            border: 1px solid rgba(57, 255, 20, 0.3); /* Softer borders */
             padding: 60px; 
             border-radius: 20px; 
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(20px); /* Glassmorphism effect */
             min-height: 80vh;
-            box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 50px rgba(0,0,0,0.6);
         }
 
-        /* --- UI Elements --- */
+        /* --- Interactive Elements --- */
         .nav-item { 
-            padding: 18px; 
+            padding: 20px; 
             cursor: pointer; 
-            margin-bottom: 10px; 
-            color: #555; 
-            transition: 0.3s all ease; 
+            margin-bottom: 12px; 
+            color: #666; 
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Snappy hover */
             border-radius: 8px;
             border: 1px solid transparent;
             text-transform: uppercase;
             font-size: 0.85rem;
+            letter-spacing: 1px;
         }
-        .nav-item:hover { color: var(--neon-green); background: rgba(0, 255, 0, 0.05); }
+        .nav-item:hover { color: var(--neon-green); background: rgba(0, 255, 0, 0.05); transform: translateX(5px); }
         .nav-item.active { 
             background: var(--neon-green); 
             color: black !important; 
             font-weight: bold;
-            box-shadow: 0 0 20px var(--neon-green);
+            box-shadow: 0 0 25px var(--neon-green);
         }
 
+        /* Content Modules */
         .topic-content { display: none; }
         .topic-content.active { display: block; }
 
@@ -95,19 +147,23 @@
             margin: 0 0 30px 0;
             animation: glitch 4s infinite linear alternate-reverse;
             text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
+        /* Themed Image Frame */
         .img-frame { 
             border: 3px solid var(--neon-green); 
             padding: 15px; 
             background: #000; 
             border-radius: 15px; 
             margin: 40px 0;
-            transition: 0.4s;
+            transition: 0.4s ease-in-out;
+            cursor: crosshair;
         }
         .img-frame img { width: 100%; height: auto; border-radius: 5px; }
-        .img-frame:hover { transform: translateY(-5px); box-shadow: 0 0 40px var(--neon-green); }
+        .img-frame:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 0 45px var(--neon-green); }
 
+        /* Animated List Items */
         .data-list { list-style: none; padding: 0; }
         .data-list li {
             padding: 15px;
@@ -115,111 +171,114 @@
             background: rgba(255,255,255,0.03);
             border-left: 4px solid var(--neon-green);
             animation: revealItem 0.6s ease-out forwards;
-            opacity: 0;
+            opacity: 0; /* Starts invisible */
         }
 
-        .speaker-quote {
-            font-size: 1.2rem;
-            border-left: 5px solid white;
-            padding-left: 20px;
-            margin: 30px 0;
-            color: #ccc;
-            font-style: italic;
-        }
+        /* Staggered Delay (Added up to 6 items) */
+        .data-list li:nth-child(1) { animation-delay: 0.1s; }
+        .data-list li:nth-child(2) { animation-delay: 0.2s; }
+        .data-list li:nth-child(3) { animation-delay: 0.3s; }
+        .data-list li:nth-child(4) { animation-delay: 0.4s; }
+        .data-list li:nth-child(5) { animation-delay: 0.5s; }
+        .data-list li:nth-child(6) { animation-delay: 0.6s; }
 
         .terminal-box {
             background: #000;
             color: var(--neon-green);
             padding: 20px;
             border-radius: 10px;
-            border: 1px solid #222;
+            border: 1px solid #333;
             font-size: 0.9rem;
             margin: 20px 0;
-            box-shadow: inset 0 0 10px #000;
+            box-shadow: inset 0 0 15px #000;
         }
 
-        /* --- Scrollbar Styling --- */
+        /* --- Scrollbar Styling (Webkit) --- */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--deep-black); }
         ::-webkit-scrollbar-thumb { background: var(--dark-green); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--neon-green); }
 
+        .btn { padding: 10px 20px; text-decoration: none; border: 1px solid var(--neon-green); color: var(--neon-green); font-weight: bold;}
+        .btn:hover { background: var(--neon-green); color: black; box-shadow: 0 0 15px var(--neon-green); }
+
     </style>
 </head>
 <body>
+    
     <div class="bg-container"></div>
-    <div class="grid-overlay"></div>
+    <div class="data-rain-overlay"></div> <div class="grid-overlay"></div>
     
     <div style="padding: 30px 50px;">
-        <a href="index.html" class="btn" style="border-radius: 5px;">[ BACK_TO_HOME ]</a>
+        <a href="index.html" class="btn">[ EXIT_SESSION ]</a>
     </div>
 
     <div class="dashboard">
         <div class="sidebar">
-            <h2 style="color:var(--neon-green); font-size: 0.9rem; text-align: center; letter-spacing: 4px; border-bottom: 1px solid #111; padding-bottom: 15px; margin-bottom: 20px;">NAV_MENU</h2>
-            <div class="nav-item active" onclick="showTab('m0', this)">00. OVERVIEW</div>
-            <div class="nav-item" onclick="showTab('m1', this)">01. RECONNAISSANCE</div>
-            <div class="nav-item" onclick="showTab('m2', this)">02. SCANNING</div>
-            <div class="nav-item" onclick="showTab('m3', this)">03. GAINING ACCESS</div>
-            <div class="nav-item" onclick="showTab('m4', this)">04. MAINTAINING ACCESS</div>
-            <div class="nav-item" onclick="showTab('m5', this)">05. COVERING TRACKS</div>
+            <h2 style="color:var(--neon-green); font-size: 0.9rem; text-align: center; letter-spacing: 4px; border-bottom: 1px solid #222; padding-bottom: 15px; margin-bottom: 20px;">VULN_OS_TERMINAL</h2>
+            <div class="nav-item active" onclick="showTab('m0', this)">00. Overview</div>
+            <div class="nav-item" onclick="showTab('m1', this)">01. Reconnaissance</div>
+            <div class="nav-item" onclick="showTab('m2', this)">02. Scanning</div>
+            <div class="nav-item" onclick="showTab('m3', this)">03. Gaining Access</div>
+            <div class="nav-item" onclick="showTab('m4', this)">04. Maintaining Access</div>
+            <div class="nav-item" onclick="showTab('m5', this)">05. Covering Tracks</div>
         </div>
 
         <div class="content-area">
             
             <div id="m0" class="topic-content active">
                 <h1 class="glitch-text">The Knight in Armour</h1>
-                <p>Ethical hacking gives companies the solution to help them combat this ever-growing problem. In today's landscape, IT security conditions are dire.</p>
+                <p>Ethical hacking gives companies the solution to help them combat this ever-growing problem. IT security conditions are currently dire.</p>
                 
-                <div class="speaker-quote">
-                    "It takes up to 6 months for organizations to realize a breach has occurred. A cyber attack happens every 39 seconds."
+                <div style="font-size: 1.2rem; border-left: 5px solid white; padding-left: 20px; margin: 30px 0; color: #ccc; font-style: italic;">
+                    "It takes up to 6 months for organizations to realize a breach occurred. A cyber attack happens every 39 seconds."
                 </div>
 
                 <div class="img-frame">
-                    <img src="Ethical-hacking-process.png" alt="Full Ethical Hacking Process">
+                    <img src="Ethical-hacking-process.png" alt="Full Ethical Hacking Process Diagram">
                 </div>
 
-                <p>Organizations employ ethical hackers to simulate a real cyberattack. This simulated attack is used to pinpoint all areas of weaknesses to work towards strengthening them.</p>
+                <p>Organizations employ ethical hackers to simulate a real cyberattack. This simulated attack is used to pinpoint all areas of weaknesses to strengthen them.</p>
             </div>
 
             <div id="m1" class="topic-content">
                 <h1 class="glitch-text">01. Reconnaissance</h1>
                 <p>The first stage where the white-hat hacker collects all information available about the networks, systems, and security measures.</p>
                 <ul class="data-list">
-                    <li><b>Active Reconnaissance:</b> Probing the target network system/server. High risk of detection.</li>
-                    <li><b>Passive Reconnaissance:</b> The stealthier way. Focusing on key members, IP addresses, and essential facts.</li>
-                    <li>Gathering information about company's key members and public records.</li>
+                    <li><b>Active Reconnaissance:</b> Directly probing the target network system/server. Higher risk of detection.</li>
+                    <li><b>Passive Reconnaissance:</b> The stealthier way. Focuses on gathering information public records, key members, and IP addresses.</li>
+                    <li>Analyzing the public "Digital Footprint" of the target.</li>
                 </ul>
             </div>
 
             <div id="m2" class="topic-content">
                 <h1 class="glitch-text">02. Scanning Phase</h1>
-                <p>Applying intelligence to look for vulnerabilities. This process is often automated with professional tools.</p>
+                <p>Applying gathered intelligence to look for exploitable vulnerabilities. This process is now often automated through professional <span style="color:var(--neon-green)">TOOLS</span>.</p>
                 <ul class="data-list">
-                    <li><b>Vulnerability Scans:</b> Finding weaknesses in company servers.</li>
-                    <li><b>Network Mapping:</b> Identifying firewalls, routers, and host networks.</li>
-                    <li><b>Open Port Analysis:</b> Scanning for services running unprotected.</li>
+                    <li>Scan for open ports or unprotected services running in the organization.</li>
+                    <li><b>Vulnerability Scans:</b> Automated probes identifying weaknesses in company servers.</li>
+                    <li><b>Network Mapping:</b> Creating firewalls, routers, and host networks.</li>
                 </ul>
-                <div class="terminal-box"># nmap -sV -p 1-65535 target_ip <br># scanning_vulnerabilities... DONE</div>
+                <div class="terminal-box"># starting_port_scan... <br># scanning_CVEs... DONE</div>
             </div>
 
             <div id="m3" class="topic-content">
                 <h1 class="glitch-text">03. Gaining Access</h1>
-                <p>The hacker exploits exposed vulnerabilities and gains control of the system.</p>
+                <p>The hacker launches a full-fledged attack on the identified exposed vulnerabilities and gains control of the system.</p>
                 <ul class="data-list">
-                    <li>Launch full-fledged attack based on Phase 1 & 2 data.</li>
-                    <li>Steal data, corrupt systems, or inject viruses.</li>
-                    <li>Manipulate network entities to gain deeper control.</li>
+                    <li>Executes full system infiltration using analyzed data.</li>
+                    <li>Data manipulation: steal data, corrupt systems, or inject viruses (Malware Threats).</li>
+                    <li>Exploiting memory vulnerabilities (e.g., Buffer Overflow).</li>
                 </ul>
             </div>
 
             <div id="m4" class="topic-content">
                 <h1 class="glitch-text">04. Maintaining Access</h1>
-                <p>Breaking in isn't enough; the ethical hacker must maintain access until the goal is fulfilled.</p>
+                <p> breaking in is not enough; the ethical hacker must maintain access until the mission or simulation goal is fulfilled.</p>
                 <ul class="data-list">
                     <li><b>Persistence:</b> Utilizing Trojans, Backdoors, or Rootkits.</li>
+                    <li><b>Privilege Escalation:</b> Gaining Root/Admin access.</li>
                     <li>Launching secondary attacks from the internal beachhead.</li>
-                    <li>Ensuring the connection survives reboots and patches.</li>
                 </ul>
             </div>
 
@@ -228,11 +287,11 @@
                 <p>The sign of a successful simulated attack is that the security system never realizes it occurred.</p>
                 <ul class="data-list">
                     <li><b>Log Manipulation:</b> Deleting or corrupting system logs.</li>
-                    <li><b>Registry Modification:</b> Altering values to hide persistence.</li>
-                    <li><b>Total Cleanup:</b> Deleting folders and uninstalling all hacking tools used.</li>
-                    <li>Removing all traces of any activity performed.</li>
+                    <li>Modifying registry values or values of registries.</li>
+                    <li><b>Trace Elimination:</b> Uninstalling applications and deleting created folders.</li>
+                    <li>Removing all traces of any activity performed by the hacker.</li>
                 </ul>
-                <div class="terminal-box"># history -c <br># rm -rf /tmp/payload <br># logs_cleared: TRUE</div>
+                <div class="terminal-box"># history -c <br># rm -rf /tmp/payload <br># logs_scrubbed: TRUE</div>
             </div>
 
         </div>
@@ -248,16 +307,8 @@
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             el.classList.add('active');
 
-            // Scroll content area back to top when tab changes
+            // Optional: Smoothly scroll content area back to top when tab changes
             window.scrollTo(0, 0);
-
-            // Trigger animations for list items
-            const items = document.getElementById(id).querySelectorAll('li');
-            items.forEach((item, index) => {
-                item.style.animation = 'none';
-                item.offsetHeight; // Reflow
-                item.style.animation = `revealItem 0.5s ease-out forwards ${0.1 * (index + 1)}s`;
-            });
         }
     </script>
 </body>
