@@ -14,48 +14,70 @@
             --error-red: #ff3131;
         }
 
+        /* --- PRESENTATION SCROLL SNAP --- */
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
             background-color: var(--deep-black);
             font-family: 'Consolas', 'Courier New', monospace;
-            color: white; overflow: hidden;
+            color: white;
+            overflow: hidden;
         }
 
-        .dashboard { display: grid; grid-template-columns: 320px 1fr; height: 100vh; }
-        .sidebar { background: var(--glass-bg); border-right: 1px solid var(--neon-green); padding: 40px 30px; z-index: 10; }
+        .dashboard { 
+            display: grid; 
+            grid-template-columns: 320px 1fr; 
+            height: 100vh; 
+        }
 
-        /* SCROLL SNAP */
-        .content-area { overflow-y: scroll; scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+        .sidebar { 
+            background: var(--glass-bg); 
+            border-right: 1px solid var(--neon-green); 
+            padding: 40px 30px; 
+            z-index: 10; 
+        }
+
+        .content-area { 
+            overflow-y: scroll; 
+            height: 100vh;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
 
         .topic-section {
-            height: 100vh; scroll-snap-align: start; padding: 40px 80px;
-            box-sizing: border-box; display: flex; flex-direction: column;
-            justify-content: center; background: rgba(0, 5, 0, 0.4);
+            height: 100vh;
+            width: 100%;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 80px;
+            box-sizing: border-box;
+            background: rgba(0, 5, 0, 0.4);
         }
 
+        /* Styling for content boxes */
         .discussion-box { 
             background: rgba(255,255,255,0.03); border-left: 4px solid var(--neon-green); 
-            padding: 20px; margin: 15px 0; line-height: 1.5; font-size: 0.9rem; 
+            padding: 25px; margin: 20px 0; line-height: 1.6;
         }
 
-        .example-box {
-            background: rgba(57, 255, 20, 0.05); border: 1px dashed var(--neon-green);
-            padding: 15px; margin-top: 10px; color: #fff; font-size: 0.85rem;
+        .nav-item { 
+            padding: 15px; cursor: pointer; color: #666; transition: 0.3s; 
+            text-decoration: none; display: block; font-size: 0.8rem; border-radius: 5px; 
         }
+        .nav-item:hover { color: var(--neon-green); background: rgba(0,255,0,0.1); }
 
-        .img-frame { border: 1px solid var(--neon-green); padding: 5px; background: #000; margin: 15px 0; max-width: 50%; }
+        .img-frame { border: 1px solid var(--neon-green); padding: 10px; background: #000; margin: 20px 0; max-width: 70%; }
         .img-frame img { width: 100%; height: auto; }
 
-        .nav-item { padding: 12px; cursor: pointer; color: #666; transition: 0.3s; text-decoration: none; display: block; font-size: 0.8rem; }
-        .nav-item:hover { color: var(--neon-green); }
+        .btn { padding: 12px 24px; background: none; border: 1px solid var(--neon-green); color: var(--neon-green); cursor: pointer; font-weight: bold; text-transform: uppercase; margin-top: 15px; text-decoration: none; display: inline-block;}
+        .btn:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 20px var(--neon-green); }
 
-        .btn { padding: 10px 20px; background: none; border: 1px solid var(--neon-green); color: var(--neon-green); cursor: pointer; font-weight: bold; text-transform: uppercase; margin-top: 10px; }
-        .btn:hover { background: var(--neon-green); color: #000; }
-
-        /* QUIZ MODAL */
+        /* Quiz Overlay */
         #quiz-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 1000; justify-content: center; align-items: center; }
-        .flashcard { background: #000; border: 2px solid var(--neon-green); padding: 40px; width: 600px; }
-        .choice-btn { width: 100%; text-align: left; padding: 12px; margin: 8px 0; background: transparent; border: 1px solid #444; color: #ccc; cursor: pointer; font-family: inherit;}
+        .flashcard { background: #000; border: 2px solid var(--neon-green); padding: 40px; width: 600px; text-align: center; }
+        .choice-btn { width: 100%; text-align: left; padding: 12px; margin: 8px 0; background: transparent; border: 1px solid #444; color: #ccc; cursor: pointer; font-family: inherit; }
         .choice-btn.correct-choice { background: var(--dark-green); color: var(--neon-green); border-color: var(--neon-green); }
         .feedback-flash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: 0.2s; z-index: 1100; }
     </style>
@@ -65,8 +87,8 @@
 
     <div id="quiz-overlay">
         <div class="flashcard">
-            <h3 style="color: var(--neon-green);">[ SECURITY_VALIDATION ]</h3>
-            <p id="quiz-question"></p>
+            <h3 style="color: var(--neon-green);">[ SECURITY_CHALLENGE ]</h3>
+            <p id="quiz-question" style="margin-bottom: 20px;"></p>
             <div id="choices-container"></div>
             <div id="quiz-controls" style="margin-top: 20px; display: none;">
                 <button class="btn" onclick="triggerFeedback('correct')">CORRECT</button>
@@ -79,89 +101,74 @@
 
     <div class="dashboard">
         <div class="sidebar">
-            <h2 style="color:var(--neon-green); font-size: 0.8rem; border-bottom: 1px solid #222; padding-bottom: 20px; margin-bottom: 20px;">SECURITY_MODULES</h2>
+            <h2 style="color:var(--neon-green); font-size: 0.8rem; border-bottom: 1px solid #222; padding-bottom: 20px; margin-bottom: 20px; letter-spacing: 2px;">SEC_TERMINAL_v2</h2>
             <a href="#overview" class="nav-item">00. OVERVIEW</a>
             <a href="#waf" class="nav-item">01. WAF CONTROL</a>
             <a href="#encrypt" class="nav-item">02. DATA ENCRYPTION</a>
             <a href="#rbac" class="nav-item">03. ACCESS ROLES</a>
-            <a href="#mfa" class="nav-item">04. AUTHENTICATION</a>
-            <a href="#https" class="nav-item">05. TRANSPORT LAYER</a>
-            <br>
-            <a href="index.html" class="btn" style="font-size: 0.7rem; display: block; text-align: center; text-decoration: none;">LOGOUT</a>
+            <a href="#auth" class="nav-item">04. AUTHENTICATION</a>
+            <a href="#transport" class="nav-item">05. TRANSPORT LAYER</a>
+            <br><br>
+            <a href="index.html" class="btn" style="font-size: 0.7rem;">[ DISCONNECT ]</a>
         </div>
 
         <div class="content-area">
             
             <section id="overview" class="topic-section">
-                <h1 style="color: var(--neon-green); font-size: 3rem;">Defense-in-Depth</h1>
-                <p>Security is not a single product, but a layered architecture. We use the 5 Pillars of Web Defense to ensure system integrity.</p>
+                <h1 style="color: var(--neon-green); font-size: 3rem;">Web Defense Architecture</h1>
+                <p>Establishing multi-layered security protocols to ensure Information System integrity.</p>
                 <div class="img-frame">
-                    <img src="Web_application_security_tools_40424a679c.png" alt="Defense Layers Map">
+                    <img src="Web_application_security_tools_40424a679c.png" alt="Security Overview">
                 </div>
             </section>
 
             <section id="waf" class="topic-section">
                 <h1 style="color: var(--neon-green);">01. Web Application Firewall (WAF)</h1>
                 <div class="discussion-box">
-                    <strong>Technical Mechanism:</strong> A WAF inspects HTTP requests (GET, POST, PUT, DELETE) at the <strong>Application Layer</strong>. It protects against zero-day exploits, malicious bots, and patterns found in headers and query strings.
+                    <strong>Technical Mechanism:</strong> Inspects HTTP requests (GET, POST, etc.) at the Application Layer to block malicious bots and zero-day exploits.
                     <br><br>
-                    <strong>IS Importance:</strong> Essential for protecting retailers and banks, meeting <strong>PCI DSS compliance</strong>, and safeguarding against malware.
+                    <strong>Importance:</strong> Essential for PCI DSS compliance and protecting sensitive data in banking and retail.
                 </div>
-                
-                <button class="btn" onclick="startQuiz(0)">Launch WAF Quiz</button>
+                <div class="img-frame">
+                    <img src="becdbaa1-b59f-4d73-b85c-bce26ca4eeb1.jpg" alt="WAF Diagram">
+                </div>
+                <button class="btn" onclick="startQuiz(0)">LAUNCH WAF QUIZ</button>
             </section>
 
             <section id="encrypt" class="topic-section">
                 <h1 style="color: var(--neon-green);">02. Data Encryption</h1>
                 <div class="discussion-box">
-                    <strong>Definition:</strong> Cryptography translates plaintext into ciphertext using a secret key. It protects data from being stolen or compromised, whether it is <strong>at rest</strong> (hard drives) or <strong>in transit</strong> (transferred over a network).
+                    <strong>Technical Concept:</strong> Translating plaintext into ciphertext using cryptography. Protects data "at rest" (storage) and "in transit" (network).
                 </div>
-                <div class="example-box">
-                    <strong>Symmetric vs Asymmetric:</strong> Symmetric uses one key; Asymmetric uses a Public key for encryption and a Private key for decryption.
-                </div>
-                
-                <button class="btn" onclick="startQuiz(1)">Launch Encryption Quiz</button>
+                <p><strong>Symmetric:</strong> Single key for both actions. <br> <strong>Asymmetric:</strong> Public key to encrypt, Private key to decrypt.</p>
+                <button class="btn" onclick="startQuiz(1)">LAUNCH ENCRYPTION QUIZ</button>
             </section>
 
             <section id="rbac" class="topic-section">
-                <h1 style="color: var(--neon-green);">03. RBAC (Access Control)</h1>
+                <h1 style="color: var(--neon-green);">03. Access Roles (RBAC)</h1>
                 <div class="discussion-box">
-                    <strong>Definition:</strong> Role-based access control (RBAC) authorizes access based on a user’s predefined role. An administrator assigns roles (e.g., Finance, HR, Sales) which carry specific sets of permissions.
+                    <strong>Technical Concept:</strong> Role-Based Access Control (RBAC) authorizes access based on predefined job roles.
                 </div>
-                <div class="example-box">
-                    <strong>Real-World Example:</strong> A sales rep can view customer accounts but cannot touch firewall settings. This protects against malicious insiders and negligent employees.
-                </div>
-                
-                <button class="btn" onclick="startQuiz(2)">Launch RBAC Quiz</button>
+                <p><strong>Example:</strong> A Sales Rep can view customer data but cannot modify firewall settings. This limits internal risk.</p>
+                <button class="btn" onclick="startQuiz(2)">LAUNCH RBAC QUIZ</button>
             </section>
 
-            <section id="mfa" class="topic-section">
-                <h1 style="color: var(--neon-green);">04. MFA (Multifactor Authentication)</h1>
+            <section id="auth" class="topic-section">
+                <h1 style="color: var(--neon-green);">04. Authentication (MFA)</h1>
                 <div class="discussion-box">
-                    <strong>The Three Factors:</strong>
-                    <ul>
-                        <li><strong>Knowledge:</strong> Something you know (Passwords, PINs).</li>
-                        <li><strong>Possession:</strong> Something you have (Smartphone, Security Token).</li>
-                        <li><strong>Inherence:</strong> Something you are (Fingerprints, Face ID).</li>
-                    </ul>
+                    <strong>Multifactor Authentication (MFA):</strong> Combines Knowledge (Password), Possession (Smartphone), and Inherence (Biometrics).
                 </div>
-                <div class="example-box">
-                    <strong>Example:</strong> Combining a password (Knowledge) with a fingerprint scan (Inherence) to minimize the risk of unauthorized access.
-                </div>
-                
-                <button class="btn" onclick="startQuiz(3)">Launch MFA Quiz</button>
+                <p><strong>Defense:</strong> Blocks 99% of phishing attacks by requiring a physical "Second Factor."</p>
+                <button class="btn" onclick="startQuiz(3)">LAUNCH MFA QUIZ</button>
             </section>
 
-            <section id="https" class="topic-section">
-                <h1 style="color: var(--neon-green);">05. HTTPS (Secure Transport)</h1>
+            <section id="transport" class="topic-section">
+                <h1 style="color: var(--neon-green);">05. Transport Layer (HTTPS)</h1>
                 <div class="discussion-box">
-                    <strong>Definition:</strong> The secure version of HTTP. It uses <strong>Transport Layer Security (TLS)</strong> to encrypt communications between a browser and a website.
+                    <strong>HTTPS/TLS:</strong> Encrypts the communication "tunnel" between browser and server using a Public Key Infrastructure.
                 </div>
-                <div class="example-box">
-                    <strong>Asymmetric Infrastructure:</strong> Uses a <strong>Public Key</strong> (available to everyone) to encrypt and a <strong>Private Key</strong> (kept on the web server) to decrypt. Modern browsers flag all non-HTTPS sites as "Not Secure."
-                </div>
-                
-                <button class="btn" onclick="startQuiz(4)">Launch HTTPS Quiz</button>
+                <p><strong>Visibility:</strong> Modern browsers mark non-HTTPS sites as "Not Secure" to protect user trust.</p>
+                <button class="btn" onclick="startQuiz(4)">LAUNCH HTTPS QUIZ</button>
             </section>
 
         </div>
@@ -169,31 +176,11 @@
 
     <script>
         const quizData = [
-            { 
-                q: "A WAF inspects data packets at which layer of the OSI model?", 
-                options: ["Layer 3 (Network)", "Layer 4 (Transport)", "Layer 7 (Application)", "Layer 1 (Physical)"], 
-                correct: 2 
-            },
-            { 
-                q: "Which type of encryption is considered more secure because it does not require sharing a private key?", 
-                options: ["Symmetric Encryption", "Asymmetric Encryption", "Rot13", "Plaintext"], 
-                correct: 1 
-            },
-            { 
-                q: "What is the primary benefit of using RBAC in a large organization?", 
-                options: ["Faster Internet", "Simplified Access Management", "Cheaper Hardware", "Better Graphics"], 
-                correct: 1 
-            },
-            { 
-                q: "A fingerprint scan is classified under which authentication factor category?", 
-                options: ["Knowledge Factor", "Possession Factor", "Inherence Factor", "Time Factor"], 
-                correct: 2 
-            },
-            { 
-                q: "In HTTPS, which key is held privately by the website owner to decrypt interactions?", 
-                options: ["Public Key", "Private Key", "SSH Key", "House Key"], 
-                correct: 1 
-            }
+            { q: "A WAF inspects data at which OSI layer?", options: ["Layer 3", "Layer 4", "Layer 7", "Layer 2"], correct: 2 },
+            { q: "Which encryption type uses a Public and Private key?", options: ["Symmetric", "Asymmetric", "Plaintext", "Hashing"], correct: 1 },
+            { q: "RBAC assigns permissions based on what?", options: ["User Name", "Predefined Role", "Password Strength", "Laptop Type"], correct: 1 },
+            { q: "A fingerprint scan is what type of factor?", options: ["Knowledge", "Possession", "Inherence", "Time"], correct: 2 },
+            { q: "HTTPS uses which protocol for encryption?", options: ["FTP", "SMTP", "TLS/SSL", "UDP"], correct: 2 }
         ];
 
         let currentIdx = 0;
