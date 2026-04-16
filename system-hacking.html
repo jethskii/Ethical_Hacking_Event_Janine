@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced System Hacking | Global Security Seminar v4.0</title>
+    <title>Instructor Terminal | Advanced System Hacking v5.0</title>
     <style>
-        /* --- CORE THEME (Your Preferred Aesthetic) --- */
+        /* --- CORE THEME (Original Aesthetic Maintained) --- */
         :root {
             --neon-green: #39ff14;
             --dark-green: #003300;
             --deep-black: #050505;
+            --error-red: #ff3131;
         }
 
         @keyframes glitch {
@@ -29,6 +30,12 @@
         @keyframes rain {
             0% { background-position: 0% 0%; }
             100% { background-position: 0% 1000px; }
+        }
+
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(57, 255, 20, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(57, 255, 20, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(57, 255, 20, 0); }
         }
 
         body, html {
@@ -103,9 +110,6 @@
             box-shadow: 0 0 25px var(--neon-green);
         }
 
-        .topic-content { display: none; }
-        .topic-content.active { display: block; }
-
         h1.glitch-text { 
             font-size: 3rem; 
             color: var(--neon-green); 
@@ -113,13 +117,15 @@
             animation: glitch 4s infinite linear alternate-reverse;
         }
 
+        .topic-content { display: none; }
+        .topic-content.active { display: block; }
+
         .data-list { list-style: none; padding: 0; }
         .data-list li {
             padding: 15px;
             margin-bottom: 12px;
             background: rgba(255,255,255,0.03);
             border-left: 4px solid var(--neon-green);
-            animation: revealItem 0.6s ease-out forwards;
         }
 
         .terminal-box {
@@ -132,17 +138,76 @@
             font-size: 0.9rem;
         }
 
-        .speaker-note {
-            border: 1px dashed var(--neon-green);
+        .speaker-context {
+            border: 1px solid #444;
             padding: 20px;
-            margin-top: 30px;
-            background: rgba(57, 255, 20, 0.05);
-            color: #ccc;
-            font-style: italic;
+            background: rgba(0,0,0,0.8);
+            margin-bottom: 30px;
+            border-radius: 10px;
         }
 
-        .btn { padding: 10px 20px; border: 1px solid var(--neon-green); color: var(--neon-green); background: none; cursor: pointer;}
+        /* --- FLASHCARD SYSTEM STYLES --- */
+        .flashcard-container {
+            margin-top: 50px;
+            border-top: 2px solid var(--dark-green);
+            padding-top: 40px;
+        }
+
+        .flashcard {
+            background: #000;
+            border: 1px solid var(--neon-green);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: revealItem 0.5s ease-out;
+        }
+
+        .quiz-option {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            background: transparent;
+            border: 1px solid #444;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 5px;
+            font-family: inherit;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--neon-green);
+            background: rgba(57, 255, 20, 0.05);
+        }
+
+        .quiz-option.correct {
+            background: var(--dark-green) !important;
+            border-color: var(--neon-green) !important;
+            color: var(--neon-green);
+            animation: pulse-green 1s infinite;
+        }
+
+        .quiz-option.wrong {
+            background: #330000 !important;
+            border-color: var(--error-red) !important;
+            color: var(--error-red);
+        }
+
+        #reveal-zone {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #222;
+            display: none;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .btn { padding: 10px 20px; border: 1px solid var(--neon-green); color: var(--neon-green); background: none; cursor: pointer; text-transform: uppercase;}
         .btn:hover { background: var(--neon-green); color: black; }
+
     </style>
 </head>
 <body>
@@ -150,122 +215,86 @@
     <div class="data-rain-overlay"></div>
     
     <div style="padding: 30px 50px;">
-        <button class="btn" onclick="location.reload()">[ REBOOT_SYSTEM ]</button>
+        <button class="btn" onclick="location.reload()">[ RESET_TERMINAL ]</button>
     </div>
 
     <div class="dashboard">
         <div class="sidebar">
-            <h2 style="color:var(--neon-green); font-size: 0.9rem; text-align: center; letter-spacing: 4px; border-bottom: 1px solid #222; padding-bottom: 15px;">SEC_CON_2026</h2>
-            <div class="nav-item active" onclick="showTab('m1', this)">01. System Hacking Concept</div>
-            <div class="nav-item" onclick="showTab('m2', this)">02. Vulnerability Research</div>
-            <div class="nav-item" onclick="showTab('m3', this)">03. Password Cracking</div>
-            <div class="nav-item" onclick="showTab('m4', this)">04. Privilege Escalation</div>
-            <div class="nav-item" onclick="showTab('m5', this)">05. Buffer Overflows</div>
-            <div class="nav-item" onclick="showTab('m6', this)">06. Post-Exploitation</div>
-            <div class="nav-item" onclick="showTab('m7', this)">07. Active Directory</div>
+            <h2 style="color:var(--neon-green); font-size: 0.9rem; text-align: center; letter-spacing: 4px; border-bottom: 1px solid #222; padding-bottom: 15px;">SEC_CON_BREIFING</h2>
+            <div class="nav-item active" onclick="showTab('m1', this)">01. The System Hacking Mindset</div>
+            <div class="nav-item" onclick="showTab('m2', this)">02. Breaking the OS Barrier</div>
+            <div class="nav-item" onclick="showTab('m3', this)">03. Memory Corruption</div>
+            <div class="nav-item" onclick="showTab('m4', this)">04. Kerberos & AD Dominance</div>
+            <div class="nav-item" onclick="showTab('quiz', this)" style="border: 1px solid var(--neon-green);">[ TEST KNOWLEDGE ]</div>
         </div>
 
         <div class="content-area">
             
             <div id="m1" class="topic-content active">
-                <h1 class="glitch-text">System Hacking</h1>
-                <p>System hacking is the culmination of all previous phases. This is where we go beyond finding a bug and move toward full machine control. In a professional engagement, this proves to the client that their "unhackable" server can, in fact, be owned.</p>
-                
-                <ul class="data-list">
-                    <li><b>The Goal:</b> To bypass OS security controls and access unauthorized data.</li>
-                    <li><b>The Methodology:</b> Exploiting software bugs, service misconfigurations, or weak credentials.</li>
-                    <li><b>The Responsibility:</b> As ethical hackers, we must document every step to ensure the client can reproduce the fix.</li>
-                </ul>
-
-                <div class="speaker-note">
-                    <b>Speaker Dialogue:</b> "Ladies and gentlemen, look at this list. System hacking isn't a movie scene—it's a logical chain. If you miss one step in enumeration, you miss your entry point."
+                <div class="speaker-context">
+                    <b style="color: var(--neon-green);">INSTRUCTOR BROADCAST:</b><br>
+                    "Welcome to the deep end. We aren't just scanning websites anymore. Today, we learn how to take total control of a machine. Remember: in system hacking, if you have user-level access, you're just a guest. If you have root-level access, you're the God of the machine."
                 </div>
+                <h1 class="glitch-text">System Hacking Foundations</h1>
+                <p>System hacking involves cracking the OS security to gain administrative control. It is the core of any penetration testing engagement because it demonstrates the real impact of a vulnerability.</p>
+                <ul class="data-list">
+                    <li><b>Infiltration:</b> Bypassing perimeter defenses (Firewalls/AV).</li>
+                    <li><b>Escalation:</b> Moving from a service account to a System/Admin account.</li>
+                    <li><b>Lateral Movement:</b> Using one compromised machine to infect the entire network.</li>
+                </ul>
             </div>
 
             <div id="m2" class="topic-content">
-                <h1 class="glitch-text">Vulnerability Research</h1>
-                <p>Before exploitation, you must know what you are fighting. We use global databases to find "Zero-Days" or "N-Days" (known flaws).</p>
-                
-                <ul class="data-list">
-                    <li><b>CVE (Common Vulnerabilities & Exposures):</b> A dictionary of publicly disclosed cybersecurity vulnerabilities.</li>
-                    <li><b>Exploit-DB:</b> An archive of exploit code and software for use by penetration testers.</li>
-                    <li><b>CVSS Scoring:</b> Understanding the severity (Critical, High, Medium, Low) of a bug.</li>
-                </ul>
-                
+                <h1 class="glitch-text">Breaking the OS Barrier</h1>
+                <p>Most operating systems are built like fortresses, but every fortress has a weak brick. As an instructor, I emphasize searching for misconfigured services over complex code exploits.</p>
                 <div class="terminal-box">
-                    # searchsploit "Windows Server 2019"<br>
-                    # RESULTS: 12 Exploits Found (3 Remote Code Execution)
+                    # Enumerating unquoted service paths in Windows<br>
+                    wmic service get name,displayname,pathname,startmode | findstr /i "Auto" | findstr /i /v "C:\Windows\\" | findstr /i /v """
                 </div>
+                <p>By finding a service path with a space and no quotes, we can plant a malicious executable that the OS will run instead of the real service.</p>
             </div>
 
             <div id="m3" class="topic-content">
-                <h1 class="glitch-text">Password Cracking</h1>
-                <p>Most breaches occur because of "admin123." We teach students the physics of cracking passwords and why length matters more than complexity.</p>
+                <h1 class="glitch-text">Memory Corruption & BoF</h1>
+                <p>Buffer Overflows (BoF) occur when a program writes more data to a buffer than it can hold. This spills over into adjacent memory, potentially overwriting the Return Address.</p>
+                
+                
                 
                 <ul class="data-list">
-                    <li><b>Dictionary Attack:</b> Testing a list of common words (RockYou.txt).</li>
-                    <li><b>Brute Force:</b> Testing every possible combination of characters (Slower but 100% effective).</li>
-                    <li><b>Rainbow Tables:</b> Using pre-computed hashes to crack passwords in seconds.</li>
+                    <li><b>Stack Smashing:</b> Overwriting the local variables and the EIP.</li>
+                    <li><b>NOP Sleds:</b> Using \x90 instructions to lead the CPU to your shellcode.</li>
+                    <li><b>The Payoff:</b> Execution of a remote shell directly in system memory, leaving no files on the disk.</li>
                 </ul>
-
-                <div class="terminal-box">
-                    $ john --wordlist=/usr/share/wordlists/rockyou.txt hashes.txt<br>
-                    $ hashcat -m 0 -a 0 hash.txt pass.txt
-                </div>
             </div>
 
             <div id="m4" class="topic-content">
-                <h1 class="glitch-text">Privilege Escalation</h1>
-                <p>Gaining access to a system as a "Guest" or "Standard User" is only half the battle. To be a master, you must become <b>ROOT</b> (Linux) or <b>SYSTEM</b> (Windows).</p>
-                
-                <ul class="data-list">
-                    <li><b>Horizontal Escalation:</b> Gaining access to another user's account at the same level.</li>
-                    <li><b>Vertical Escalation:</b> Moving from a restricted user to an administrator.</li>
-                    <li><b>Kernel Exploits:</b> Attacking the core of the OS to bypass all security.</li>
-                </ul>
-            </div>
-
-            <div id="m5" class="topic-content">
-                <h1 class="glitch-text">Buffer Overflows (BoF)</h1>
-                <p>This is the "Holy Grail" of technical hacking. By sending more data to a program than it can handle, we overwrite the memory and force the CPU to execute our own code.</p>
-                
-                <ul class="data-list">
-                    <li><b>Fuzzing:</b> Finding the exact "crash point" of an application.</li>
-                    <li><b>Instruction Pointer (EIP):</b> Gaining control of the pointer that tells the CPU what to do next.</li>
-                    <li><b>Shellcode:</b> The custom payload injected into the overflow to spawn a reverse shell.</li>
-                </ul>
-
-                
-
-                <div class="speaker-note">
-                    <b>Speaker Dialogue:</b> "This is where the math meets the machine. If you can control the EIP, you control the system. No password needed."
-                </div>
-            </div>
-
-            <div id="m6" class="topic-content">
-                <h1 class="glitch-text">Post-Exploitation</h1>
-                <p>What happens after you get in? You must establish a permanent presence and harvest all the intelligence you can find.</p>
-                
-                <ul class="data-list">
-                    <li><b>Data Exfiltration:</b> Stealthily moving sensitive files out of the network.</li>
-                    <li><b>Backdoors:</b> Installing "Netcat" listeners or custom service tasks for persistence.</li>
-                    <li><b>Pivoting:</b> Using your current victim to attack other hidden servers inside the network.</li>
-                </ul>
-            </div>
-
-            <div id="m7" class="topic-content">
-                <h1 class="glitch-text">Active Directory Attacks</h1>
-                <p>In 90% of corporate environments, the network is controlled by Active Directory (AD). If you own the Domain Controller, you own the entire company.</p>
-                
-                <ul class="data-list">
-                    <li><b>Pass-the-Hash:</b> Using a user's hash to log in without ever knowing their password.</li>
-                    <li><b>Kerberoasting:</b> Attacking service accounts to gain high-level credentials.</li>
-                    <li><b>Golden Tickets:</b> Creating a permanent "Master Key" to the network that never expires.</li>
-                </ul>
-
+                <h1 class="glitch-text">Active Directory (AD) Dominance</h1>
+                <p>In a large-scale corporate environment, individual machines matter less than the <b>Domain Controller (DC)</b>. If you control the DC, you control every user, every computer, and every password in the company.</p>
                 <div class="terminal-box">
-                    # mimikatz "privilege::debug" "lsadump::sam"<br>
-                    # Hash Captured: Admin:500:aad3b435b51404eea...
+                    $ invoke-kerberoast -erroraction silentlycontinue<br>
+                    $ lsadump::dcsync /domain:corp.local /user:administrator
+                </div>
+                <ul class="data-list">
+                    <li><b>Golden Ticket:</b> A forged TGT that grants unlimited access for up to 10 years.</li>
+                    <li><b>Silver Ticket:</b> A forged ticket for a specific service (like SQL or File Shares).</li>
+                </ul>
+            </div>
+
+            <div id="quiz" class="topic-content">
+                <h1 class="glitch-text">Knowledge Validation</h1>
+                <p style="text-align: center; color: #888;">Complete the following assessment to verify your system hacking proficiency.</p>
+                
+                <div class="flashcard">
+                    <h3 id="question-text" style="color: var(--neon-green);">Loading Question...</h3>
+                    <div id="options-container">
+                        </div>
+                    <div id="reveal-zone">
+                        <b id="status-text"></b><br>
+                        <span id="explanation-text"></span>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <button class="btn" onclick="nextQuestion()">Next Challenge -></button>
+                    </div>
                 </div>
             </div>
 
@@ -273,6 +302,7 @@
     </div>
 
     <script>
+        // Tab Management
         function showTab(id, el) {
             document.querySelectorAll('.topic-content').forEach(t => t.classList.remove('active'));
             document.getElementById(id).classList.add('active');
@@ -280,7 +310,75 @@
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             el.classList.add('active');
 
+            if(id === 'quiz') { loadQuestion(); }
             window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        // Quiz Data
+        const quizData = [
+            {
+                q: "What is the primary goal of Privilege Escalation?",
+                options: ["Deleting system logs", "Moving from low-level access to admin/root access", "Installing a keylogger", "Performing a DoS attack"],
+                correct: 1,
+                exp: "Privilege escalation is the act of exploiting a bug or configuration oversight to gain elevated access to resources that are normally protected."
+            },
+            {
+                q: "Which register does a Buffer Overflow aim to control?",
+                options: ["EAX", "ESP", "EIP (Instruction Pointer)", "EBP"],
+                correct: 2,
+                exp: "The EIP (Extended Instruction Pointer) tells the CPU which memory address to execute next. Controlling it means controlling the program flow."
+            },
+            {
+                q: "What is a 'Golden Ticket' in Active Directory hacking?",
+                options: ["A legal permission to hack", "A forged Ticket Granting Ticket (TGT)", "A password for the CEO", "A tool for cracking WiFi"],
+                correct: 1,
+                exp: "A Golden Ticket is a forged TGT that allows an attacker to impersonate any user in the Domain, providing permanent persistence."
+            }
+        ];
+
+        let currentQ = 0;
+
+        function loadQuestion() {
+            const q = quizData[currentQ];
+            document.getElementById('question-text').innerText = q.q;
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            document.getElementById('reveal-zone').style.display = 'none';
+
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-option';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(index, btn);
+                container.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(index, btn) {
+            const q = quizData[currentQ];
+            const allBtns = document.querySelectorAll('.quiz-option');
+            
+            // Disable all buttons after choice
+            allBtns.forEach(b => b.disabled = true);
+
+            if(index === q.correct) {
+                btn.classList.add('correct');
+                document.getElementById('status-text').innerText = "[ ACCESS GRANTED ] Correct.";
+                document.getElementById('status-text').style.color = "var(--neon-green)";
+            } else {
+                btn.classList.add('wrong');
+                allBtns[q.correct].classList.add('correct'); // Highlight right answer
+                document.getElementById('status-text').innerText = "[ ACCESS DENIED ] Unauthorized Selection.";
+                document.getElementById('status-text').style.color = "var(--error-red)";
+            }
+
+            document.getElementById('explanation-text').innerText = q.exp;
+            document.getElementById('reveal-zone').style.display = 'block';
+        }
+
+        function nextQuestion() {
+            currentQ = (currentQ + 1) % quizData.length;
+            loadQuestion();
         }
     </script>
 </body>
