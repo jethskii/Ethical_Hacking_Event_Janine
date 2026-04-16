@@ -13,7 +13,6 @@
             --warning-red: #ff3131;
         }
 
-        /* --- ADVANCED ANIMATIONS --- */
         @keyframes glitch {
             0% { transform: translate(0); }
             20% { transform: translate(-2px, 2px); }
@@ -28,7 +27,6 @@
             to { opacity: 1; transform: translateY(0); filter: blur(0); }
         }
 
-        /* Scrolling Grid Animation */
         @keyframes gridMove {
             0% { background-position: 0 0; }
             100% { background-position: 50px 50px; }
@@ -50,14 +48,6 @@
             100% { top: 100%; }
         }
 
-        @keyframes noise {
-            0%, 100% { background-position: 0 0; }
-            10% { background-position: -5% -10%; }
-            20% { background-position: -15% 5%; }
-            30% { background-position: 7% -25%; }
-            50% { background-position: -25% 10%; }
-        }
-
         body, html {
             margin: 0; padding: 0;
             width: 100%; min-height: 100vh;
@@ -68,7 +58,6 @@
             overflow-x: hidden;
         }
 
-        /* --- THE LAYERED BACKGROUND ENGINE --- */
         .bg-container {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: 
@@ -77,29 +66,13 @@
                 linear-gradient(90deg, rgba(0, 51, 0, 0.2) 1px, transparent 1px);
             background-size: 100% 100%, 50px 50px, 50px 50px;
             animation: gridMove 4s linear infinite;
-            z-index: -5;
+            z-index: -3;
         }
 
         .bg-glow {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle at 50% 50%, rgba(57, 255, 20, 0.05), transparent 70%);
             animation: bgPulse 8s ease-in-out infinite;
-            z-index: -4;
-            pointer-events: none;
-        }
-
-        .noise-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Noi_Noise_Texture.png');
-            opacity: 0.05;
-            z-index: -3;
-            animation: noise 0.2s infinite;
-            pointer-events: none;
-        }
-
-        .vignette {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.8) 100%);
             z-index: -2;
             pointer-events: none;
         }
@@ -114,16 +87,18 @@
             pointer-events: none;
         }
 
-        .scanner-line {
-            position: fixed; top: 0; left: 0; width: 100%; height: 5px;
-            background: rgba(57, 255, 20, 0.1);
-            box-shadow: 0 0 20px var(--neon-green);
+        body::after {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
             z-index: 9999;
-            animation: scanline 8s linear infinite;
+            background-size: 100% 3px, 3px 100%;
             pointer-events: none;
         }
 
-        /* --- MAIN DASHBOARD LAYOUT --- */
         .dashboard { 
             display: grid; 
             grid-template-columns: 320px 1fr; 
@@ -144,7 +119,6 @@
             top: 40px;
             box-shadow: 0 0 30px rgba(0, 255, 0, 0.15);
             backdrop-filter: blur(5px);
-            height: fit-content;
         }
 
         .content-area { 
@@ -158,130 +132,49 @@
         }
 
         .nav-item { 
-            padding: 15px; 
-            cursor: pointer; 
-            margin-bottom: 10px; 
-            color: #666; 
-            transition: 0.3s;
-            border-radius: 8px;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 1px;
+            padding: 15px; cursor: pointer; margin-bottom: 10px; color: #666; 
+            transition: 0.3s; border-radius: 8px; text-transform: uppercase;
+            font-size: 0.8rem; letter-spacing: 1px;
         }
         .nav-item:hover { color: var(--neon-green); background: rgba(0, 255, 0, 0.05); }
-        .nav-item.active { 
-            background: var(--neon-green); 
-            color: black !important; 
-            font-weight: bold;
-            box-shadow: 0 0 25px var(--neon-green);
-        }
+        .nav-item.active { background: var(--neon-green); color: black !important; font-weight: bold; box-shadow: 0 0 25px var(--neon-green); }
 
         .topic-content { display: none; }
         .topic-content.active { display: block; }
 
-        h1.glitch-text { 
-            font-size: 3rem; 
-            color: var(--neon-green); 
-            margin: 0 0 20px 0;
-            animation: glitch 4s infinite linear alternate-reverse;
-            text-shadow: 0 0 10px var(--neon-green);
-        }
+        h1.glitch-text { font-size: 3rem; color: var(--neon-green); margin: 0 0 20px 0; animation: glitch 4s infinite linear alternate-reverse; text-shadow: 0 0 10px var(--neon-green); }
 
         .data-list { list-style: none; padding: 0; }
-        .data-list li {
-            padding: 15px;
-            margin-bottom: 12px;
-            background: rgba(255,255,255,0.05);
-            border-left: 4px solid var(--neon-green);
-            animation: revealItem 0.6s ease-out forwards;
-        }
+        .data-list li { padding: 15px; margin-bottom: 12px; background: rgba(255,255,255,0.05); border-left: 4px solid var(--neon-green); animation: revealItem 0.6s ease-out forwards; }
 
-        .terminal-box {
-            background: #000;
-            color: var(--neon-green);
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid #333;
-            margin: 20px 0;
-            font-size: 0.9rem;
-            box-shadow: 0 0 20px rgba(0,0,0,1);
-        }
+        .terminal-box { background: #000; color: var(--neon-green); padding: 20px; border-radius: 10px; border: 1px solid #333; margin: 20px 0; font-size: 0.9rem; box-shadow: 0 0 20px rgba(0,0,0,1); }
 
-        .speaker-note {
-            border: 1px dashed var(--neon-green);
-            padding: 20px;
-            margin-top: 30px;
-            background: rgba(57, 255, 20, 0.05);
-            color: #ccc;
-            font-style: italic;
-        }
+        .speaker-note { border: 1px dashed var(--neon-green); padding: 20px; margin-top: 30px; background: rgba(57, 255, 20, 0.05); color: #ccc; font-style: italic; }
 
-        .img-container {
-            border: 1px solid var(--neon-green);
-            padding: 10px;
-            background: #000;
-            margin: 20px 0;
-            text-align: center;
-            box-shadow: 0 0 30px rgba(0,0,0,0.8);
-        }
+        .img-container { border: 1px solid var(--neon-green); padding: 10px; background: #000; margin: 20px 0; text-align: center; box-shadow: 0 0 30px rgba(0,0,0,0.8); }
         .img-container img { max-width: 100%; height: auto; }
 
-        .btn { padding: 10px 20px; border: 1px solid var(--neon-green); color: var(--neon-green); background: none; cursor: pointer; text-shadow: 0 0 5px var(--neon-green);}
+        .btn { padding: 10px 20px; border: 1px solid var(--neon-green); color: var(--neon-green); background: none; cursor: pointer; text-shadow: 0 0 5px var(--neon-green); font-weight: bold; text-transform: uppercase;}
         .btn:hover { background: var(--neon-green); color: black; box-shadow: 0 0 15px var(--neon-green); }
 
-        /* --- QUIZ STYLES --- */
-        #quiz-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.92);
-            z-index: 10000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .quiz-card {
-            background: #000;
-            border: 2px solid var(--neon-green);
-            padding: 40px;
-            width: 600px;
-            box-shadow: 0 0 70px rgba(57, 255, 20, 0.3);
-            text-align: center;
-        }
-
-        .choice-btn {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            background: transparent;
-            border: 1px solid #444;
-            color: #ccc;
-            text-align: left;
-            cursor: pointer;
-            font-family: inherit;
-        }
-
-        .choice-btn:hover { border-color: var(--neon-green); color: var(--neon-green); background: rgba(57, 255, 20, 0.05); }
+        #quiz-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 10000; justify-content: center; align-items: center; }
+        .quiz-card { background: #000; border: 2px solid var(--neon-green); padding: 40px; width: 600px; box-shadow: 0 0 70px rgba(57, 255, 20, 0.3); text-align: center; }
+        .choice-btn { display: block; width: 100%; padding: 12px; margin: 10px 0; background: transparent; border: 1px solid #444; color: #ccc; text-align: left; cursor: pointer; font-family: inherit; }
+        .choice-btn:hover { border-color: var(--neon-green); color: var(--neon-green); }
         .choice-btn.selected { background: rgba(57, 255, 20, 0.15); border-color: var(--neon-green); }
         .choice-btn.correct-glow { background: var(--dark-green); color: var(--neon-green); border-color: var(--neon-green); box-shadow: 0 0 20px var(--neon-green); }
-
     </style>
 </head>
 <body>
     <div class="bg-container"></div>
     <div class="bg-glow"></div>
-    <div class="noise-overlay"></div>
-    <div class="vignette"></div>
     <div class="data-rain-overlay"></div>
-    <div class="scanner-line"></div>
     
     <div id="quiz-overlay">
         <div class="quiz-card">
             <h3 style="color: var(--neon-green); border-bottom: 1px solid #222; padding-bottom: 10px; letter-spacing: 2px;">[ SYSTEM_VALIDATION ]</h3>
             <p id="quiz-question" style="font-size: 1.1rem; margin: 20px 0;"></p>
             <div id="choices-container"></div>
-            
             <div style="margin-top: 30px;">
                 <button class="btn" id="reveal-btn" onclick="revealAnswer()">REVEAL ANSWER</button>
                 <button class="btn" style="border-color: #555; color: #555;" onclick="closeQuiz()">[ CLOSE ]</button>
@@ -296,12 +189,12 @@
     <div class="dashboard">
         <div class="sidebar">
             <h2 style="color:var(--neon-green); font-size: 0.9rem; text-align: center; letter-spacing: 4px; border-bottom: 1px solid #222; padding-bottom: 15px;">SEC_PROT_2026</h2>
-            <div class="nav-item active" onclick="showTab('m0', this)">00. Web App Security Overview</div>
-            <div class="nav-item" onclick="showTab('m1', this)">01. WAF Control</div>
+            <div class="nav-item active" onclick="showTab('m0', this)">00. Security Overview</div>
+            <div class="nav-item" onclick="showTab('m1', this)">01. WAF (Deep Dive)</div>
             <div class="nav-item" onclick="showTab('m2', this)">02. Data Encryption</div>
             <div class="nav-item" onclick="showTab('m3', this)">03. Access Roles (RBAC)</div>
             <div class="nav-item" onclick="showTab('m4', this)">04. Authentication (MFA)</div>
-            <div class="nav-item" onclick="showTab('m5', this)">05. Transport Layer (HTTPS)</div>
+            <div class="nav-item" onclick="showTab('m5', this)">05. Transport (HTTPS)</div>
         </div>
 
         <div class="content-area">
@@ -313,70 +206,80 @@
                     <img src="Web_application_security_tools_40424a679c.png" alt="Layered Web Security Overview">
                 </div>
                 <ul class="data-list">
-                    <li><b>Defense in Depth:</b> Creating multiple layers of security so if one fails, others protect the system.</li>
-                    <li><b>Perimeter Defense:</b> Filtering malicious requests before they reach the server (WAF).</li>
-                    <li><b>Data Sovereignty:</b> Ensuring information is unreadable without authorization (Encryption).</li>
+                    <li><b>Defense in Depth:</b> Overlapping security measures so if one fails, others remain.</li>
+                    <li><b>CIA Triad:</b> Maintaining Confidentiality, Integrity, and Availability.</li>
+                    <li><b>Compliance:</b> Meeting regulatory standards like PCI DSS and GDPR.</li>
                 </ul>
                 <button class="btn" onclick="startQuiz(0)">Launch Topic Quiz</button>
             </div>
             
             <div id="m1" class="topic-content">
                 <h1 class="glitch-text">WAF Control</h1>
-                <p>Web application firewalls (WAFs) are the first line of defense at the application layer. They monitor, filter, and block malicious HTTP/HTTPS traffic to prevent unauthorized data access.</p>
+                <p>Web application firewalls (WAFs) monitor, filter, and block malicious data packets. They provide visibility into application data at the <b>HTTP Application Layer (Layer 7)</b>.</p>
+                <div class="img-container">
+                    <img src="what-is-waf-cf521c4f0020e2a81f70454931d2e21e.webp" alt="WAF Diagram">
+                </div>
                 <ul class="data-list">
-                    <li><b>GET/POST Analysis:</b> Inspecting payload verbs for malicious strings.</li>
-                    <li><b>Exploit Mitigation:</b> Designed to counter SQLi, XSS, and dangerous bots.</li>
-                    <li><b>Deployment:</b> Can be network-based, host-based, or cloud-based solutions.</li>
+                    <li><b>The "Verbs" Analysis:</b> WAF inspects <b>GET</b> (retrieving data), <b>POST</b> (changing state), <b>PUT</b> (updating), and <b>DELETE</b> requests.</li>
+                    <li><b>Payload Inspection:</b> Checks headers, query strings, and bodies for malicious code like SQLi and XSS.</li>
+                    <li><b>PCI DSS Compliance:</b> Essential for online businesses (banks, retail) to protect credit card data.</li>
                 </ul>
                 <div class="terminal-box">
-[STATUS] WAF Filtering Active...
-[DETECTED] Malicious pattern in POST request /login.php
-[ACTION] 403 Forbidden - Request Dropped.
+[STATUS] WAF Analyzing GET Request...
+[PATTERN] ' OR 1=1 -- Detected
+[ACTION] BLOCK: SQL Injection attempt neutralized.
                 </div>
                 <button class="btn" onclick="startQuiz(1)">Launch Topic Quiz</button>
             </div>
 
             <div id="m2" class="topic-content">
                 <h1 class="glitch-text">Data Encryption</h1>
-                <p>Encryption translates plaintext into ciphertext, ensuring data remains secure even if storage or transmission channels are compromised.</p>
+                <p>The science of <b>Cryptography</b> translates plaintext into unreadable ciphertext using secret keys.</p>
                 <ul class="data-list">
-                    <li><b>Symmetric Encryption:</b> Single secret key for both actions.</li>
-                    <li><b>Asymmetric Encryption:</b> Public key for encryption, Private for decryption.</li>
+                    <li><b>At Rest vs. Transit:</b> Protecting data on hard drives (At Rest) vs. data moving across the web (In Transit).</li>
+                    <li><b>Symmetric Encryption:</b> Faster performance, uses the <b>same key</b> for lock and unlock.</li>
+                    <li><b>Asymmetric Encryption:</b> More secure; uses a <b>Public Key</b> to encrypt and a <b>Private Key</b> to decrypt.</li>
                 </ul>
-                <div class="terminal-box">
-$ openssl enc -aes-256-cbc -salt -in data.txt -out data.enc
-[SYSTEM] Data translated to Ciphertext.
+                <div class="speaker-note">
+                    "If a hacker steals an encrypted database, they have nothing but gibberish without the Private Key."
                 </div>
                 <button class="btn" onclick="startQuiz(2)">Launch Topic Quiz</button>
             </div>
 
             <div id="m3" class="topic-content">
                 <h1 class="glitch-text">Access Roles (RBAC)</h1>
-                <p>Role-Based Access Control restricts system access to authorized users based on their predefined roles within the organization.</p>
+                <p><b>Role-Based Access Control</b> authorizes access based on a user’s predefined role rather than their identity.</p>
                 <ul class="data-list">
-                    <li><b>Principle of Least Privilege:</b> Users only access what is needed for their job.</li>
-                    <li><b>Role Assignment:</b> Managing permissions through 'Roles' (HR, Finance, IT).</li>
+                    <li><b>Principle of Least Privilege:</b> A sales rep can see accounts but cannot modify server firewalls.</li>
+                    <li><b>Privilege Management:</b> Admins assign 'Roles' (Finance, HR, IT) with specific permission sets.</li>
+                    <li><b>Threat Defense:</b> Defends against malicious insiders and negligent employees.</li>
                 </ul>
                 <button class="btn" onclick="startQuiz(3)">Launch Topic Quiz</button>
             </div>
 
             <div id="m4" class="topic-content">
                 <h1 class="glitch-text">Authentication (MFA)</h1>
-                <p>Multi-Factor Authentication requires two or more distinct verification types to prove a user's identity.</p>
+                <p>Multifactor Authentication requires <b>two or more</b> distinct categories of credentials to verify identity.</p>
                 <ul class="data-list">
-                    <li><b>Knowledge:</b> Something you know (Passwords).</li>
-                    <li><b>Possession:</b> Something you have (Smartphone).</li>
-                    <li><b>Inherence:</b> Something you are (Biometrics).</li>
+                    <li><b>Knowledge Factor:</b> Something you <b>Know</b> (Passwords, PINs).</li>
+                    <li><b>Possession Factor:</b> Something you <b>Have</b> (Smartphone, Security Keys).</li>
+                    <li><b>Inherence Factor:</b> Something you <b>Are</b> (Fingerprints, Face ID).</li>
                 </ul>
+                <div class="terminal-box">
+[AUTH] Password Accepted.
+[PENDING] Awaiting Inherence Factor (Fingerprint Scan)...
+[SUCCESS] Multi-factor handshake complete.
+                </div>
                 <button class="btn" onclick="startQuiz(4)">Launch Topic Quiz</button>
             </div>
 
             <div id="m5" class="topic-content">
                 <h1 class="glitch-text">Transport Layer (HTTPS)</h1>
-                <p>HTTPS provides an encrypted "tunnel" for data transfer using Transport Layer Security (TLS).</p>
+                <p>HTTPS is the secure version of HTTP, using <b>TLS (Transport Layer Security)</b> to encrypt communications.</p>
                 <ul class="data-list">
-                    <li><b>SSL/TLS Handshake:</b> Negotiating encryption keys between browser and server.</li>
-                    <li><b>Public Key Infrastructure:</b> Asymmetric keys used to verify authenticity.</li>
+                    <li><b>TLS Protocol:</b> Formerly known as SSL; it secures the connection between browser and server.</li>
+                    <li><b>Asymmetric PKI:</b> Uses a Private key on the server and a Public key available to everyone.</li>
+                    <li><b>Trust Indicators:</b> Browsers flag non-HTTPS sites as "Not Secure" to protect users.</li>
                 </ul>
                 <button class="btn" onclick="startQuiz(5)">Launch Topic Quiz</button>
             </div>
@@ -394,12 +297,12 @@ $ openssl enc -aes-256-cbc -salt -in data.txt -out data.enc
         }
 
         const quizData = [
-            { q: "What is the primary goal of a 'Defense in Depth' strategy?", options: ["Buying the most expensive firewall", "Using overlapping layers of security", "Hiring only one security expert", "Using a single strong password"], correct: 1 },
-            { q: "WAF operates at which layer of the OSI model?", options: ["Layer 2 (Data Link)", "Layer 3 (Network)", "Layer 7 (Application)", "Layer 4 (Transport)"], correct: 2 },
-            { q: "Which encryption method uses a Public Key and a Private Key?", options: ["Symmetric Encryption", "Asymmetric Encryption", "Hashing", "Encoding"], correct: 1 },
-            { q: "What is the 'Principle of Least Privilege' in RBAC?", options: ["Everyone gets Admin access", "Users get only the minimum access needed", "Access depends on how long you've worked there", "Granting access based on computer speed"], correct: 1 },
-            { q: "A fingerprint scan is an example of which MFA factor?", options: ["Knowledge", "Possession", "Inherence", "Location"], correct: 2 },
-            { q: "What does HTTPS use to secure the 'tunnel' between browser and server?", options: ["UDP", "TLS/SSL", "FTP", "ICMP"], correct: 1 }
+            { q: "What is the primary goal of a 'Defense in Depth' strategy?", options: ["Buying expensive firewalls", "Layered security controls", "Using one strong password", "Ignoring internal threats"], correct: 1 },
+            { q: "WAF operates at which layer of the OSI model?", options: ["Layer 1", "Layer 3", "Layer 4", "Layer 7"], correct: 3 },
+            { q: "Which encryption uses a Public key to encrypt and a Private key to decrypt?", options: ["Symmetric", "Asymmetric", "Plaintext", "Hashing"], correct: 1 },
+            { q: "RBAC helps enforce which security principle?", options: ["Principle of Least Privilege", "Principle of Maximum Speed", "Principle of Open Access", "Principle of Hardware Design"], correct: 0 },
+            { q: "A fingerprint scan is an example of which authentication factor?", options: ["Knowledge", "Possession", "Inherence", "Temporal"], correct: 2 },
+            { q: "HTTPS uses which protocol to encrypt data in transit?", options: ["UDP", "TLS/SSL", "FTP", "SMTP"], correct: 1 }
         ];
 
         let currentQuizIndex = -1;
