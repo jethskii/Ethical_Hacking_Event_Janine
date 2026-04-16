@@ -487,53 +487,72 @@
         </p>
     </div>
 
-    <button class="btn" style="width: 100%; margin-top: 30px;" onclick="showTab('quiz', this)">PROCEED TO VALIDATION ➔</button>
-</div>
+   <div id="quiz" class="topic-content">
+                <h1 class="glitch-text">Validation: Mission Briefing</h1>
+                <div id="quiz-container" class="highlight-box" style="min-height: 400px;">
+                    <div id="progress-bar" style="width: 100%; height: 5px; background: #222; margin-bottom: 20px; border-radius: 5px;">
+                        <div id="progress-fill" style="width: 0%; height: 100%; background: var(--neon-green); transition: 0.5s;"></div>
+                    </div>
+                    
+                    <div id="question-wrapper">
+                        <span id="question-category" style="color: var(--gold); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px;"></span>
+                        <h2 id="question-text" style="margin-top: 10px;">Initializing System Validation...</h2>
+                        <div id="options-grid" style="margin-top: 30px;"></div>
+                    </div>
 
-            <div id="m1" class="topic-content">...</div>
-            <div id="m3" class="topic-content">...</div>
-            <div id="m4" class="topic-content">...</div>
-            <div id="quiz" class="topic-content">...</div>
+                    <div id="feedback-zone" style="display: none; margin-top: 30px; padding: 20px; border: 1px solid #333; border-radius: 10px; background: rgba(0,0,0,0.4);">
+                        <b id="feedback-status"></b>
+                        <p id="feedback-explanation" style="margin-top: 10px; color: #aaa;"></p>
+                        <button class="btn" onclick="loadNextQuestion()" style="margin-top: 15px; width: 100%;">PROCEED TO NEXT UPLINK ➔</button>
+                    </div>
+
+                    <div id="result-screen" style="display: none; text-align: center; padding: 40px 0;">
+                        <h2 style="color: var(--gold); font-size: 2.5rem;">MISSION COMPLETE</h2>
+                        <p id="final-score" style="font-size: 1.2rem; margin: 20px 0;"></p>
+                        <button class="btn" onclick="resetQuiz()">RESTART VALIDATION</button>
+                    </div>
+                </div>
+            </div>
 
         </div>
     </div>
 
-   <script>
+    <script>
         const flashcards = [
             {
                 cat: "Hacking Mindset",
-                q: "Which phase of system hacking involves gathering intelligence like IP addresses and employee information?",
+                q: "Which phase of system hacking involves gathering intelligence like IP addresses and footprinting?",
                 options: ["Scanning", "Reconnaissance", "Maintaining Access", "Privilege Escalation"],
                 correct: 1,
-                exp: "Reconnaissance (Footprinting) is the first stage where an attacker maps out the target organization before launching an exploit."
+                exp: "Reconnaissance is the initial phase where an attacker maps out the target organization."
             },
             {
                 cat: "OS Barrier",
-                q: "In the Protection Ring model, which ring has the 'least' privilege where standard user applications reside?",
-                options: ["Ring 0", "Ring 1", "Ring 2", "Ring 3"],
-                correct: 3,
-                exp: "Ring 3 is User Mode. This provides the most restricted access to prevent applications from accidentally or maliciously damaging the system."
+                q: "In the Protection Ring model, where does the OS Kernel reside?",
+                options: ["Ring 3", "Ring 1", "Ring 0", "The User Mode"],
+                correct: 2,
+                exp: "Ring 0 (Kernel Mode) is 'God Mode' with unrestricted access to CPU and memory."
             },
             {
                 cat: "Memory Corruption",
-                q: "What technical component does an attacker overwrite during a Buffer Overflow to hijack the program's 'map'?",
-                options: ["The Local Variable", "The Instruction Pointer (EIP)", "The Data Buffer", "The CPU Fan"],
+                q: "What component is overwritten during a Buffer Overflow to hijack the program's control flow?",
+                options: ["The Local Variable", "The Instruction Pointer (EIP)", "The Data Buffer", "The Power Supply"],
                 correct: 1,
-                exp: "The Instruction Pointer (EIP) tells the CPU what instruction to execute next. By overwriting it, the hacker redirects the flow to their own code."
+                exp: "Overwriting the Instruction Pointer (EIP) allows an attacker to point the CPU to malicious Shellcode."
             },
             {
                 cat: "AD Dominance",
-                q: "Which specific account is targeted during a 'Golden Ticket' attack to forge Kerberos authentication passes?",
+                q: "Which specific account is targeted during a 'Golden Ticket' attack?",
                 options: ["Administrator", "Guest", "KRBTGT", "SYSTEM"],
                 correct: 2,
-                exp: "The KRBTGT account is the service account that signs all Kerberos tickets. Gaining its hash allows an attacker to create forged tickets for any user."
+                exp: "KRBTGT signs all Kerberos tickets. Stealing its hash allows unlimited impersonation."
             },
             {
                 cat: "Lateral Movement",
                 q: "What is the primary objective of 'The Pivot' in a network attack?",
-                options: ["To delete files locally", "To move from a low-security machine to a high-value target", "To fix the internet connection", "To install a new firewall"],
+                options: ["To delete logs", "To move from a low-security machine to a high-value target", "To fix a firewall", "To reset a password"],
                 correct: 1,
-                exp: "Pivoting is the act of using a compromised machine (foothold) as a stepping stone to access deeper, more sensitive areas of the network."
+                exp: "Pivoting uses a minor foothold to launch attacks against more sensitive internal systems."
             }
         ];
 
@@ -542,9 +561,11 @@
 
         function showTab(id, el) {
             document.querySelectorAll('.topic-content').forEach(t => t.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
+            const target = document.getElementById(id);
+            if (target) target.classList.add('active');
+            
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            if(el.classList.contains('nav-item')) el.classList.add('active');
+            if(el) el.classList.add('active');
             
             if(id === 'quiz') { resetQuiz(); }
             window.scrollTo({top: 0, behavior: 'smooth'});
@@ -568,7 +589,7 @@
                 optionsGrid.appendChild(btn);
             });
 
-            const progress = ((currentCardIndex) / flashcards.length) * 100;
+            const progress = (currentCardIndex / flashcards.length) * 100;
             document.getElementById('progress-fill').style.width = progress + "%";
         }
 
@@ -606,7 +627,6 @@
             document.getElementById('question-wrapper').style.display = 'none';
             document.getElementById('feedback-zone').style.display = 'none';
             document.getElementById('progress-fill').style.width = "100%";
-            
             const screen = document.getElementById('result-screen');
             screen.style.display = 'block';
             document.getElementById('final-score').innerText = `You authenticated ${score} out of ${flashcards.length} security challenges.`;
