@@ -197,6 +197,7 @@
             <div class="nav-item" onclick="showTab('m2', this)">02. OS Barrier</div>
             <div class="nav-item" onclick="showTab('m3', this)">03. Memory Corruption</div>
             <div class="nav-item" onclick="showTab('m4', this)">04. AD Dominance</div>
+             <div class="nav-item" onclick="showTab('m4', this)">05. Lateral Movement</div>
             <div class="nav-item" onclick="showTab('quiz', this)" style="border: 1px solid var(--neon-green); margin-top: 40px; text-align: center;">[ VALIDATE ]</div>
         </div>
 
@@ -465,7 +466,68 @@
         </p>
     </div>
 </div>
+<div id="m5" class="topic-content">
+                <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 30px;">
+                    <h1 class="glitch-text" style="margin:0;">Lateral Movement</h1>
+                    <div style="flex-grow: 1; height: 2px; background: linear-gradient(90deg, var(--neon-green), transparent);"></div>
+                </div>
 
+                <div class="speaker-context">
+                    "Lateral movement is the process of navigating through a network after an initial foothold. If the breach is the front door, <b>Lateral Movement</b> is moving from room to room to find the vault."
+                </div>
+
+                <h3 style="color:var(--neon-green); letter-spacing: 2px;">[ 📍 THE STRATEGY: THE PIVOT ]</h3>
+                <div class="highlight-box">
+                    <p>Attackers land on low-security machines (e.g., a receptionist laptop) and use them as <b>Pivot Points</b> to reach high-value targets like the Finance database or Domain Controller.</p>
+                </div>
+                
+
+                <h3 style="color:var(--neon-green); letter-spacing: 2px;">[ 🔨 THE 3-STEP EXPLOIT LOOP ]</h3>
+                <div class="phase-grid">
+                    <div class="phase-card">
+                        <b style="color:var(--neon-green);">1. INTERNAL RECON</b><br>
+                        <small>Scanning the local machine for file shares, connected servers, and active user sessions.</small>
+                    </div>
+                    <div class="phase-card">
+                        <b style="color:var(--neon-green);">2. CREDENTIAL HARVESTING</b><br>
+                        <small>Stealing password hashes from memory (LSASS) to 'become' an admin without knowing their password.</small>
+                    </div>
+                </div>
+                <div class="phase-card" style="margin-top:0; border-left-color: var(--gold);">
+                    <b style="color:var(--gold);">3. REMOTE ACCESS</b><br>
+                    <small>Using legitimate tools like <b>RDP</b> or <b>PsExec</b> to log into the next machine using stolen 'valid' credentials.</small>
+                </div>
+
+                <h3 style="color:var(--neon-green); letter-spacing: 2px; margin-top: 40px;">[ 📊 VISUALIZING THE NETWORK AS A GRAPH ]</h3>
+                <div class="impact-grid">
+                    <div class="impact-card">
+                        <b>Nodes & Edges</b><br>
+                        <small>To a hacker, users/devices are <b>Nodes</b> and permissions/connections are <b>Edges</b>. Tools like BloodHound find the shortest path to 'Domain Admin'.</small>
+                    </div>
+                    <div class="impact-card">
+                        <b>The 'Sneak' Analogy</b><br>
+                        <small>Entering one classroom, then moving to faculty rooms, then the computer lab, until reaching the registrar's office.</small>
+                    </div>
+                </div>
+                
+
+                <div class="highlight-box" style="border: 1px solid var(--neon-green); background: rgba(0, 255, 0, 0.02);">
+                    <h3 style="color:var(--neon-green); margin-top:0;">🛡️ DEFENSIVE COUNTERMEASURES</h3>
+                    <ul style="color: #ccc; font-size: 0.9rem;">
+                        <li><b>Micro-segmentation:</b> Isolating network zones to stop the spread.</li>
+                        <li><b>PAM (Privileged Access Management):</b> Ensuring admin credentials aren't stored on user PCs.</li>
+                        <li><b>Honeytokens:</b> Fake credentials in memory that trigger an alert when touched.</li>
+                    </ul>
+                </div>
+
+                <div style="margin-top: 40px; text-align: center; border: 1px dashed #333; padding: 25px; border-radius: 15px;">
+                    <p style="font-style: italic; color: #666; font-size: 0.85rem; margin: 0;">
+                        "Peer Note: Internal Security is as vital as the Firewall. Once a hacker is past the perimeter, lateral movement is their primary mission. Make the network as 'noisy' and difficult to navigate as possible!"
+                    </p>
+                </div>
+
+                <button class="btn" style="width: 100%; margin-top: 30px;" onclick="showTab('quiz', this)">FINAL VALIDATION ➔</button>
+      </div>
             <div id="quiz" class="topic-content">
                 <h1 class="glitch-text">Validate Proficiency</h1>
                 <div class="highlight-box">
@@ -557,4 +619,5 @@
 </html>
 
 
-just make this fully updated that will add that laterla
+
+can you polished my code correct if theres error
