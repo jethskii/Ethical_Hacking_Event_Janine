@@ -8,8 +8,8 @@
         :root {
             --neon-green: #00ff41;
             --dark-bg: #050505;
-            --glass-bg: rgba(0, 255, 65, 0.03);
-            --border-glow: 0 0 20px rgba(0, 255, 65, 0.4);
+            --glass-bg: rgba(0, 255, 65, 0.05);
+            --border-glow: 0 0 20px rgba(0, 255, 65, 0.6);
         }
 
         body, html {
@@ -23,44 +23,47 @@
             overflow: hidden;
         }
 
-        /* 1. ANIMATED MESH & GRID BACKGROUND */
-        .bg-container {
+        /* --- BACKGROUND LAYER 1: MOVING MESH --- */
+        .bg-mesh {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -3;
-            background: radial-gradient(circle at center, #0a2a0a 0%, #000 70%);
-            animation: meshMove 10s ease-in-out infinite alternate;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -4;
+            background: linear-gradient(45deg, #000 25%, #051a05 50%, #000 75%);
+            background-size: 400% 400%;
+            animation: meshGradient 15s ease infinite;
         }
 
-        @keyframes meshMove {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.2); }
+        @keyframes meshGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
+        /* --- BACKGROUND LAYER 2: 3D TILTING GRID --- */
         .grid-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -2;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -3;
             background-image: 
                 linear-gradient(var(--neon-green) 1px, transparent 1px),
                 linear-gradient(90deg, var(--neon-green) 1px, transparent 1px);
-            background-size: 50px 50px;
-            opacity: 0.05;
+            background-size: 60px 60px;
+            opacity: 0.1;
             perspective: 1000px;
             transform: rotateX(60deg) translateY(-200px);
+            animation: gridScroll 20s linear infinite;
         }
 
-        /* 2. FLOATING HACKER ELEMENTS (Floating Laptops/Balls) */
+        @keyframes gridScroll {
+            from { background-position: 0 0; }
+            to { background-position: 0 1000px; }
+        }
+
+        /* --- BACKGROUND LAYER 3: FLOATING ICONS & NODES --- */
         .floating-elements {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
+            z-index: -2;
             pointer-events: none;
         }
 
@@ -68,33 +71,32 @@
             position: absolute;
             background: var(--neon-green);
             border-radius: 50%;
-            filter: blur(5px);
+            filter: blur(4px);
             box-shadow: 0 0 15px var(--neon-green);
-            opacity: 0.6;
-            animation: bounce 8s infinite ease-in-out;
+            animation: bounce 10s infinite ease-in-out;
         }
 
-        .hardware-icon {
+        .icon {
             position: absolute;
             color: var(--neon-green);
-            font-size: 2rem;
-            opacity: 0.2;
-            animation: float 12s infinite linear;
+            font-size: 1.5rem;
+            opacity: 0.3;
+            animation: floatUp 15s infinite linear;
         }
 
         @keyframes bounce {
-            0%, 100% { transform: translateY(0) translateX(0); }
-            25% { transform: translateY(-50vh) translateX(20vw); }
-            50% { transform: translateY(-10vh) translateX(50vw); }
-            75% { transform: translateY(-80vh) translateX(80vw); }
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(30vw, 20vh); }
+            50% { transform: translate(60vw, -10vh); }
+            75% { transform: translate(20vw, 40vh); }
         }
 
-        @keyframes float {
+        @keyframes floatUp {
             from { transform: translateY(110vh) rotate(0deg); }
             to { transform: translateY(-10vh) rotate(360deg); }
         }
 
-        /* 3. CONTENT STYLING */
+        /* --- UI ELEMENTS --- */
         .page {
             display: flex;
             flex-direction: column;
@@ -102,106 +104,101 @@
             align-items: center;
             height: 100vh;
             text-align: center;
-            backdrop-filter: brightness(0.8);
+            background: radial-gradient(circle, transparent 20%, rgba(0,0,0,0.8) 100%);
         }
 
         .hero-title {
-            font-size: clamp(3rem, 10vw, 5.5rem);
+            font-size: clamp(2.5rem, 8vw, 5.5rem);
             text-transform: uppercase;
-            letter-spacing: 15px;
+            letter-spacing: 12px;
             color: var(--neon-green);
-            text-shadow: var(--border-glow);
+            text-shadow: 0 0 10px var(--neon-green), 0 0 30px var(--neon-green);
             margin: 0;
-            filter: drop-shadow(0 0 10px var(--neon-green));
+            animation: flicker 4s infinite;
+        }
+
+        @keyframes flicker {
+            0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
+            20%, 24%, 55% { opacity: 0.7; }
         }
 
         .profile-card {
-            margin: 30px;
-            padding: 40px;
-            border: 2px solid var(--neon-green);
+            margin: 40px;
+            padding: 35px;
+            border: 1px solid var(--neon-green);
             background: var(--glass-bg);
-            backdrop-filter: blur(15px);
-            border-radius: 5px;
-            box-shadow: inset 0 0 20px rgba(0, 255, 65, 0.2), var(--border-glow);
-            position: relative;
+            backdrop-filter: blur(10px);
+            border-radius: 4px;
+            box-shadow: var(--border-glow);
+            transition: 0.3s;
         }
 
-        .profile-card::before {
-            content: "SECURE_PROFILE_LOADED";
-            position: absolute;
-            top: -10px;
-            left: 20px;
-            background: var(--dark-bg);
-            padding: 0 10px;
-            font-size: 0.7rem;
-            color: var(--neon-green);
+        .profile-card:hover {
+            box-shadow: 0 0 40px rgba(0, 255, 65, 0.8);
+            transform: scale(1.02);
         }
 
         .btn-container {
             display: flex;
-            gap: 25px;
-            margin-top: 20px;
+            gap: 20px;
         }
 
         .btn {
-            padding: 15px 35px;
+            padding: 12px 30px;
             border: 1px solid var(--neon-green);
             color: var(--neon-green);
             text-decoration: none;
             text-transform: uppercase;
-            font-weight: bold;
             letter-spacing: 2px;
-            transition: 0.3s;
-            background: transparent;
+            font-weight: bold;
+            transition: 0.4s;
+            background: rgba(0, 0, 0, 0.5);
         }
 
         .btn:hover {
             background: var(--neon-green);
             color: black;
-            box-shadow: 0 0 40px var(--neon-green);
-            transform: translateY(-5px);
+            box-shadow: 0 0 30px var(--neon-green);
         }
 
+        /* SCANLINE EFFECT */
         .scanline {
-            width: 100%;
-            height: 100px;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 3px, 3px 100%;
+            pointer-events: none;
             z-index: 10;
-            background: linear-gradient(0deg, rgba(0, 255, 65, 0) 0%, rgba(0, 255, 65, 0.1) 50%, rgba(0, 255, 65, 0) 100%);
-            opacity: 0.1;
-            position: absolute;
-            bottom: 100%;
-            animation: scanline 4s linear infinite;
-        }
-
-        @keyframes scanline {
-            0% { bottom: 100%; }
-            100% { bottom: -100px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="bg-container"></div>
+    <div class="bg-mesh"></div>
     <div class="grid-overlay"></div>
     <div class="scanline"></div>
 
     <div class="floating-elements">
-        <div class="node" style="width: 10px; height: 10px; left: 10%; animation-delay: 0s;"></div>
-        <div class="node" style="width: 20px; height: 20px; left: 80%; animation-delay: -2s;"></div>
-        <div class="node" style="width: 15px; height: 15px; left: 40%; animation-delay: -5s;"></div>
+        <div class="node" style="width: 12px; height: 12px; left: 15%; top: 20%;"></div>
+        <div class="node" style="width: 8px; height: 8px; left: 80%; top: 70%; animation-delay: -3s;"></div>
         
-        <div class="hardware-icon" style="left: 15%; animation-duration: 15s;">💻</div>
-        <div class="hardware-icon" style="left: 75%; animation-duration: 20s; animation-delay: -5s;">&lt;/&gt;</div>
-        <div class="hardware-icon" style="left: 50%; animation-duration: 18s; animation-delay: -10s;">📡</div>
+        <div class="icon" style="left: 10%; animation-duration: 12s;">💻</div>
+        <div class="icon" style="left: 85%; animation-duration: 18s; animation-delay: -5s;">&lt;/&gt;</div>
+        <div class="icon" style="left: 50%; animation-duration: 14s; animation-delay: -2s;">🔐</div>
     </div>
 
     <div class="page">
         <h1 class="hero-title">Ethical Hacking</h1>
-        <div style="letter-spacing: 8px; margin-top: 15px; color: #888;">SEMINAR EVENT // APRIL 17, 2026</div>
+        <div style="letter-spacing: 6px; margin-top: 10px; color: #888;">SEMINAR EVENT // APRIL 17, 2026</div>
 
         <div class="profile-card">
-            <div style="font-size: 2rem; color: var(--neon-green); margin-bottom: 10px;">Mrs. Janine K. Mandalones - Flores</div>
-            <div style="color: #ccc; letter-spacing: 3px; font-size: 0.8rem; text-transform: uppercase;">Software Engineer - Application Developer</div>
+            <div style="font-size: 1.8rem; color: var(--neon-green); font-weight: bold;">
+                Mrs. Janine K. Mandalones - Flores
+            </div>
+            <div style="color: #bbb; margin-top: 8px; font-size: 0.9rem; text-transform: uppercase;">
+                Software Engineer - Application Developer
+            </div>
         </div>
 
         <div class="btn-container">
