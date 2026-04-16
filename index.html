@@ -2,12 +2,138 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ethical Hacking Seminar | Intro</title>
-    <link rel="stylesheet" href="style.css">
     <style>
-        .page { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; }
-        .hero-title { font-size: 5rem; text-transform: uppercase; letter-spacing: 12px; color: var(--neon-green); text-shadow: var(--border-glow); margin: 0; }
-        .profile-card { margin: 40px; padding: 25px; border: 1px solid var(--neon-green); background: var(--glass-bg); backdrop-filter: blur(8px); border-radius: 10px; text-align: center; }
+        :root {
+            --neon-green: #00ff41;
+            --dark-bg: #0a0a0a;
+            --glass-bg: rgba(0, 255, 65, 0.05);
+            --border-glow: 0 0 15px rgba(0, 255, 65, 0.5);
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Courier New', Courier, monospace;
+            background-color: var(--dark-bg);
+            color: white;
+            overflow: hidden;
+        }
+
+        /* Animated Mesh Background */
+        .bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: linear-gradient(45deg, #000 25%, #051a05 50%, #000 75%);
+            background-size: 400% 400%;
+            animation: meshGradient 15s ease infinite;
+        }
+
+        @keyframes meshGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Scanline Grid Overlay */
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+        }
+
+        .page {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        /* Glitch Animation for Title */
+        .hero-title {
+            font-size: 5rem;
+            text-transform: uppercase;
+            letter-spacing: 12px;
+            color: var(--neon-green);
+            text-shadow: var(--border-glow);
+            margin: 0;
+            position: relative;
+            animation: pulse 2s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green); }
+            to { text-shadow: 0 0 20px var(--neon-green), 0 0 40px var(--neon-green); }
+        }
+
+        .profile-card {
+            margin: 40px;
+            padding: 30px;
+            border: 1px solid var(--neon-green);
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 2px; /* Sharper edges look more 'terminal' */
+            box-shadow: var(--border-glow);
+            transform: skew(-2deg);
+            transition: all 0.3s ease;
+        }
+
+        .profile-card:hover {
+            transform: skew(0deg) scale(1.02);
+            background: rgba(0, 255, 65, 0.1);
+        }
+
+        /* Buttons Styling */
+        .btn-container {
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+            transition: 0.4s;
+        }
+
+        .btn:hover {
+            background: var(--neon-green);
+            color: black;
+            box-shadow: 0 0 30px var(--neon-green);
+        }
+
+        .date-shimmer {
+            letter-spacing: 5px;
+            margin-top: 10px;
+            color: #888;
+            animation: flicker 3s infinite;
+        }
+
+        @keyframes flicker {
+            0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% { opacity: 1; }
+            20%, 21.999%, 63%, 63.999%, 65%, 69.999% { opacity: 0.4; }
+        }
     </style>
 </head>
 <body>
@@ -16,14 +142,18 @@
 
     <div class="page">
         <h1 class="hero-title">Ethical Hacking</h1>
-        <div style="letter-spacing: 5px; margin-top: 10px;">SEMINAR EVENT // APRIL 17, 2026</div>
+        <div class="date-shimmer">SEMINAR EVENT // APRIL 17, 2026</div>
 
         <div class="profile-card">
-            <div style="font-size: 1.8rem; color: var(--neon-green);">Janine K. Mandalones</div>
-            <div style="color: #ccc; margin-top: 5px;">Software Engineer - Application Developer</div>
+            <div style="font-size: 1.8rem; color: var(--neon-green); font-weight: bold;">
+                Mrs. Janine K. Mandalones - Flores
+            </div>
+            <div style="color: #aaa; margin-top: 10px; text-transform: uppercase; font-size: 0.9rem;">
+                Software Engineer - Application Developer
+            </div>
         </div>
 
-        <div>
+        <div class="btn-container">
             <a href="system-hacking.html" class="btn">System Hacking</a>
             <a href="web-app-security.html" class="btn">Web App Security</a>
         </div>
