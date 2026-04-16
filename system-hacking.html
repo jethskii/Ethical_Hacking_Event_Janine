@@ -11,6 +11,7 @@
             --dark-green: #003300;
             --deep-black: #050505;
             --error-red: #ff3131;
+            --gold: #ffd700;
         }
 
         @keyframes glitch {
@@ -36,6 +37,12 @@
             0% { box-shadow: 0 0 0 0 rgba(57, 255, 20, 0.4); }
             70% { box-shadow: 0 0 0 10px rgba(57, 255, 20, 0); }
             100% { box-shadow: 0 0 0 0 rgba(57, 255, 20, 0); }
+        }
+
+        @keyframes gold-shimmer {
+            0% { border-color: var(--neon-green); box-shadow: 0 0 5px var(--neon-green); }
+            50% { border-color: var(--gold); box-shadow: 0 0 20px var(--gold); }
+            100% { border-color: var(--neon-green); box-shadow: 0 0 5px var(--neon-green); }
         }
 
         body, html {
@@ -156,6 +163,15 @@
             border-radius: 8px;
         }
 
+        .golden-ticket-card {
+            border: 2px solid var(--neon-green);
+            background: rgba(0,0,0,0.9);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            animation: gold-shimmer 3s infinite;
+        }
+
         .flashcard {
             background: #000;
             border: 1px solid var(--neon-green);
@@ -251,105 +267,88 @@
             <div id="m1" class="topic-content active">
                 <div class="speaker-context">
                     <b style="color: var(--neon-green);">🎤 PRESENTATION MODE - INSTRUCTOR BROADCAST:</b><br>
-                    "Today, we move beyond basic security and explore how systems are actually compromised. Remember: <b>Access is not equal to Control.</b> A guest account is a visitor; a root account is the God of the machine. We learn to hack so we can build fortresses that cannot be climbed."
+                    "Today, we move beyond basic security and explore how systems are actually compromised. Remember: <b>Access is not equal to Control.</b> A guest account is a visitor; a root account is the God of the machine."
                 </div>
-                
                 <h1 class="glitch-text">The System Hacking Mindset</h1>
-                <p>System hacking is the art of identifying vulnerabilities in an OS (Windows, Linux, macOS) to move from unauthorized access to complete administrative authority.</p>
-
+                <p>System hacking involves moving from unauthorized access to complete administrative authority over an Operating System.</p>
                 <div class="highlight-box">
-                    <h3 style="margin:0; color:var(--neon-green);">The Three Strategic Pillars</h3>
                     <div class="business-grid">
-                        <div class="impact-card">
-                            <b style="color:var(--neon-green);">1. Infiltration</b><br>
-                            Bypassing Firewalls & AV via phishing, weak passwords, or unpatched software bugs.
-                        </div>
-                        <div class="impact-card">
-                            <b style="color:var(--neon-green);">2. Escalation</b><br>
-                            Climbing the ladder vertically (User → Admin) or horizontally (shifting between same-level accounts).
-                        </div>
-                        <div class="impact-card" style="grid-column: span 2;">
-                            <b style="color:var(--neon-green);">3. Lateral Movement</b><br>
-                            Using one 'foot in the door' to expand reach across the entire corporate network using trust relationships.
-                        </div>
+                        <div class="impact-card"><b style="color:var(--neon-green);">1. Infiltration</b><br>Bypassing Firewalls.</div>
+                        <div class="impact-card"><b style="color:var(--neon-green);">2. Escalation</b><br>Climbing the ladder.</div>
                     </div>
-                </div>
-
-                <h3 style="color:var(--neon-green);">Business Risk Perspective</h3>
-                <p>In a corporate environment, this isn't just a technical glitch—it's a strategic risk. A single compromised account can lead to:</p>
-                <ul class="data-list">
-                    <li><b>Data Breaches:</b> Exposure of customer PII and financial records.</li>
-                    <li><b>Operational Downtime:</b> Complete paralysis of business workflows.</li>
-                    <li><b>Legal Liability:</b> Massive fines and loss of stakeholder trust.</li>
-                </ul>
-
-                <div class="highlight-box" style="border-style: solid; border-color: #444; background: rgba(0,0,0,0.5);">
-                    <b style="color: var(--neon-green);">PRO TIP:</b> Control is rarely taken instantly—it is gained step by step. As defenders, our job is to break those steps.
                 </div>
             </div>
 
             <div id="m2" class="topic-content">
                 <h1 class="glitch-text">Breaking the OS Barrier</h1>
-                
                 <div class="speaker-context">
-                    <b style="color: var(--neon-green);">🎤 PRESENTATION MODE - SPEAKER SCRIPT:</b><br>
-                    "Think of your OS like a <b>School Campus</b>. Students are normal users, Teachers are admins, and Security Guards are the system protections. 'Breaking the Barrier' is when someone finds a way into the restricted records room without a key."
+                    <b style="color: var(--neon-green);">🎤 SPEAKER SCRIPT:</b><br>
+                    "Think of your OS like a <b>School Campus</b>. Students are users, Teachers are admins, and Guards are system protections."
                 </div>
-
-                <div class="highlight-box">
-                    <h3 style="margin-top:0; color:var(--neon-green);">The Gatekeeper Concept</h3>
-                    <p>The Operating System (OS) manages memory, files, and hardware. Breaking the barrier means:</p>
-                    <ul style="margin:0; padding-left:20px; color:#ccc;">
-                        <li>Gaining unauthorized entry</li>
-                        <li>Escalating privileges (Normal User &rarr; Admin)</li>
-                        <li>Bypassing built-in security rules</li>
-                    </ul>
-                </div>
-
                 <div class="terminal-box">
-                    # THE TECHNICAL REALITY: Enumerating unquoted service paths<br>
+                    # Enumerating unquoted service paths<br>
                     wmic service get name,displayname,pathname,startmode | findstr /i "Auto" | findstr /i /v "C:\Windows\\" | findstr /i /v """
                 </div>
-                
-                <p>By finding a service path with a space and no quotes, we exploit a logic flaw where the OS 'guesses' which file to run.</p>
             </div>
 
             <div id="m3" class="topic-content">
                 <h1 class="glitch-text">Memory Corruption & BoF</h1>
-                <p>Buffer Overflows (BoF) occur when a program writes more data to a buffer than it can hold, overwriting the <b>Instruction Pointer (EIP)</b>.</p>
-                
+                <p>Buffer Overflows (BoF) overwrite the <b>Instruction Pointer (EIP)</b>.</p>
                 <ul class="data-list">
-                    <li><b>Stack Smashing:</b> Overwriting local variables to hijack execution.</li>
-                    <li><b>NOP Sleds:</b> CPU instructions (\x90) that lead execution to shellcode.</li>
-                    <li><b>The Payoff:</b> Execution of a remote shell directly in system memory.</li>
+                    <li><b>Stack Smashing:</b> Hijacking execution.</li>
+                    <li><b>NOP Sleds:</b> CPU guides for shellcode.</li>
                 </ul>
             </div>
 
             <div id="m4" class="topic-content">
-                <h1 class="glitch-text">Active Directory Dominance</h1>
-                <p>In large-scale environments, the <b>Domain Controller (DC)</b> is the ultimate prize. Owning it means owning every identity.</p>
+                <h1 class="glitch-text">AD Dominance & Kerberos</h1>
                 
+                <div class="speaker-context">
+                    <b style="color: var(--neon-green);">🎤 HIGH-IMPACT SCRIPT:</b><br>
+                    "What if someone in your organization could log in as anyone... access anything... and no one would notice? <br><br>
+                    <b>Active Directory is Trust itself.</b> It decides who you are and what you're allowed to do. Break AD, and you break the very foundation of trust inside the network."
+                </div>
+
+                <div class="highlight-box">
+                    <h3 style="margin:0; color:var(--neon-green);">The VIP Concert Analogy</h3>
+                    <p>Behind AD is <b>Kerberos</b>. Think of it like a VIP Concert Pass:</p>
+                    <ul style="color:#ccc;">
+                        <li><b>Entrance:</b> Security checks your ID (Authentication).</li>
+                        <li><b>The Ticket:</b> Once verified, you get a <b>VIP Pass</b> (Kerberos Ticket).</li>
+                        <li><b>Access:</b> That pass lets you go anywhere—no more ID checks.</li>
+                    </ul>
+                    <p style="color:var(--error-red); font-weight:bold;">The Twist: Attackers don't steal your ID; they steal the VIP Pass. Or worse... they learn how to print their own.</p>
+                </div>
+
+                <div class="golden-ticket-card">
+                    <h2 style="color:var(--gold); margin-top:0;">[ ALERT ] THE GOLDEN TICKET</h2>
+                    <p>A forged Ticket Granting Ticket (TGT) using the <b>KRBTGT</b> hash. This is the ultimate "Master Key."</p>
+                    <ul class="data-list" style="border-left-color: var(--gold);">
+                        <li><b>Unlimited Impersonation:</b> Log in as the CEO, the Admin, or anyone.</li>
+                        <li><b>Unlimited Time:</b> Forged tickets can last for up to 10 years.</li>
+                        <li><b>Invisible:</b> It looks like a perfectly normal login to most systems.</li>
+                    </ul>
+                </div>
+
                 <div class="terminal-box">
-                    # Kerberoasting: Extracting service hashes for offline cracking<br>
+                    # Kerberoasting: Stealing service tickets for offline cracking<br>
                     $ invoke-kerberoast -erroraction silentlycontinue<br><br>
-                    # DCSync: Mimicking a DC to replicate password hashes<br>
+                    # DCSync: Mimicking a Domain Controller to pull every password hash<br>
                     $ lsadump::dcsync /domain:corp.local /user:administrator
                 </div>
 
-                <ul class="data-list">
-                    <li><b>Golden Ticket:</b> Forged TGT using the KRBTGT hash.</li>
-                    <li><b>Silver Ticket:</b> Forged ticket for specific services (SQL/Files).</li>
-                    <li><b>AD CS Abuse:</b> Exploiting Certificate Authorities for impersonation.</li>
-                </ul>
+                <div class="speaker-context" style="border-color: var(--error-red);">
+                    <b style="color: var(--error-red);">MIC-DROP CLOSING:</b><br>
+                    "The real danger is not someone breaking in... The real danger is someone logging in— <b>as you.</b>"
+                </div>
             </div>
 
             <div id="m5" class="topic-content">
                 <h1 class="glitch-text">Lateral Movement & Graphs</h1>
-                <p>Tools like <b>BloodHound</b> use graph theory to find the "Path of Least Resistance" to the Domain Admin.</p>
+                <p>Tools like <b>BloodHound</b> find the "Path of Least Resistance" to the Domain Admin.</p>
                 
                 <ul class="data-list">
                     <li><b>Pass-the-Hash (PtH):</b> Authenticating with NTLM hashes.</li>
-                    <li><b>Shadow Admins:</b> Backdoors hidden in the <b>AdminSDHolder</b> container.</li>
                 </ul>
             </div>
 
@@ -383,28 +382,22 @@
 
         const quizData = [
             {
-                q: "In the 'Strategic Pillars' of system hacking, what is Escalation?",
-                options: ["Bypassing the firewall", "Increasing your level of access (User to Admin)", "Moving to a different server", "Deleting log files"],
+                q: "What does the 'VIP Concert Pass' represent in Kerberos?",
+                options: ["The Firewall", "A Kerberos Ticket (TGT/ST)", "The physical server", "A user's password"],
                 correct: 1,
-                exp: "Escalation involves gaining higher permissions, moving from a standard user account to an administrative or root level."
+                exp: "A Kerberos ticket allows you to access services without re-entering your password, just like a VIP pass lets you past security checks."
             },
             {
-                q: "Why is 'Access' not the same as 'Control'?",
-                options: ["Access is temporary, control is permanent", "Access is limited to user permissions; control implies administrative authority", "They are actually the same thing", "Control only applies to physical hardware"],
+                q: "Why is a 'Golden Ticket' so dangerous for a business?",
+                options: ["It slows down the internet", "It allows unlimited, invisible impersonation of any user", "It only works on Saturdays", "It requires a physical gold key"],
                 correct: 1,
-                exp: "A hacker may have access as a guest but still cannot change system files. Control requires administrative (Root/Admin) privileges."
+                exp: "A Golden Ticket grants total, long-term control over the entire domain by forging the highest level of trust."
             },
             {
-                q: "What does the 'School Campus' analogy represent?",
-                options: ["The physical location of servers", "The hierarchy of Users, Admins, and Security controls", "The school's WiFi speed", "A specific coding language"],
+                q: "What account must be compromised to forge a Golden Ticket?",
+                options: ["The Guest account", "The KRBTGT account", "The HR computer", "The Wi-Fi router"],
                 correct: 1,
-                exp: "Students are users, Teachers are admins, and Guards are the OS protections."
-            },
-            {
-                q: "What register does a Buffer Overflow aim to hijack?",
-                options: ["EAX", "ESP", "EIP (Instruction Pointer)", "EBP"],
-                correct: 2,
-                exp: "The EIP tells the CPU which memory address to execute next."
+                exp: "The KRBTGT hash is the 'master key' used to sign all tickets in Active Directory."
             }
         ];
 
