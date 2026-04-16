@@ -498,13 +498,125 @@
         </div>
     </div>
 
-    <script>
+   <script>
+        const flashcards = [
+            {
+                cat: "Hacking Mindset",
+                q: "Which phase of system hacking involves gathering intelligence like IP addresses and employee information?",
+                options: ["Scanning", "Reconnaissance", "Maintaining Access", "Privilege Escalation"],
+                correct: 1,
+                exp: "Reconnaissance (Footprinting) is the first stage where an attacker maps out the target organization before launching an exploit."
+            },
+            {
+                cat: "OS Barrier",
+                q: "In the Protection Ring model, which ring has the 'least' privilege where standard user applications reside?",
+                options: ["Ring 0", "Ring 1", "Ring 2", "Ring 3"],
+                correct: 3,
+                exp: "Ring 3 is User Mode. This provides the most restricted access to prevent applications from accidentally or maliciously damaging the system."
+            },
+            {
+                cat: "Memory Corruption",
+                q: "What technical component does an attacker overwrite during a Buffer Overflow to hijack the program's 'map'?",
+                options: ["The Local Variable", "The Instruction Pointer (EIP)", "The Data Buffer", "The CPU Fan"],
+                correct: 1,
+                exp: "The Instruction Pointer (EIP) tells the CPU what instruction to execute next. By overwriting it, the hacker redirects the flow to their own code."
+            },
+            {
+                cat: "AD Dominance",
+                q: "Which specific account is targeted during a 'Golden Ticket' attack to forge Kerberos authentication passes?",
+                options: ["Administrator", "Guest", "KRBTGT", "SYSTEM"],
+                correct: 2,
+                exp: "The KRBTGT account is the service account that signs all Kerberos tickets. Gaining its hash allows an attacker to create forged tickets for any user."
+            },
+            {
+                cat: "Lateral Movement",
+                q: "What is the primary objective of 'The Pivot' in a network attack?",
+                options: ["To delete files locally", "To move from a low-security machine to a high-value target", "To fix the internet connection", "To install a new firewall"],
+                correct: 1,
+                exp: "Pivoting is the act of using a compromised machine (foothold) as a stepping stone to access deeper, more sensitive areas of the network."
+            }
+        ];
+
+        let currentCardIndex = 0;
+        let score = 0;
+
         function showTab(id, el) {
             document.querySelectorAll('.topic-content').forEach(t => t.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             if(el.classList.contains('nav-item')) el.classList.add('active');
+            
+            if(id === 'quiz') { resetQuiz(); }
             window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        function loadQuestion() {
+            const card = flashcards[currentCardIndex];
+            document.getElementById('question-category').innerText = card.cat;
+            document.getElementById('question-text').innerText = card.q;
+            document.getElementById('feedback-zone').style.display = 'none';
+            document.getElementById('question-wrapper').style.display = 'block';
+            
+            const optionsGrid = document.getElementById('options-grid');
+            optionsGrid.innerHTML = '';
+            
+            card.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-option';
+                btn.innerText = `[ ${idx + 1} ] ${opt}`;
+                btn.onclick = () => handleAnswer(idx, btn);
+                optionsGrid.appendChild(btn);
+            });
+
+            const progress = ((currentCardIndex) / flashcards.length) * 100;
+            document.getElementById('progress-fill').style.width = progress + "%";
+        }
+
+        function handleAnswer(choiceIdx, clickedBtn) {
+            const card = flashcards[currentCardIndex];
+            const options = document.querySelectorAll('.quiz-option');
+            options.forEach(opt => opt.disabled = true);
+
+            if(choiceIdx === card.correct) {
+                clickedBtn.classList.add('correct');
+                document.getElementById('feedback-status').innerText = "[ ACCESS GRANTED ]";
+                document.getElementById('feedback-status').style.color = "var(--neon-green)";
+                score++;
+            } else {
+                clickedBtn.classList.add('wrong');
+                document.getElementById('feedback-status').innerText = "[ ACCESS DENIED ]";
+                document.getElementById('feedback-status').style.color = "var(--error-red)";
+                options[card.correct].classList.add('correct');
+            }
+
+            document.getElementById('feedback-explanation').innerText = card.exp;
+            document.getElementById('feedback-zone').style.display = 'block';
+        }
+
+        function loadNextQuestion() {
+            currentCardIndex++;
+            if(currentCardIndex < flashcards.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('question-wrapper').style.display = 'none';
+            document.getElementById('feedback-zone').style.display = 'none';
+            document.getElementById('progress-fill').style.width = "100%";
+            
+            const screen = document.getElementById('result-screen');
+            screen.style.display = 'block';
+            document.getElementById('final-score').innerText = `You authenticated ${score} out of ${flashcards.length} security challenges.`;
+        }
+
+        function resetQuiz() {
+            currentCardIndex = 0;
+            score = 0;
+            document.getElementById('result-screen').style.display = 'none';
+            loadQuestion();
         }
     </script>
 </body>
