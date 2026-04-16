@@ -184,23 +184,12 @@
         }
 
         .quiz-option {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            background: transparent;
-            border: 1px solid #444;
-            color: white;
-            cursor: pointer;
-            transition: 0.3s;
-            border-radius: 5px;
-            font-family: inherit;
+            display: block; width: 100%; padding: 15px; margin: 10px 0;
+            background: transparent; border: 1px solid #444; color: white;
+            cursor: pointer; transition: 0.3s; border-radius: 5px; font-family: inherit;
         }
 
-        .quiz-option:hover {
-            border-color: var(--neon-green);
-            background: rgba(57, 255, 20, 0.05);
-        }
+        .quiz-option:hover { border-color: var(--neon-green); background: rgba(57, 255, 20, 0.05); }
 
         .quiz-option.correct {
             background: var(--dark-green) !important;
@@ -213,15 +202,6 @@
             background: #330000 !important;
             border-color: var(--error-red) !important;
             color: var(--error-red);
-        }
-
-        #reveal-zone {
-            margin-top: 20px;
-            padding: 15px;
-            border: 1px solid #222;
-            display: none;
-            color: #aaa;
-            font-size: 0.9rem;
         }
 
         .btn { padding: 10px 20px; border: 1px solid var(--neon-green); color: var(--neon-green); background: none; cursor: pointer; text-transform: uppercase;}
@@ -266,7 +246,7 @@
             
             <div id="m1" class="topic-content active">
                 <div class="speaker-context">
-                    <b style="color: var(--neon-green);">🎤 PRESENTATION MODE - INSTRUCTOR BROADCAST:</b><br>
+                    <b style="color: var(--neon-green);">INSTRUCTOR BROADCAST:</b><br>
                     "Today, we move beyond basic security and explore how systems are actually compromised. Remember: <b>Access is not equal to Control.</b> A guest account is a visitor; a root account is the God of the machine."
                 </div>
                 <h1 class="glitch-text">The System Hacking Mindset</h1>
@@ -282,7 +262,6 @@
             <div id="m2" class="topic-content">
                 <h1 class="glitch-text">Breaking the OS Barrier</h1>
                 <div class="speaker-context">
-                    <b style="color: var(--neon-green);">🎤 SPEAKER SCRIPT:</b><br>
                     "Think of your OS like a <b>School Campus</b>. Students are users, Teachers are admins, and Guards are system protections."
                 </div>
                 <div class="terminal-box">
@@ -292,61 +271,58 @@
             </div>
 
             <div id="m3" class="topic-content">
-                <h1 class="glitch-text">Memory Corruption & BoF</h1>
-                <p>Buffer Overflows (BoF) overwrite the <b>Instruction Pointer (EIP)</b>.</p>
+                <div class="speaker-context">
+                    <b style="color: var(--neon-green);">INSTRUCTOR BROADCAST:</b><br>
+                    "Now let’s move to one of the most important concepts in system security — Memory Corruption, specifically Buffer Overflow attacks. To understand this easily, think of memory as a set of containers, or boxes, where a program stores data. Each box has a fixed size. It is only meant to hold a certain amount of information."
+                </div>
+                
+                <h1 class="glitch-text">Memory Corruption</h1>
+
+                
+
+                <div class="highlight-box">
+                    <b style="color: var(--neon-green);">What is a Buffer Overflow?</b><br>
+                    "A Buffer Overflow happens when a program receives more data than it can handle. Instead of stopping the extra data, it spills over into nearby memory locations — just like pouring water into a glass until it overflows and flows everywhere."
+                </div>
+
+                <div class="highlight-box" style="border-color: var(--error-red);">
+                    <b style="color: var(--error-red);">Why is it Dangerous?</b><br>
+                    "The problem is that memory doesn’t only store normal data. It also stores important control information — including something called the <b>Instruction Pointer, or EIP.</b> The EIP is like the program’s navigation system. It tells the system what instruction to execute next."
+                </div>
+
+                <div class="speaker-context">
+                    <b style="color: var(--neon-green);">What happens during an attack?</b><br>
+                    "When a buffer overflow occurs, the excess data can overwrite nearby memory — and if it reaches the Instruction Pointer, the attacker may be able to change the program’s execution flow. In simple terms: Instead of the program following its normal instructions, it may be forced to execute something unintended or malicious."
+                </div>
+
+                <div class="highlight-box">
+                    <b style="color: var(--neon-green);">Security Insight</b><br>
+                    "This is why buffer overflows are considered critical vulnerabilities. Modern systems implement protections, but understanding how memory works is essential in ethical hacking — because many exploits are built around these weaknesses. A buffer overflow is not just a crash — it’s a breakdown of memory control that can lead to system exploitation."
+                </div>
+
                 <ul class="data-list">
-                    <li><b>Stack Smashing:</b> Hijacking execution.</li>
-                    <li><b>NOP Sleds:</b> CPU guides for shellcode.</li>
+                    <li><b>Stack Smashing:</b> Hijacking execution by overwriting the stack.</li>
+                    <li><b>NOP Sleds:</b> CPU guides (\x90) that lead execution flow to malicious shellcode.</li>
                 </ul>
             </div>
 
             <div id="m4" class="topic-content">
                 <h1 class="glitch-text">AD Dominance & Kerberos</h1>
-                
                 <div class="speaker-context">
-                    <b style="color: var(--neon-green);">🎤 HIGH-IMPACT SCRIPT:</b><br>
-                    "What if someone in your organization could log in as anyone... access anything... and no one would notice? <br><br>
-                    <b>Active Directory is Trust itself.</b> It decides who you are and what you're allowed to do. Break AD, and you break the very foundation of trust inside the network."
+                    "What if someone in your organization could log in as anyone... access anything... and no one would notice? <b>Active Directory is Trust itself.</b> Break AD, and you break the foundation of trust."
                 </div>
-
-                <div class="highlight-box">
-                    <h3 style="margin:0; color:var(--neon-green);">The VIP Concert Analogy</h3>
-                    <p>Behind AD is <b>Kerberos</b>. Think of it like a VIP Concert Pass:</p>
-                    <ul style="color:#ccc;">
-                        <li><b>Entrance:</b> Security checks your ID (Authentication).</li>
-                        <li><b>The Ticket:</b> Once verified, you get a <b>VIP Pass</b> (Kerberos Ticket).</li>
-                        <li><b>Access:</b> That pass lets you go anywhere—no more ID checks.</li>
-                    </ul>
-                    <p style="color:var(--error-red); font-weight:bold;">The Twist: Attackers don't steal your ID; they steal the VIP Pass. Or worse... they learn how to print their own.</p>
-                </div>
-
                 <div class="golden-ticket-card">
                     <h2 style="color:var(--gold); margin-top:0;">[ ALERT ] THE GOLDEN TICKET</h2>
-                    <p>A forged Ticket Granting Ticket (TGT) using the <b>KRBTGT</b> hash. This is the ultimate "Master Key."</p>
                     <ul class="data-list" style="border-left-color: var(--gold);">
-                        <li><b>Unlimited Impersonation:</b> Log in as the CEO, the Admin, or anyone.</li>
-                        <li><b>Unlimited Time:</b> Forged tickets can last for up to 10 years.</li>
-                        <li><b>Invisible:</b> It looks like a perfectly normal login to most systems.</li>
+                        <li><b>Unlimited Impersonation:</b> Log in as any user.</li>
+                        <li><b>Unlimited Time:</b> Forged tickets can last 10 years.</li>
                     </ul>
-                </div>
-
-                <div class="terminal-box">
-                    # Kerberoasting: Stealing service tickets for offline cracking<br>
-                    $ invoke-kerberoast -erroraction silentlycontinue<br><br>
-                    # DCSync: Mimicking a Domain Controller to pull every password hash<br>
-                    $ lsadump::dcsync /domain:corp.local /user:administrator
-                </div>
-
-                <div class="speaker-context" style="border-color: var(--error-red);">
-                    <b style="color: var(--error-red);">MIC-DROP CLOSING:</b><br>
-                    "The real danger is not someone breaking in... The real danger is someone logging in— <b>as you.</b>"
                 </div>
             </div>
 
             <div id="m5" class="topic-content">
                 <h1 class="glitch-text">Lateral Movement & Graphs</h1>
                 <p>Tools like <b>BloodHound</b> find the "Path of Least Resistance" to the Domain Admin.</p>
-                
                 <ul class="data-list">
                     <li><b>Pass-the-Hash (PtH):</b> Authenticating with NTLM hashes.</li>
                 </ul>
@@ -357,7 +333,7 @@
                 <div class="flashcard">
                     <h3 id="question-text" style="color: var(--neon-green);">Loading Question...</h3>
                     <div id="options-container"></div>
-                    <div id="reveal-zone">
+                    <div id="reveal-zone" style="display:none; margin-top:20px; padding:15px; border:1px solid #222; color:#aaa; font-size:0.9rem;">
                         <b id="status-text"></b><br>
                         <span id="explanation-text"></span>
                     </div>
@@ -382,22 +358,22 @@
 
         const quizData = [
             {
-                q: "What does the 'VIP Concert Pass' represent in Kerberos?",
-                options: ["The Firewall", "A Kerberos Ticket (TGT/ST)", "The physical server", "A user's password"],
+                q: "What does the Instruction Pointer (EIP) control?",
+                options: ["The password database", "The next command the CPU executes", "The network speed", "The user's wallpaper"],
                 correct: 1,
-                exp: "A Kerberos ticket allows you to access services without re-entering your password, just like a VIP pass lets you past security checks."
+                exp: "The EIP is the program's navigation system. Controlling it via a Buffer Overflow allows an attacker to hijack the program's flow."
             },
             {
-                q: "Why is a 'Golden Ticket' so dangerous for a business?",
-                options: ["It slows down the internet", "It allows unlimited, invisible impersonation of any user", "It only works on Saturdays", "It requires a physical gold key"],
+                q: "What happens when a 'Buffer' overflows?",
+                options: ["The computer shuts down", "Data spills into adjacent memory boxes", "The internet disconnects", "The screen turns blue"],
                 correct: 1,
-                exp: "A Golden Ticket grants total, long-term control over the entire domain by forging the highest level of trust."
+                exp: "Just like a glass of water, data spills over its fixed size into nearby memory, potentially overwriting critical control information."
             },
             {
-                q: "What account must be compromised to forge a Golden Ticket?",
-                options: ["The Guest account", "The KRBTGT account", "The HR computer", "The Wi-Fi router"],
+                q: "In the 'School Campus' analogy, what is the gatekeeper?",
+                options: ["The Student", "The Operating System", "The Classroom", "The Textbook"],
                 correct: 1,
-                exp: "The KRBTGT hash is the 'master key' used to sign all tickets in Active Directory."
+                exp: "The OS manages all permissions and access, acting as the security guard for the system's 'restricted rooms'."
             }
         ];
 
