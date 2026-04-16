@@ -3,284 +3,328 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ethical Hacking Academy | Expert Terminal v3.0</title>
+    <title>Global Cyber Security Summit | Professional Speaker Edition</title>
     <style>
         :root {
             --neon-green: #39ff14;
-            --dark-green: #003300;
-            --deep-black: #050505;
-            --warning-red: #ff3131;
+            --dark-green: #003b00;
+            --deep-black: #020202;
+            --terminal-gray: #1a1a1a;
+            --accent-blue: #00d4ff;
         }
 
-        /* --- Animations --- */
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-            100% { transform: translate(0); }
+        /* --- Master Animations --- */
+        @keyframes scanline {
+            0% { bottom: 100%; }
+            100% { bottom: 0%; }
         }
 
-        @keyframes revealItem {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes rain {
-            0% { background-position: 0% 0%; }
-            100% { background-position: 0% 1000px; }
-        }
-
-        /* --- Layout --- */
+        /* --- Base Styles --- */
         body, html {
             margin: 0; padding: 0;
-            width: 100%; min-height: 100vh;
             background-color: var(--deep-black);
-            font-family: 'Consolas', 'Courier New', monospace;
-            color: #e0e0e0;
-            scroll-behavior: smooth;
-            line-height: 1.6;
+            font-family: 'Segoe UI', 'Consolas', monospace;
+            color: #d1d1d1;
+            overflow-x: hidden;
         }
 
-        .bg-container {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, var(--dark-green) 0%, var(--deep-black) 100%);
-            z-index: -3;
+        /* The "Scanline" CRT Effect */
+        body::before {
+            content: " ";
+            position: fixed; top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 9999;
+            pointer-events: none;
+            background-size: 100% 4px, 3px 100%;
         }
 
-        .data-rain-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: repeating-linear-gradient(0deg, transparent 0%, rgba(57, 255, 20, 0.05) 50%, transparent 100%);
-            background-size: 1000px 1000px;
-            animation: rain 30s linear infinite;
-            z-index: -2;
-            opacity: 0.4;
+        /* --- Dashboard Layout --- */
+        .header-bar {
+            background: var(--terminal-gray);
+            padding: 15px 40px;
+            border-bottom: 2px solid var(--neon-green);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .dashboard { 
-            display: grid; 
-            grid-template-columns: 300px 1fr; 
-            gap: 30px; 
-            padding: 40px; 
-            max-width: 1400px;
+        .dashboard {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            min-height: 100vh;
+        }
+
+        /* --- Professional Sidebar --- */
+        .sidebar {
+            background: rgba(10, 10, 10, 0.95);
+            border-right: 1px solid #333;
+            padding: 30px 20px;
+            overflow-y: auto;
+            max-height: 100vh;
+            position: sticky;
+            top: 0;
+        }
+
+        .nav-group-label {
+            color: #555;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 20px 0 10px 10px;
+        }
+
+        .nav-item {
+            padding: 12px 15px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: rgba(57, 255, 20, 0.05);
+            color: var(--neon-green);
+        }
+
+        .nav-item.active {
+            background: var(--dark-green);
+            color: var(--neon-green);
+            border: 1px solid var(--neon-green);
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
+        }
+
+        /* --- Content Engine --- */
+        .main-content {
+            padding: 60px;
+            max-width: 1000px;
             margin: 0 auto;
         }
 
-        /* --- Sidebar --- */
-        .sidebar { 
-            background: rgba(0, 15, 0, 0.9); 
-            border: 1px solid var(--neon-green); 
-            padding: 25px; 
-            border-radius: 12px; 
-            position: sticky;
-            top: 40px;
-            height: fit-content;
-        }
+        .topic-content { display: none; animation: fadeIn 0.6s ease; }
+        .topic-content.active { display: block; }
 
-        .nav-item { 
-            padding: 15px; 
-            cursor: pointer; 
-            margin-bottom: 8px; 
-            color: #888; 
-            transition: 0.3s;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            border-left: 3px solid transparent;
-        }
-        .nav-item:hover { color: var(--neon-green); background: rgba(57, 255, 20, 0.1); }
-        .nav-item.active { 
-            background: var(--neon-green); 
-            color: black !important; 
-            font-weight: bold;
-            border-left: 3px solid white;
-        }
+        h1 { font-size: 3rem; color: var(--neon-green); margin-bottom: 10px; }
+        .subtitle { color: var(--accent-blue); font-size: 1.1rem; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* --- Content Area --- */
-        .content-area { 
-            background: rgba(0, 0, 0, 0.7); 
-            border: 1px solid rgba(57, 255, 20, 0.2); 
-            padding: 50px; 
-            border-radius: 15px; 
-            backdrop-filter: blur(10px);
-        }
+        h2 { color: #fff; border-left: 4px solid var(--neon-green); padding-left: 15px; margin-top: 40px; }
 
-        .topic-content { display: none; }
-        .topic-content.active { display: block; animation: revealItem 0.5s ease-out; }
+        p { font-size: 1.1rem; line-height: 1.8; color: #bbb; }
 
-        h1.glitch-text { 
-            font-size: 2.5rem; 
-            color: var(--neon-green); 
-            margin-bottom: 20px;
-            animation: glitch 5s infinite linear;
-        }
-
-        h3 { color: var(--neon-green); border-bottom: 1px solid var(--dark-green); padding-bottom: 5px; }
-
-        .data-list { list-style: none; padding: 0; }
-        .data-list li {
-            padding: 12px;
-            margin-bottom: 10px;
-            background: rgba(255,255,255,0.05);
-            border-left: 3px solid var(--neon-green);
-        }
-
-        .terminal-box {
-            background: #000;
-            color: #00ff00;
-            padding: 15px;
-            border-radius: 8px;
+        /* --- UI Components --- */
+        .info-card {
+            background: #111;
             border: 1px solid #333;
-            font-size: 0.85rem;
-            margin: 20px 0;
-            overflow-x: auto;
-            white-space: pre-wrap;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 25px 0;
         }
 
-        .instructor-note {
-            background: rgba(255, 255, 0, 0.1);
-            border: 1px dashed #ffff00;
+        .tech-spec {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .spec-item {
+            background: rgba(255,255,255,0.03);
             padding: 15px;
-            margin-top: 25px;
-            font-style: italic;
-            color: #ffff00;
+            border-radius: 5px;
+            font-size: 0.9rem;
         }
 
-        .btn { padding: 10px 20px; text-decoration: none; border: 1px solid var(--neon-green); color: var(--neon-green); font-size: 0.8rem; }
-        .btn:hover { background: var(--neon-green); color: black; }
+        .spec-item b { color: var(--neon-green); display: block; margin-bottom: 5px; }
 
+        .terminal-block {
+            background: #000;
+            padding: 20px;
+            border-radius: 5px;
+            font-family: 'Consolas', monospace;
+            color: #0f0;
+            border-left: 4px solid #555;
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+
+        .lecture-note {
+            background: rgba(0, 212, 255, 0.1);
+            border-left: 4px solid var(--accent-blue);
+            padding: 20px;
+            margin-top: 30px;
+            font-style: italic;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: var(--dark-green); }
     </style>
 </head>
 <body>
 
-    <div class="bg-container"></div>
-    <div class="data-rain-overlay"></div>
-
-    <div style="padding: 20px 40px;">
-        <button class="btn" onclick="location.reload()">[ RESET_SESSION ]</button>
+    <div class="header-bar">
+        <div style="font-weight: bold; letter-spacing: 2px;">SEC_CON 2026 | MAIN_STAGE</div>
+        <div id="clock" style="color: var(--neon-green);">SYSTEM_READY</div>
     </div>
 
     <div class="dashboard">
         <div class="sidebar">
-            <h2 style="color:var(--neon-green); font-size: 0.8rem; text-align: center; letter-spacing: 3px; margin-bottom: 20px;">ACADEMY_ROOT_v3.0</h2>
-            <div class="nav-item active" onclick="showTab('m0', this)">00. Curriculum Overview</div>
-            <div class="nav-item" onclick="showTab('m1', this)">01. Advanced Recon</div>
-            <div class="nav-item" onclick="showTab('m2', this)">02. Scanning & Enum</div>
-            <div class="nav-item" onclick="showTab('m3', this)">03. Exploitation</div>
-            <div class="nav-item" onclick="showTab('m4', this)">04. Post-Exploitation</div>
-            <div class="nav-item" onclick="showTab('m5', this)">05. Clearing Presence</div>
-            <div class="nav-item" onclick="showTab('m6', this)">06. Reporting & Remediation</div>
+            <div class="nav-group-label">Foundations</div>
+            <div class="nav-item active" onclick="showTab('m1', this)">01. The Ethics of Hacking</div>
+            <div class="nav-item" onclick="showTab('m2', this)">02. Legal Frameworks</div>
+            
+            <div class="nav-group-label">The Kill Chain</div>
+            <div class="nav-item" onclick="showTab('m3', this)">03. Intelligence Gathering</div>
+            <div class="nav-item" onclick="showTab('m4', this)">04. Network Enumeration</div>
+            <div class="nav-item" onclick="showTab('m5', this)">05. Vulnerability Analysis</div>
+            
+            <div class="nav-group-label">Exploitation Lab</div>
+            <div class="nav-item" onclick="showTab('m6', this)">06. System Exploitation</div>
+            <div class="nav-item" onclick="showTab('m7', this)">07. Web Application Hacking</div>
+            <div class="nav-item" onclick="showTab('m8', this)">08. Wireless & IoT Security</div>
+            
+            <div class="nav-group-label">Professional Exit</div>
+            <div class="nav-item" onclick="showTab('m9', this)">09. Post-Exploitation</div>
+            <div class="nav-item" onclick="showTab('m10', this)">10. Reporting & Disclosure</div>
         </div>
 
-        <div class="content-area">
+        <div class="main-content">
             
-            <div id="m0" class="topic-content active">
-                <h1 class="glitch-text">The Ethical Mindset</h1>
-                <p>To defeat a hacker, you must think like one—but act with integrity. Ethical hacking is the authorized process of bypassing system security to identify gaps.</p>
+            <div id="m1" class="topic-content active">
+                <h1>The Ethics of Hacking</h1>
+                <div class="subtitle">Defining the White Hat Mindset</div>
+                <p>Welcome, everyone. Before we touch a keyboard, we must understand the burden of the "Ethical" prefix. In a world where a single breach costs an average of $4.45 million, your role is not just to break things, but to provide a safety net for civilization.</p>
                 
-                <div style="font-size: 1.1rem; border-left: 4px solid var(--neon-green); padding-left: 20px; margin: 30px 0; color: #aaa;">
-                    "Security is not a product, but a process." - Bruce Schneier
+                <div class="info-card">
+                    <h2>Core Principles</h2>
+                    <ul style="line-height: 2;">
+                        <li><b>Informed Consent:</b> Never perform a scan without written authorization.</li>
+                        <li><b>Integrity:</b> If you find sensitive data (HR records, personal photos), you report the vulnerability without viewing the data.</li>
+                        <li><b>Reliability:</b> Your tools must not crash the production servers you are testing.</li>
+                    </ul>
                 </div>
-
-                <h3>Learning Objectives:</h3>
-                <ul class="data-list">
-                    <li>Understand the Cyber Kill Chain methodology.</li>
-                    <li>Differentiate between White, Gray, and Black Hat hacking.</li>
-                    <li>Master the technical legalities of a "Rules of Engagement" (RoE) document.</li>
-                </ul>
-            </div>
-
-            <div id="m1" class="topic-content">
-                <h1 class="glitch-text">01. Reconnaissance (OSINT)</h1>
-                <p>Information is the most valuable currency. In this phase, we map the "Digital Surface Area" of the target organization.</p>
-                
-                <h3>Key Techniques for Students:</h3>
-                <ul class="data-list">
-                    <li><b>Passive OSINT:</b> Using <code>theHarvester</code> to scrape emails and <code>Shodan.io</code> to find vulnerable IoT devices without sending a single packet to the target.</li>
-                    <li><b>DNS Enumeration:</b> Identifying subdomains (e.g., dev.target.com, vpn.target.com) that are often less secure than the main site.</li>
-                    <li><b>Google Dorking:</b> Using advanced search queries like <code>filetype:pdf "confidential"</code> to find leaked documents.</li>
-                </ul>
-                <div class="terminal-box">$ whois target-domain.com<br>$ dig target-domain.com MX<br>$ site:linkedin.com/in/ "Target Company"</div>
-            </div>
-
-            <div id="m2" class="topic-content">
-                <h1 class="glitch-text">02. Scanning & Enumeration</h1>
-                <p>Now we "touch" the target. We are looking for open ports, specific software versions, and misconfigured services.</p>
-                
-                <h3>Teaching Tools:</h3>
-                <ul class="data-list">
-                    <li><b>Nmap (Network Mapper):</b> The industry standard. We teach students to use <code>-sV</code> for version detection and <code>--script vuln</code> to find known bugs automatically.</li>
-                    <li><b>Banner Grabbing:</b> Connecting to a port to see what "banner" the software returns (e.g., "Apache 2.4.49").</li>
-                    <li><b>Vulnerability Scanning:</b> Using professional tools like Nessus or OpenVAS to generate a list of high-risk flaws.</li>
-                </ul>
-                <div class="terminal-box"># nmap -sS -A -T4 192.168.1.1/24<br># Starting Nmap... Found Port 80 (HTTP), Port 445 (SMB)</div>
             </div>
 
             <div id="m3" class="topic-content">
-                <h1 class="glitch-text">03. Gaining Access (Exploitation)</h1>
-                <p>The "Point of Entry." This is where a vulnerability is turned into a working access point.</p>
-                
-                <h3>Core Concepts:</h3>
-                <ul class="data-list">
-                    <li><b>Server-Side:</b> Exploiting an unpatched service (like the famous EternalBlue exploit).</li>
-                    <li><b>Client-Side:</b> Tricking a user into running a payload via Phishing or USB-drops.</li>
-                    <li><b>Web-Based:</b> Using SQL Injection to steal passwords or Cross-Site Scripting (XSS) to hijack browser sessions.</li>
-                </ul>
-                <div class="instructor-note">
-                    <b>Instructor Note:</b> Emphasize that Metasploit is a powerful framework, but students must understand the underlying manual exploits to be true experts.
+                <h1>Intelligence Gathering</h1>
+                <div class="subtitle">Phase 1: Open Source Intelligence (OSINT)</div>
+                <p>In this lecture, we discuss the "Art of the Silent Search." A professional spends weeks in this phase. If you know the target's infrastructure better than their own admins do, you have already won.</p>
+
+                <h2>Technical Deep Dive</h2>
+                <div class="tech-spec">
+                    <div class="spec-item">
+                        <b>Infrastructure Mapping</b>
+                        Using tools like <i>DNSdumpster</i> and <i>Subfinder</i> to find every hidden portal a company has.
+                    </div>
+                    <div class="spec-item">
+                        <b>Employee Profiling</b>
+                        Scraping LinkedIn to find the "IT Manager"—knowing their tech stack based on their listed skills.
+                    </div>
+                </div>
+
+                <div class="terminal-block">
+                    $ subfinder -d target.com -o subdomains.txt<br>
+                    $ cat subdomains.txt | httpx -title -status-code<br>
+                    [FOUND] dev-api.target.com [200 OK] - Swagger UI Detected
                 </div>
             </div>
 
             <div id="m4" class="topic-content">
-                <h1 class="glitch-text">04. Maintaining Access</h1>
-                <p>Once inside, a hacker wants to ensure they can get back in even if the computer restarts or the password is changed.</p>
+                <h1>Network Enumeration</h1>
+                <div class="subtitle">Phase 2: Digital Fingerprinting</div>
+                <p>Enumeration is the process of extracting user names, machine names, network resources, and services from a system. This is where we go from "Outside" to "Looking through the Window."</p>
+
+                <h2>The Power of Nmap</h2>
+                <p>Nmap is the Swiss Army knife of hacking. During this session, we analyze how to bypass Firewalls and IDS (Intrusion Detection Systems) using fragmented packets.</p>
                 
-                <h3>Technical Methods:</h3>
-                <ul class="data-list">
-                    <li><b>Persistence:</b> Creating hidden 'Cron' jobs in Linux or Registry keys in Windows that execute a backdoor on startup.</li>
-                    <li><b>Privilege Escalation:</b> Moving from a "Guest" account to "System/Root" by exploiting kernel vulnerabilities.</li>
-                    <li><b>Pivoting:</b> Using the first hacked computer as a "jump box" to attack other computers deeper inside the internal network.</li>
-                </ul>
+                <div class="terminal-block">
+                    # Stealth Scan with OS Detection<br>
+                    nmap -sS -O -T3 10.0.0.50<br><br>
+                    # Result: Port 445 [Open] - Windows Server 2016 (SMBv1 Detected)
+                </div>
+
+                <div class="lecture-note">
+                    <b>Instructor Note:</b> Remind the participants that "Loud" scans will trigger alerts. Always adjust your timing (T0 to T5) based on the target's defense level.
+                </div>
             </div>
 
-            <div id="m5" class="topic-content">
-                <h1 class="glitch-text">05. Covering Tracks</h1>
-                <p>A professional operation leaves no trace. This protects the "persistence" and prevents the Blue Team (Defenders) from knowing they were compromised.</p>
-                
-                <h3>Invisibility Tactics:</h3>
-                <ul class="data-list">
-                    <li><b>Log Cleaning:</b> Carefully removing only the specific lines in the System Log that show the hacker's IP address.</li>
-                    <li><b>Timestomping:</b> Changing the "Modified" and "Accessed" dates of malware to match old system files (e.g., set to 2012).</li>
-                    <li><b>Alternate Data Streams:</b> Hiding malicious code inside the metadata of a harmless text file.</li>
-                </ul>
+            <div id="m7" class="topic-content">
+                <h1>Web Application Hacking</h1>
+                <div class="subtitle">The OWASP Top 10 Framework</div>
+                <p>Modern hacking is 90% Web-based. Since businesses moved to the Cloud, the browser is the new frontline. We focus on the **OWASP Top 10**, the definitive guide to web vulnerabilities.</p>
+
+                <div class="info-card">
+                    <h2>Critical Vulnerabilities</h2>
+                    <ul style="line-height: 2;">
+                        <li><b>SQL Injection (SQLi):</b> Manipulating database queries to bypass logins.</li>
+                        <li><b>Broken Access Control:</b> Accessing admin pages by simply changing the URL.</li>
+                        <li><b>SSRF:</b> Tricking a server into attacking its own internal network.</li>
+                    </ul>
+                </div>
+
+                <h2>Demonstration: SQLi Logic</h2>
+                <div class="terminal-block">
+                    Input: ' OR 1=1 -- <br>
+                    Query: SELECT * FROM users WHERE user='' OR 1=1 -- ' AND pass=''
+                </div>
             </div>
 
-            <div id="m6" class="topic-content">
-                <h1 class="glitch-text">06. Reporting & Remediation</h1>
-                <p>The most important part for an Ethical Hacker. We don't just find problems; we provide the cure.</p>
-                
-                <h3>The Professional Report:</h3>
-                <ul class="data-list">
-                    <li><b>Executive Summary:</b> Explaining the risks to the CEO in non-technical language.</li>
-                    <li><b>Detailed Findings:</b> A step-by-step guide on how the exploit was achieved so the IT team can replicate it.</li>
-                    <li><b>Remediation Plan:</b> Specific advice (e.g., "Apply Patch MS17-010" or "Disable Port 21").</li>
-                </ul>
-                <div class="terminal-box">[STATUS] Vulnerability Found: CVE-2023-XXXX<br>[FIX] Update kernel to v6.1.2<br>[VERIFIED] Security Patch Applied.</div>
+            <div id="m10" class="topic-content">
+                <h1>Professional Reporting</h1>
+                <div class="subtitle">The Deliverable</div>
+                <p>This is why you get paid. A client doesn't pay for the "hack"; they pay for the "fix." Your report must be readable by both a CEO and a Lead Developer.</p>
+
+                <div class="tech-spec">
+                    <div class="spec-item">
+                        <b>Executive Summary</b>
+                        High-level risk assessment. "If this isn't fixed, you lose $2M in revenue."
+                    </div>
+                    <div class="spec-item">
+                        <b>Proof of Concept (PoC)</b>
+                        Screenshots and code showing exactly how you gained access. No fluff, just facts.
+                    </div>
+                </div>
+
+                <div class="lecture-note">
+                    <b>Closing Statement:</b> Your goal is to leave the client's network safer than you found it. That is the mark of a true professional speaker and hacker.
+                </div>
             </div>
+
+            <div id="m2" class="topic-content"><h1>Legal Frameworks</h1><p>Discussing HIPAA, GDPR, and the Computer Misuse Act...</p></div>
+            <div id="m5" class="topic-content"><h1>Vulnerability Analysis</h1><p>Deep dive into CVSS scoring and CVE databases...</p></div>
+            <div id="m6" class="topic-content"><h1>System Exploitation</h1><p>Buffer Overflows and Metasploit fundamentals...</p></div>
+            <div id="m8" class="topic-content"><h1>Wireless & IoT Security</h1><p>WPA3 cracking and smart device vulnerabilities...</p></div>
+            <div id="m9" class="topic-content"><h1>Post-Exploitation</h1><p>Persistence, Privilege Escalation, and Data Exfiltration...</p></div>
 
         </div>
     </div>
 
     <script>
         function showTab(id, el) {
+            // Content Switch
             document.querySelectorAll('.topic-content').forEach(t => t.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             
+            // Nav Switch
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             el.classList.add('active');
 
+            // Scroll to top
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
+
+        // Clock Update
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleTimeString() + " | SESSION_ACTIVE";
+        }, 1000);
     </script>
 </body>
 </html>
