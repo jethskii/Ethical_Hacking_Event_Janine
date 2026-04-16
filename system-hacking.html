@@ -2,56 +2,118 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>System Hacking Modules</title>
+    <title>System Hacking | Expert Modules</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .dashboard { display: grid; grid-template-columns: 300px 1fr; gap: 20px; padding: 40px; height: 85vh; }
-        .sidebar { background: rgba(0,0,0,0.7); border: 1px solid var(--neon-green); padding: 20px; border-radius: 10px; }
-        .content-area { background: var(--glass-bg); border: 1px solid var(--neon-green); padding: 40px; border-radius: 10px; overflow-y: auto; }
-        .nav-item { padding: 15px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; color: #aaa; }
-        .nav-item:hover, .nav-item.active { border-color: var(--neon-green); color: var(--neon-green); }
-        .topic-content { display: none; animation: fadeIn 0.5s; }
+        .dashboard { display: grid; grid-template-columns: 320px 1fr; gap: 25px; padding: 30px; height: 85vh; margin-top: 10px; }
+        .sidebar { background: rgba(0,0,0,0.8); border: 1px solid var(--neon-green); padding: 20px; border-radius: 12px; box-shadow: inset 0 0 10px var(--dark-green); }
+        .content-area { background: var(--glass-bg); border: 1px solid var(--neon-green); padding: 45px; border-radius: 12px; overflow-y: auto; backdrop-filter: blur(15px); }
+        
+        .nav-item { padding: 18px; cursor: pointer; border-left: 3px solid transparent; margin-bottom: 8px; color: #888; transition: 0.3s; background: rgba(255,255,255,0.02); }
+        .nav-item:hover { color: var(--neon-green); background: rgba(57, 255, 20, 0.05); }
+        .nav-item.active { border-left: 3px solid var(--neon-green); color: var(--neon-green); background: rgba(57, 255, 20, 0.1); font-weight: bold; }
+
+        .topic-content { display: none; animation: slideUp 0.4s ease-out; }
         .topic-content.active { display: block; }
-        .img-frame { border: 3px solid var(--neon-green); padding: 10px; display: inline-block; margin: 20px 0; border-radius: 8px; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .speaker-note { background: rgba(57, 255, 20, 0.1); border-left: 4px solid var(--neon-green); padding: 15px; margin: 20px 0; font-style: italic; color: #cfc; }
+        .tech-box { background: #000; border: 1px dashed var(--neon-green); padding: 15px; font-family: monospace; font-size: 0.9rem; color: #39ff14; margin: 15px 0; }
+        .img-frame { border: 2px solid var(--neon-green); padding: 5px; background: #000; display: block; margin: 20px auto; max-width: 80%; box-shadow: 0 0 20px rgba(57, 255, 20, 0.2); }
+        
+        h1 { font-size: 2.5rem; margin-top: 0; color: var(--neon-green); text-transform: uppercase; letter-spacing: 2px; }
+        h3 { color: var(--neon-green); border-bottom: 1px solid var(--dark-green); padding-bottom: 5px; }
+        p { line-height: 1.8; color: #eee; }
+        ul li { margin-bottom: 12px; color: #ccc; }
+        b { color: var(--neon-green); }
     </style>
 </head>
 <body>
     <div class="bg-container"></div>
     <div class="grid-overlay"></div>
     
-    <div style="padding: 20px;"><a href="index.html" class="btn" style="padding: 5px 15px; font-size: 0.8rem;">< RETURN</a></div>
+    <div style="padding: 15px 30px;">
+        <a href="index.html" class="btn" style="padding: 8px 20px; font-size: 0.8rem;">[ ESC ] EXIT TERMINAL</a>
+    </div>
 
     <div class="dashboard">
         <div class="sidebar">
-            <h2 style="color:var(--neon-green)">PHASES</h2>
-            <div class="nav-item active" onclick="showTab('overview', this)">00. Overview</div>
-            <div class="nav-item" onclick="showTab('recon', this)">01. Reconnaissance</div>
-            <div class="nav-item" onclick="showTab('scan', this)">02. Scanning</div>
+            <h2 style="color:var(--neon-green); letter-spacing: 3px; font-size: 1rem; text-align: center;">VULNERABILITY_LIFECYCLE</h2>
+            <div class="nav-item active" onclick="showTab('intro', this)">00. OVERVIEW & IMPACT</div>
+            <div class="nav-item" onclick="showTab('recon', this)">01. RECONNAISSANCE</div>
+            <div class="nav-item" onclick="showTab('scan', this)">02. SCANNING & ENUMERATION</div>
+            <div class="nav-item" onclick="showTab('access', this)">03. GAINING ACCESS (EXPLOIT)</div>
+            <div class="nav-item" onclick="showTab('maintain', this)">04. PERSISTENCE & PRIV-ESC</div>
+            <div class="nav-item" onclick="showTab('cover', this)">05. TRACK OBFUSCATION</div>
         </div>
 
         <div class="content-area">
-            <div id="overview" class="topic-content active">
-                <h1 style="color:var(--neon-green)">Ethical Hacking Process</h1>
+            
+            <div id="intro" class="topic-content active">
+                <h1>The State of Cyber Warfare</h1>
+                <p>As a Software Engineer, I see security not as a feature, but as the foundation. Today, the average time to detect a breach is <b>212 days</b>. Hackers aren't "breaking in"; they are logging in using leaked credentials or exploiting unpatched logic.</p>
                 <div class="img-frame">
-                    <img src="hacking-process.png" style="max-width:100%; border-radius: 5px;">
+                    <img src="hacking-process.png" style="width:100%;">
                 </div>
-                <p>Ethical hacking gives companies the solution to help them combat this ever-growing problem. It takes up to 6 months for organizations to realize a breach has occurred.</p>
+                <div class="speaker-note">
+                    "Every 39 seconds, a system is targeted. Our goal today is to understand the mind of the attacker to build better defenses."
+                </div>
             </div>
 
             <div id="recon" class="topic-content">
-                <h1 style="color:var(--neon-green)">01. Reconnaissance</h1>
-                <p>The first stage involves collecting all information available about the target networks and security measures.</p>
+                <h1>Phase 01: Reconnaissance</h1>
+                <p>Information is the most valuable asset. Before a single line of code is run, we gather intelligence.</p>
                 <ul>
-                    <li>Active: Direct interaction with the target.</li>
-                    <li>Passive: Indirect gathering (social media, public records).</li>
+                    <li><b>Passive Recon:</b> Utilizing OSINT (Open Source Intelligence), LinkedIn, and Google Dorking to find employee habits and tech stacks.</li>
+                    <li><b>Active Recon:</b> Directly interacting with the target server via DNS interrogation or social engineering calls.</li>
                 </ul>
+                <div class="tech-box">> whois target-domain.com <br>> nslookup -type=mx target-domain.com</div>
             </div>
 
             <div id="scan" class="topic-content">
-                <h1 style="color:var(--neon-green)">02. Scanning</h1>
-                <p>Using reconnaissance data to look for vulnerabilities like open ports and unprotected services.</p>
+                <h1>Phase 02: Scanning & Enumeration</h1>
+                <p>This is where we identify the "doors and windows." We look for services, versions, and misconfigurations.</p>
+                <ul>
+                    <li><b>Port Scanning:</b> Using tools like Nmap to find open "gates" (SSH, HTTP, SMB).</li>
+                    <li><b>Vulnerability Scanning:</b> Automated tools (Nessus/OpenVAS) checking for known CVEs.</li>
+                    <li><b>Banner Grabbing:</b> Determining exactly what software version is running to find specific exploits.</li>
+                </ul>
+                <div class="tech-box">> nmap -sV -T4 target-ip-address</div>
             </div>
+
+            <div id="access" class="topic-content">
+                <h1>Phase 03: Gaining Access</h1>
+                <p>The "Hollywood" moment. We use the vulnerability found in Phase 2 to bypass security controls.</p>
+                <h3>Common Vectors:</h3>
+                <ul>
+                    <li><b>Buffer Overflows:</b> Overwriting memory to execute custom shellcode.</li>
+                    <li><b>Web Exploits:</b> SQL Injection or Cross-Site Scripting (XSS).</li>
+                    <li><b>Client-Side Attacks:</b> Sending a weaponized PDF or Office document to an employee.</li>
+                </ul>
+                <div class="speaker-note">"Access is gained through the weakest link—often a human or an unpatched legacy server."</div>
+            </div>
+
+            <div id="maintain" class="topic-content">
+                <h1>Phase 04: Maintaining Access</h1>
+                <p>One-time access is useless. A professional needs to ensure they can come back even if the system reboots.</p>
+                <ul>
+                    <li><b>Privilege Escalation:</b> Moving from a low-level user to <b>Root/Administrator</b>.</li>
+                    <li><b>Persistence:</b> Installing Rootkits, Backdoors, or creating hidden Admin accounts.</li>
+                    <li><b>Pivoting:</b> Using the first hacked computer to attack other machines inside the network.</li>
+                </ul>
+            </div>
+
+            <div id="cover" class="topic-content">
+                <h1>Phase 05: Track Obfuscation</h1>
+                <p>The mark of a master is silence. If the Blue Team (defenders) never finds the logs, the attack never "happened."</p>
+                <ul>
+                    <li><b>Log Manipulation:</b> Deleting specific entries in Syslog or Windows Event Viewer.</li>
+                    <li><b>Steganography:</b> Hiding stolen data inside harmless images to smuggle it out.</li>
+                    <li><b>Reverse Shell Cleanup:</b> Deleting temporary scripts and binaries used during the exploit.</li>
+                </ul>
+                <div class="tech-box"># history -c <br># rm -rf /tmp/exploit_payload</div>
+            </div>
+
         </div>
     </div>
 
