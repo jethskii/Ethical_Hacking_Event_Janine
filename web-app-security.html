@@ -34,7 +34,7 @@
             background-color: var(--deep-black);
             font-family: 'Consolas', 'Courier New', monospace;
             color: #e0e0e0;
-            overflow: hidden; /* We will scroll the content-area instead */
+            overflow: hidden; /* CRITICAL: Prevents manual scrolling */
         }
 
         .bg-container {
@@ -88,25 +88,23 @@
             border-left: 3px solid white;
         }
 
-        /* --- Scroll Snap Content --- */
+        /* --- Presentation Content Area --- */
         .content-area { 
-            overflow-y: scroll; 
-            scroll-snap-type: y mandatory; 
+            overflow-y: hidden; /* CRITICAL: Disable manual scroll access */
             scroll-behavior: smooth;
+            height: 100vh;
             padding: 0;
         }
 
         .topic-section {
-            min-height: 100vh;
-            scroll-snap-align: start;
-            scroll-snap-stop: always;
+            height: 100vh; /* Fixed height for each slide */
+            width: 100%;
             padding: 80px 100px;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
             justify-content: center;
             background: rgba(0, 0, 0, 0.4);
-            border-bottom: 1px solid rgba(57, 255, 20, 0.1);
         }
 
         h1.glitch-text { 
@@ -116,12 +114,20 @@
             animation: glitch 5s infinite linear;
         }
 
-        h3 { color: var(--neon-green); margin-top: 30px; text-transform: uppercase; letter-spacing: 2px; }
+        .img-container {
+            border: 1px solid var(--neon-green);
+            padding: 10px;
+            background: #000;
+            margin: 20px 0;
+            max-width: 80%;
+            text-align: center;
+        }
+        .img-container img { max-width: 100%; height: auto; }
 
         .data-list { list-style: none; padding: 0; }
         .data-list li {
-            padding: 15px;
-            margin-bottom: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
             background: rgba(255,255,255,0.05);
             border-left: 3px solid var(--neon-green);
         }
@@ -138,21 +144,6 @@
         }
         .btn:hover { background: var(--neon-green); color: black; }
 
-        .img-container {
-            border: 1px solid var(--neon-green);
-            padding: 10px;
-            background: #000;
-            margin: 20px 0;
-            max-width: 80%;
-            text-align: center;
-        }
-        .img-container img { max-width: 100%; height: auto; }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--deep-black); }
-        ::-webkit-scrollbar-thumb { background: var(--dark-green); border: 1px solid var(--neon-green); }
-
     </style>
 </head>
 <body>
@@ -164,12 +155,12 @@
         <div class="sidebar">
             <h2 style="color:var(--neon-green); font-size: 0.8rem; text-align: center; letter-spacing: 4px; margin-bottom: 40px; border-bottom: 1px solid #222; padding-bottom: 20px;">SECURITY_LAB_v3</h2>
             
-            <a href="#overview" class="nav-item active">00. Overview</a>
-            <a href="#waf" class="nav-item">01. WAF Control</a>
-            <a href="#encrypt" class="nav-item">02. Data Encryption</a>
-            <a href="#rbac" class="nav-item">03. Access Roles (RBAC)</a>
-            <a href="#mfa" class="nav-item">04. Authentication (MFA)</a>
-            <a href="#https" class="nav-item">05. Transport Layer (HTTPS)</a>
+            <a href="javascript:void(0)" onclick="goTo('overview', this)" class="nav-item active">00. Overview</a>
+            <a href="javascript:void(0)" onclick="goTo('waf', this)" class="nav-item">01. WAF Control</a>
+            <a href="javascript:void(0)" onclick="goTo('encrypt', this)" class="nav-item">02. Data Encryption</a>
+            <a href="javascript:void(0)" onclick="goTo('rbac', this)" class="nav-item">03. Access Roles (RBAC)</a>
+            <a href="javascript:void(0)" onclick="goTo('mfa', this)" class="nav-item">04. Authentication (MFA)</a>
+            <a href="javascript:void(0)" onclick="goTo('https', this)" class="nav-item">05. Transport Layer (HTTPS)</a>
 
             <div style="margin-top: auto;">
                 <a href="index.html" class="btn" style="width: 100%; text-align: center; box-sizing: border-box;">[ EXIT_SYSTEM ]</a>
@@ -199,7 +190,7 @@
                 <p>Web Application Firewalls monitor, filter, and block HTTP traffic to and from a web application. They function at Layer 7 of the OSI model.</p>
                 
                 <div class="img-container">
-                    
+                    <img src="what-is-waf-cf521c4f0020e2a81f70454931d2e21e.webp" alt="WAF Diagram">
                 </div>
 
                 <h3>Technical Parameters:</h3>
@@ -222,7 +213,7 @@
                 <ul class="data-list">
                     <li><b>Data at Rest:</b> Encrypting stored assets on hard drives and databases.</li>
                     <li><b>Data in Transit:</b> Protecting packets during network transfer.</li>
-                    <li><b>Asymmetric Infrastructure:</b> Utilizing public/private key pairs for higher security.</li>
+                    <li><b>Asymmetric Infrastructure:</b> Utilizing public/private key pairs.</li>
                 </ul>
             </section>
 
@@ -244,7 +235,7 @@
 
             <section id="mfa" class="topic-section">
                 <h1 class="glitch-text">04. Authentication (MFA)</h1>
-                <p>Moving beyond passwords by requiring two or more verification factors from distinct categories: Knowledge, Possession, and Inherence.</p>
+                <p>Moving beyond passwords by requiring two or more verification factors: Knowledge, Possession, and Inherence.</p>
                 
                 <div class="img-container">
                     
@@ -281,33 +272,20 @@
         const scrollBox = document.getElementById('scrollBox');
         const navItems = document.querySelectorAll('.nav-item');
         
-        // Update sidebar active state on scroll
-        scrollBox.addEventListener('scroll', () => {
-            let currentId = "";
-            const sections = document.querySelectorAll('.topic-section');
+        // This function handles the slide movement
+        function goTo(id, element) {
+            const target = document.getElementById(id);
             
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                if (scrollBox.scrollTop >= sectionTop - 100) {
-                    currentId = section.getAttribute('id');
-                }
+            // 1. Manually scroll the box to the target section
+            scrollBox.scrollTo({
+                top: target.offsetTop,
+                behavior: 'smooth'
             });
 
-            navItems.forEach(item => {
-                item.classList.remove('active');
-                if (item.getAttribute('href') === `#${currentId}`) {
-                    item.classList.add('active');
-                }
-            });
-        });
-
-        // Ensure sidebar clicks highlight immediately
-        navItems.forEach(item => {
-            item.addEventListener('click', function() {
-                navItems.forEach(nav => nav.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
+            // 2. Update active visual state
+            navItems.forEach(item => item.classList.remove('active'));
+            element.classList.add('active');
+        }
     </script>
 </body>
 </html>
