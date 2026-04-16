@@ -1,164 +1,200 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ethical Hacking Seminar | Intro</title>
-    <style>
-        :root {
-            --neon-green: #00ff41;
-            --dark-bg: #050505;
-            --glass-bg: rgba(0, 0, 0, 0.75); 
-            --border-glow: 0 0 20px rgba(0, 255, 65, 0.6);
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethical Hacking Seminar | Intro</title>
+    <style>
+        :root {
+            --neon-green: #00ff41;
+            --dark-bg: #050505;
+            --glass-bg: rgba(0, 0, 0, 0.6); 
+            --border-glow: 0 0 20px rgba(0, 255, 65, 0.4);
+        }
 
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            font-family: 'Courier New', Courier, monospace;
-            background-color: var(--dark-bg);
-            color: white;
-            overflow: hidden;
-        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Courier New', Courier, monospace;
+            background-color: var(--dark-bg);
+            color: white;
+            overflow-x: hidden;
+        }
 
-        /* --- THE VIDEO BACKGROUND FIX --- */
-        .video-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -5;
-            background: #000; 
-        }
+        /* --- THE VIDEO BACKGROUND FIX --- */
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -10; /* Lowered to ensure it stays behind everything */
+            background: #000; 
+            overflow: hidden;
+        }
 
-        #bg-video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Ensures it fits screen perfectly */
-            filter: brightness(0.4) contrast(1.1);
-            display: block;
-        }
+        #bg-video {
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+            filter: brightness(0.3) contrast(1.2) saturate(0.8);
+        }
 
-        /* --- OVERLAYS --- */
-        .grid-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -3;
-            background-image: 
-                linear-gradient(var(--neon-green) 1px, transparent 1px),
-                linear-gradient(90deg, var(--neon-green) 1px, transparent 1px);
-            background-size: 60px 60px;
-            opacity: 0.1;
-            perspective: 1000px;
-            transform: rotateX(60deg) translateY(-200px);
-            pointer-events: none;
-        }
+        /* --- OVERLAYS --- */
+        .grid-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -2;
+            background-image: 
+                linear-gradient(var(--neon-green) 1px, transparent 1px),
+                linear-gradient(90deg, var(--neon-green) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.05;
+            pointer-events: none;
+        }
 
-        .scanline {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%);
-            background-size: 100% 4px;
-            pointer-events: none;
-            z-index: 10;
-            opacity: 0.2;
-        }
+        /* CRT Scanline Effect */
+        .scanline {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(
+                to bottom,
+                rgba(18, 16, 16, 0) 50%,
+                rgba(0, 0, 0, 0.25) 50%
+            );
+            background-size: 100% 4px;
+            z-index: 5;
+            pointer-events: none;
+            opacity: 0.15;
+        }
 
-        /* --- CONTENT --- */
-        .page {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            z-index: 1;
-        }
+        /* --- CONTENT --- */
+        .page {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
 
-        .hero-title {
-            font-size: clamp(2.5rem, 8vw, 5.5rem);
-            text-transform: uppercase;
-            letter-spacing: 12px;
-            color: var(--neon-green);
-            text-shadow: 0 0 10px var(--neon-green), 0 0 30px var(--neon-green);
-            margin: 0;
-            animation: flicker 4s infinite;
-        }
+        .hero-title {
+            font-size: clamp(2rem, 10vw, 5rem);
+            text-transform: uppercase;
+            letter-spacing: clamp(5px, 2vw, 15px);
+            color: var(--neon-green);
+            text-shadow: 0 0 10px var(--neon-green);
+            margin: 0;
+            animation: glitch 3s infinite linear alternate-reverse;
+        }
 
-        .profile-card {
-            margin: 40px;
-            padding: 35px;
-            border: 2px solid var(--neon-green);
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px); /* Safari support */
-            border-radius: 4px;
-            box-shadow: var(--border-glow);
-        }
+        .event-details {
+            letter-spacing: 4px;
+            margin-top: 15px;
+            color: #aaa;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
 
-        .btn-container {
-            display: flex;
-            gap: 20px;
-        }
+        .profile-card {
+            margin: 40px 0;
+            padding: 30px;
+            border: 1px solid var(--neon-green);
+            background: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 2px;
+            box-shadow: var(--border-glow);
+            max-width: 90%;
+        }
 
-        .btn {
-            padding: 12px 30px;
-            border: 1px solid var(--neon-green);
-            color: var(--neon-green);
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: bold;
-            transition: 0.4s;
-            background: rgba(0, 0, 0, 0.8);
-        }
+        .btn-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
 
-        .btn:hover {
-            background: var(--neon-green);
-            color: black;
-            box-shadow: 0 0 30px var(--neon-green);
-        }
+        .btn {
+            padding: 15px 35px;
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            background: transparent;
+            position: relative;
+            overflow: hidden;
+        }
 
-        @keyframes flicker {
-            0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
-            20%, 24%, 55% { opacity: 0.8; }
-        }
-    </style>
+        .btn:hover {
+            background: var(--neon-green);
+            color: black;
+            box-shadow: 0 0 20px var(--neon-green);
+            transform: translateY(-2px);
+        }
+
+        /* Glitch Animation for Title */
+        @keyframes glitch {
+            0% { text-shadow: 2px 0 0 red, -2px 0 0 blue; }
+            1% { text-shadow: -2px 0 0 red, 2px 0 0 blue; }
+            2% { text-shadow: 0 0 10px var(--neon-green); }
+        }
+    </style>
 </head>
 <body>
 
-    <div class="video-container">
-        <video autoplay muted loop playsinline id="bg-video">
-            <source src="janine.mp4" type="video/mp4">
-            Your browser does not support HTML5 video.
-        </video>
-    </div>
+    <div class="video-container">
+        <video autoplay muted loop playsinline id="bg-video" poster="Ethical-hacking-process.png">
+            <source src="./janine.mp4" type="video/mp4">
+            Your browser does not support HTML5 video.
+        </video>
+    </div>
 
-    <div class="grid-overlay"></div>
-    <div class="scanline"></div>
+    <div class="grid-overlay"></div>
+    <div class="scanline"></div>
 
-    <div class="page">
-        <h1 class="hero-title">Ethical Hacking</h1>
-        <div style="letter-spacing: 6px; margin-top: 10px; color: #888; font-weight: bold;">SEMINAR EVENT // APRIL 17, 2026</div>
+    <div class="page">
+        <h1 class="hero-title">Ethical Hacking</h1>
+        <div class="event-details">SEMINAR EVENT // APRIL 17, 2026</div>
 
-        <div class="profile-card">
-            <div style="font-size: 1.8rem; color: var(--neon-green); font-weight: bold;">
-                Mrs. Janine K. Mandalones - Flores
-            </div>
-            <div style="color: #bbb; margin-top: 8px; font-size: 0.9rem; text-transform: uppercase;">
-                Software Engineer - Application Developer
-            </div>
-        </div>
+        <div class="profile-card">
+            <div style="font-size: 1.5rem; color: var(--neon-green); font-weight: bold; margin-bottom: 10px;">
+                Mrs. Janine K. Mandalones - Flores
+            </div>
+            <div style="color: #888; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px;">
+                Software Engineer // Application Developer
+            </div>
+        </div>
 
-        <div class="btn-container">
-            <a href="system-hacking.html" class="btn">System Hacking</a>
-            <a href="web-app-security.html" class="btn">Web App Security</a>
-        </div>
-    </div>
+        <div class="btn-container">
+            <a href="system-hacking.html" class="btn">System Hacking</a>
+            <a href="web-app-security.html" class="btn">Web App Security</a>
+        </div>
+    </div>
+
+    <script>
+        // Force video play if browser blocks autoplay
+        window.addEventListener('load', function() {
+            var video = document.getElementById('bg-video');
+            video.play().catch(function(error) {
+                console.log("Autoplay was prevented. Waiting for user interaction.");
+            });
+        });
+    </script>
 
 </body>
 </html>
-make this fully updasted
