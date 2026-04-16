@@ -211,6 +211,20 @@
         .btn { padding: 10px 20px; border: 1px solid var(--neon-green); color: var(--neon-green); background: none; cursor: pointer; text-transform: uppercase;}
         .btn:hover { background: var(--neon-green); color: black; }
 
+        .business-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .impact-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+
     </style>
 </head>
 <body>
@@ -236,16 +250,42 @@
             
             <div id="m1" class="topic-content active">
                 <div class="speaker-context">
-                    <b style="color: var(--neon-green);">INSTRUCTOR BROADCAST:</b><br>
-                    "Welcome to the deep end. We aren't just scanning websites anymore. Today, we learn how to take total control of a machine. Remember: in system hacking, if you have user-level access, you're just a guest. If you have root-level access, you're the God of the machine."
+                    <b style="color: var(--neon-green);">🎤 PRESENTATION MODE - INSTRUCTOR BROADCAST:</b><br>
+                    "Today, we move beyond basic security and explore how systems are actually compromised. Remember: <b>Access is not equal to Control.</b> A guest account is a visitor; a root account is the God of the machine. We learn to hack so we can build fortresses that cannot be climbed."
                 </div>
-                <h1 class="glitch-text">System Hacking Foundations</h1>
-                <p>System hacking involves cracking the OS security to gain administrative control. It demonstrates the real-world impact of infrastructure vulnerabilities.</p>
+                
+                <h1 class="glitch-text">The System Hacking Mindset</h1>
+                <p>System hacking is the art of identifying vulnerabilities in an OS (Windows, Linux, macOS) to move from unauthorized access to complete administrative authority.</p>
+
+                <div class="highlight-box">
+                    <h3 style="margin:0; color:var(--neon-green);">The Three Strategic Pillars</h3>
+                    <div class="business-grid">
+                        <div class="impact-card">
+                            <b style="color:var(--neon-green);">1. Infiltration</b><br>
+                            Bypassing Firewalls & AV via phishing, weak passwords, or unpatched software bugs.
+                        </div>
+                        <div class="impact-card">
+                            <b style="color:var(--neon-green);">2. Escalation</b><br>
+                            Climbing the ladder vertically (User → Admin) or horizontally (shifting between same-level accounts).
+                        </div>
+                        <div class="impact-card" style="grid-column: span 2;">
+                            <b style="color:var(--neon-green);">3. Lateral Movement</b><br>
+                            Using one 'foot in the door' to expand reach across the entire corporate network using trust relationships.
+                        </div>
+                    </div>
+                </div>
+
+                <h3 style="color:var(--neon-green);">Business Risk Perspective</h3>
+                <p>In a corporate environment, this isn't just a technical glitch—it's a strategic risk. A single compromised account can lead to:</p>
                 <ul class="data-list">
-                    <li><b>Infiltration:</b> Bypassing perimeter defenses (Firewalls/AV).</li>
-                    <li><b>Escalation:</b> Moving from a service account to a System/Admin account.</li>
-                    <li><b>Lateral Movement:</b> Using one compromised machine to infect the entire network.</li>
+                    <li><b>Data Breaches:</b> Exposure of customer PII and financial records.</li>
+                    <li><b>Operational Downtime:</b> Complete paralysis of business workflows.</li>
+                    <li><b>Legal Liability:</b> Massive fines and loss of stakeholder trust.</li>
                 </ul>
+
+                <div class="highlight-box" style="border-style: solid; border-color: #444; background: rgba(0,0,0,0.5);">
+                    <b style="color: var(--neon-green);">PRO TIP:</b> Control is rarely taken instantly—it is gained step by step. As defenders, our job is to break those steps.
+                </div>
             </div>
 
             <div id="m2" class="topic-content">
@@ -253,12 +293,12 @@
                 
                 <div class="speaker-context">
                     <b style="color: var(--neon-green);">🎤 PRESENTATION MODE - SPEAKER SCRIPT:</b><br>
-                    "Think of your OS like a <b>School Campus</b>. Students are normal users, Teachers are admins, and Security Guards are the system protections. 'Breaking the Barrier' is when someone finds a way into the restricted records room without a key. We study this not to destroy, but to understand how systems fail so we can make them stronger."
+                    "Think of your OS like a <b>School Campus</b>. Students are normal users, Teachers are admins, and Security Guards are the system protections. 'Breaking the Barrier' is when someone finds a way into the restricted records room without a key."
                 </div>
 
                 <div class="highlight-box">
                     <h3 style="margin-top:0; color:var(--neon-green);">The Gatekeeper Concept</h3>
-                    <p>The Operating System (OS) is the ultimate gatekeeper. It manages memory, files, and hardware. Breaking the barrier means:</p>
+                    <p>The Operating System (OS) manages memory, files, and hardware. Breaking the barrier means:</p>
                     <ul style="margin:0; padding-left:20px; color:#ccc;">
                         <li>Gaining unauthorized entry</li>
                         <li>Escalating privileges (Normal User &rarr; Admin)</li>
@@ -271,36 +311,24 @@
                     wmic service get name,displayname,pathname,startmode | findstr /i "Auto" | findstr /i /v "C:\Windows\\" | findstr /i /v """
                 </div>
                 
-                <p>By finding a service path with a space and no quotes, we exploit a logic flaw where the OS 'guesses' which file to run, allowing us to plant a malicious executable.</p>
-                
-                <div class="highlight-box" style="border-color: #444;">
-                    <b style="color: var(--neon-green);">WHY THIS MATTERS TODAY:</b><br>
-                    Every business relies on secure OS barriers. Even a small vulnerability—like a missing quote in a file path—can lead to a massive data breach. Awareness is the first line of defense.
-                </div>
+                <p>By finding a service path with a space and no quotes, we exploit a logic flaw where the OS 'guesses' which file to run.</p>
             </div>
 
             <div id="m3" class="topic-content">
                 <h1 class="glitch-text">Memory Corruption & BoF</h1>
-                <p>Buffer Overflows (BoF) occur when a program writes more data to a buffer than it can hold, spilling into adjacent memory to overwrite the <b>Instruction Pointer (EIP)</b>.</p>
-                
-                
+                <p>Buffer Overflows (BoF) occur when a program writes more data to a buffer than it can hold, overwriting the <b>Instruction Pointer (EIP)</b>.</p>
                 
                 <ul class="data-list">
-                    <li><b>Stack Smashing:</b> Overwriting local variables to hijack program execution.</li>
-                    <li><b>NOP Sleds:</b> Using \x90 instructions to lead the CPU safely to your shellcode.</li>
+                    <li><b>Stack Smashing:</b> Overwriting local variables to hijack execution.</li>
+                    <li><b>NOP Sleds:</b> CPU instructions (\x90) that lead execution to shellcode.</li>
                     <li><b>The Payoff:</b> Execution of a remote shell directly in system memory.</li>
                 </ul>
             </div>
 
             <div id="m4" class="topic-content">
                 <h1 class="glitch-text">Active Directory Dominance</h1>
-                <p>In large-scale environments, individual machines matter less than the <b>Domain Controller (DC)</b>. Owning the DC means owning every identity in the organization.</p>
+                <p>In large-scale environments, the <b>Domain Controller (DC)</b> is the ultimate prize. Owning it means owning every identity.</p>
                 
-                <div class="speaker-context">
-                    <b style="color: var(--neon-green);">REAL-WORLD INTEL:</b><br>
-                    "Attackers often exploit the <b>Service Account Trap</b>. By 'Kerberoasting', we request service tickets and crack them offline to gain a foothold."
-                </div>
-
                 <div class="terminal-box">
                     # Kerberoasting: Extracting service hashes for offline cracking<br>
                     $ invoke-kerberoast -erroraction silentlycontinue<br><br>
@@ -309,30 +337,20 @@
                 </div>
 
                 <ul class="data-list">
-                    <li><b>Golden Ticket:</b> A forged TGT using the <b>KRBTGT</b> hash.</li>
-                    <li><b>Silver Ticket:</b> A forged ticket for specific services (like SQL or File Shares).</li>
-                    <li><b>AD CS Abuse:</b> Exploiting misconfigured Certificate Authorities.</li>
+                    <li><b>Golden Ticket:</b> Forged TGT using the KRBTGT hash.</li>
+                    <li><b>Silver Ticket:</b> Forged ticket for specific services (SQL/Files).</li>
+                    <li><b>AD CS Abuse:</b> Exploiting Certificate Authorities for impersonation.</li>
                 </ul>
             </div>
 
             <div id="m5" class="topic-content">
                 <h1 class="glitch-text">Lateral Movement & Graphs</h1>
-                <p>Modern hacking isn't a straight line; it's a map. Tools like <b>BloodHound</b> use graph theory to find hidden relationships.</p>
-
-                <div class="speaker-context">
-                    <b style="color: var(--neon-green);">THE ATTACK PATH:</b><br>
-                    "This is the <b>Path of Least Resistance</b>. An attacker moves from a low-privilege workstation to a high-value server using stolen credentials or session hijacking."
-                </div>
-
+                <p>Tools like <b>BloodHound</b> use graph theory to find the "Path of Least Resistance" to the Domain Admin.</p>
+                
                 <ul class="data-list">
                     <li><b>Pass-the-Hash (PtH):</b> Authenticating with NTLM hashes.</li>
-                    <li><b>Shadow Admins:</b> Using <b>AdminSDHolder</b> to create a hidden 'backdoor' user.</li>
+                    <li><b>Shadow Admins:</b> Backdoors hidden in the <b>AdminSDHolder</b> container.</li>
                 </ul>
-
-                <div class="terminal-box">
-                    # Checking for Shadow Admins with GenericAll privileges<br>
-                    Get-DomainObjectAcl -Identity "Domain Admins" | ? {$_.ActiveDirectoryRights -eq "GenericAll"}
-                </div>
             </div>
 
             <div id="quiz" class="topic-content">
@@ -357,38 +375,36 @@
         function showTab(id, el) {
             document.querySelectorAll('.topic-content').forEach(t => t.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             el.classList.add('active');
-
             if(id === 'quiz') { loadQuestion(); }
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
         const quizData = [
             {
-                q: "What is the primary goal of Privilege Escalation?",
-                options: ["Deleting system logs", "Moving from low-level access to admin/root access", "Installing a keylogger", "Performing a DoS attack"],
+                q: "In the 'Strategic Pillars' of system hacking, what is Escalation?",
+                options: ["Bypassing the firewall", "Increasing your level of access (User to Admin)", "Moving to a different server", "Deleting log files"],
                 correct: 1,
-                exp: "Privilege escalation is the act of exploiting a bug or configuration oversight to gain elevated access."
+                exp: "Escalation involves gaining higher permissions, moving from a standard user account to an administrative or root level."
             },
             {
-                q: "What does the 'School Campus' analogy represent in OS Hacking?",
-                options: ["The physical location of a server", "The relationship between users, admins, and security protections", "A specific type of malware", "The speed of the network"],
+                q: "Why is 'Access' not the same as 'Control'?",
+                options: ["Access is temporary, control is permanent", "Access is limited to user permissions; control implies administrative authority", "They are actually the same thing", "Control only applies to physical hardware"],
                 correct: 1,
-                exp: "It explains the hierarchy: Students (Users), Teachers (Admins), and Guards (Security controls) within an Operating System."
+                exp: "A hacker may have access as a guest but still cannot change system files. Control requires administrative (Root/Admin) privileges."
             },
             {
-                q: "What register does a Buffer Overflow aim to control?",
+                q: "What does the 'School Campus' analogy represent?",
+                options: ["The physical location of servers", "The hierarchy of Users, Admins, and Security controls", "The school's WiFi speed", "A specific coding language"],
+                correct: 1,
+                exp: "Students are users, Teachers are admins, and Guards are the OS protections."
+            },
+            {
+                q: "What register does a Buffer Overflow aim to hijack?",
                 options: ["EAX", "ESP", "EIP (Instruction Pointer)", "EBP"],
                 correct: 2,
                 exp: "The EIP tells the CPU which memory address to execute next."
-            },
-            {
-                q: "What is 'Pass-the-Hash'?",
-                options: ["Cracking a password with a GPU", "Authenticating using an NTLM hash without the plaintext password", "Sharing passwords with other hackers", "A method to bypass WiFi encryption"],
-                correct: 1,
-                exp: "Pass-the-Hash allows an attacker to use a captured NTLM hash to authenticate to remote servers."
             }
         ];
 
