@@ -1,1 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Web App Security | Information Systems</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { overflow-y: auto; } /* Allow scrolling for the presentation */
+        .container { max-width: 900px; margin: 0 auto; padding: 50px 20px; }
+        .slide-section { 
+            margin-bottom: 80px; 
+            padding: 30px; 
+            border-left: 4px solid var(--neon-green); 
+            background: var(--glass-bg); 
+            backdrop-filter: blur(10px);
+        }
+        h2 { color: var(--neon-green); text-transform: uppercase; letter-spacing: 3px; }
+        .is-lens { color: #888; font-style: italic; margin-bottom: 15px; display: block; }
+        .qa-box { 
+            margin-top: 20px; 
+            padding: 15px; 
+            background: rgba(57, 255, 20, 0.1); 
+            border: 1px dashed var(--neon-green); 
+        }
+        .nav-back { position: fixed; top: 20px; left: 20px; z-index: 100; }
+    </style>
+</head>
+<body>
+    <div class="bg-container"></div>
+    <div class="grid-overlay"></div>
 
+    <a href="index.html" class="btn nav-back">← Back</a>
+
+    <div class="container">
+        <h1 class="hero-title" style="font-size: 3rem; margin-bottom: 50px;">Web App Security</h1>
+
+        <section class="slide-section">
+            <h2>1. Broken Access Control</h2>
+            <span class="is-lens">IS Focus: Identity & Access Management (IAM)</span>
+            <p>The failure to restrict users from accessing data or functions outside their intended permissions. In IS, this leads to unauthorized data disclosure and loss of privacy.</p>
+            <div class="qa-box">
+                <strong>Q:</strong> If a user changes the URL to see another person's info, what is violated?<br>
+                <strong>A:</strong> The Principle of Least Privilege.
+            </div>
+        </section>
+
+        <section class="slide-section">
+            <h2>2. SQL Injection (SQLi)</h2>
+            <span class="is-lens">IS Focus: Data Integrity & Database Governance</span>
+            <p>An attacker "injects" malicious SQL code into web forms to manipulate the backend database. This can destroy inventory records or leak financial data.</p>
+            <div class="qa-box">
+                <strong>Q:</strong> Why is SQLi dangerous for business reporting?<br>
+                <strong>A:</strong> It allows hackers to delete or alter records, making the Information System unreliable.
+            </div>
+        </section>
+
+        <section class="slide-section">
+            <h2>3. Cryptographic Failures</h2>
+            <span class="is-lens">IS Focus: Compliance & Data Privacy Acts</span>
+            <p>Using weak encryption or no encryption at all. In 2026, failing to protect sensitive PII (Personally Identifiable Information) results in massive legal fines.</p>
+            <div class="qa-box">
+                <strong>Q:</strong> Is "Password123" safe if the site is HTTPS?<br>
+                <strong>A:</strong> No. HTTPS protects data in transit, but Cryptographic Failure refers to data stored on the server.
+            </div>
+        </section>
+
+        <section class="slide-section">
+            <h2>4. Insecure Design</h2>
+            <span class="is-lens">IS Focus: SDLC (System Development Life Cycle)</span>
+            <p>Flaws in the system architecture. This isn't a coding bug, but a design error that allows for exploitation (e.g., lack of automated logic checks).</p>
+            <div class="qa-box">
+                <strong>Ice Breaker:</strong> Can a perfectly coded app still be hacked?<br>
+                <strong>Answer:</strong> Yes, if the "Plan" (Design) was flawed from the start.
+            </div>
+        </section>
+
+        <section class="slide-section">
+            <h2>5. Software & Data Integrity</h2>
+            <span class="is-lens">IS Focus: Supply Chain Risk Management</span>
+            <p>Web apps rely on external libraries (NPM/APIs). If an automatic update includes malicious code, the entire Information System is compromised.</p>
+            <div class="qa-box">
+                <strong>Q:</strong> What is an SBOM?<br>
+                <strong>A:</strong> Software Bill of Materials—a list of every "ingredient" in your software.
+            </div>
+        </section>
+
+        <section class="slide-section">
+            <h2>6. Social Engineering (Deepfakes)</h2>
+            <span class="is-lens">IS Focus: Security Awareness & Training</span>
+            <p>Manipulating employees into giving up web credentials. In 2026, AI-generated voice and video are used to trick IT admins into resetting passwords.</p>
+            <div class="qa-box">
+                <strong>Q:</strong> What is the "Human Firewall"?<br>
+                <strong>A:</strong> Employees who are trained to spot and report phishing attempts.
+            </div>
+        </section>
+
+        <section class="slide-section">
+            <h2>7. Business Continuity (BCP)</h2>
+            <span class="is-lens">IS Focus: Availability & Disaster Recovery</span>
+            <p>Security isn't just about blocking hackers; it's about keeping the system online. DDoS attacks can shut down a web app, stopping all business operations.</p>
+            <div class="qa-box">
+                <strong>Final Q:</strong> What is more important: Confidentiality or Availability?<br>
+                <strong>A:</strong> In Information Systems, it depends on the business needs (The CIA Triad).
+            </div>
+        </section>
+
+    </div>
+</body>
+</html>
